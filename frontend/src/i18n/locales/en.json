@@ -27,7 +27,8 @@
     "all": "All",
     "show": "Show",
     "hide": "Hide",
-    "years": "years"
+    "years": "years",
+    "days": "days"
   },
   "auth": {
     "login": "Login",
@@ -111,7 +112,39 @@
     "attachment": "Attachment",
     "proposal_submitted": "Proposal submitted successfully",
     "proposal_updated": "Proposal updated successfully",
-    "proposal_withdrawn": "Proposal withdrawn successfully"
+    "proposal_withdrawn": "Proposal withdrawn successfully",
+    "quantity_required": "Quantity Required",
+    "quantity_awarded": "Quantity Awarded",
+    "remaining": "Remaining",
+    "unit_price_range": "Unit Price Range",
+    "lead_time": "Lead Time",
+    "valid_until": "Valid Until",
+    "not_eligible": "Not eligible for proposal",
+    "view_proposal": "View Proposal",
+    "min_quantity": "Min Quantity",
+    "max_quantity": "Max Quantity",
+    "request": "Request",
+    "request_details": "Request Details",
+    "basic_info": "Basic Information",
+    "requirements": "Requirements",
+    "title": "Title",
+    "description": "Description",
+    "proposal_form": "Proposal Form",
+    "offered_qty": "Offered Quantity",
+    "unit_price": "Unit Price",
+    "max_available": "Maximum available",
+    "price_range": "Price range",
+    "notes_placeholder": "Add any additional notes or comments about your proposal...",
+    "file_requirements": "Max 5MB. Supported formats: PDF, DOC, DOCX, JPG, PNG",
+    "total_amount_preview": "Total Amount Preview",
+    "total": "Total",
+    "proposal": "Proposal",
+    "request_title": "Request Title",
+    "total_amount": "Total Amount",
+    "edit_proposal": "Edit Proposal",
+    "view_request": "View Request",
+    "browse_requests": "Browse Requests",
+    "request_number": "Request Number"
   },
   "admin": {
     "dashboard": "Dashboard",
@@ -159,6 +192,12 @@
     "invalid_expiry": "Invalid expiry date (MM/YY)",
     "invalid_cvv": "Invalid CVV",
     "invalid_otp": "Invalid OTP code",
-    "terms_required": "You must accept the terms and conditions"
+    "terms_required": "You must accept the terms and conditions",
+    "min_quantity": "Minimum quantity is 1",
+    "max_quantity": "Maximum quantity is {{max}}",
+    "min_price": "Minimum price is SAR {{min}}",
+    "max_price": "Maximum price is SAR {{max}}",
+    "min_lead_time": "Minimum lead time is 1 day",
+    "max_lead_time": "Maximum lead time is 365 days"
   }
 }

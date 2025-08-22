@@ -27,7 +27,8 @@
     "all": "الكل",
     "show": "إظهار",
     "hide": "إخفاء",
-    "years": "سنوات"
+    "years": "سنوات",
+    "days": "أيام"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -111,7 +112,39 @@
     "attachment": "مرفق",
     "proposal_submitted": "تم تقديم العرض بنجاح",
     "proposal_updated": "تم تحديث العرض بنجاح",
-    "proposal_withdrawn": "تم سحب العرض بنجاح"
+    "proposal_withdrawn": "تم سحب العرض بنجاح",
+    "quantity_required": "الكمية المطلوبة",
+    "quantity_awarded": "الكمية الممنوحة",
+    "remaining": "المتبقي",
+    "unit_price_range": "نطاق سعر الوحدة",
+    "lead_time": "وقت التوصيل",
+    "valid_until": "صالح حتى",
+    "not_eligible": "غير مؤهل للتقديم",
+    "view_proposal": "عرض العرض",
+    "min_quantity": "الحد الأدنى للكمية",
+    "max_quantity": "الحد الأقصى للكمية",
+    "request": "الطلب",
+    "request_details": "تفاصيل الطلب",
+    "basic_info": "المعلومات الأساسية",
+    "requirements": "المتطلبات",
+    "title": "العنوان",
+    "description": "الوصف",
+    "proposal_form": "نموذج العرض",
+    "offered_qty": "الكمية المعروضة",
+    "unit_price": "سعر الوحدة",
+    "max_available": "الحد الأقصى المتاح",
+    "price_range": "نطاق السعر",
+    "notes_placeholder": "أضف أي ملاحظات أو تعليقات إضافية حول عرضك...",
+    "file_requirements": "الحد الأقصى 5 ميجابايت. الصيغ المدعومة: PDF, DOC, DOCX, JPG, PNG",
+    "total_amount_preview": "معاينة المبلغ الإجمالي",
+    "total": "الإجمالي",
+    "proposal": "العرض",
+    "request_title": "عنوان الطلب",
+    "total_amount": "المبلغ الإجمالي",
+    "edit_proposal": "تعديل العرض",
+    "view_request": "عرض الطلب",
+    "browse_requests": "تصفح الطلبات",
+    "request_number": "رقم الطلب"
   },
   "admin": {
     "dashboard": "لوحة التحكم",
@@ -159,6 +192,12 @@
     "invalid_expiry": "تاريخ الانتهاء غير صحيح (شهر/سنة)",
     "invalid_cvv": "رمز الأمان غير صحيح",
     "invalid_otp": "رمز التحقق غير صحيح",
-    "terms_required": "يجب الموافقة على الشروط والأحكام"
+    "terms_required": "يجب الموافقة على الشروط والأحكام",
+    "min_quantity": "الحد الأدنى للكمية هو 1",
+    "max_quantity": "الحد الأقصى للكمية هو {{max}}",
+    "min_price": "الحد الأدنى للسعر هو {{min}} ريال",
+    "max_price": "الحد الأقصى للسعر هو {{max}} ريال",
+    "min_lead_time": "الحد الأدنى لوقت التوصيل هو يوم واحد",
+    "max_lead_time": "الحد الأقصى لوقت التوصيل هو 365 يوم"
   }
 }
