@@ -71,7 +71,31 @@
     "min_age": "Minimum Age",
     "max_age": "Maximum Age",
     "min_experience": "Minimum Experience (Years)",
-    "contract_created": "Contract created successfully"
+    "contract_created": "Contract created successfully",
+    "contract_details": "Contract Details",
+    "package_info": "Package Information",
+    "package": "Package",
+    "duration": "Duration",
+    "amount": "Amount",
+    "payment_expires": "Payment expires in",
+    "prepare_payment": "Prepare Payment",
+    "payment_summary": "Payment Summary",
+    "contract_info": "Contract Information",
+    "invoice_info": "Invoice Information",
+    "worker": "Worker",
+    "payment_method": "Payment Method",
+    "select_payment_method": "Select Payment Method",
+    "credit_card": "Credit Card",
+    "bank_transfer": "Bank Transfer",
+    "card_number": "Card Number",
+    "expiry_date": "Expiry Date",
+    "cvv": "CVV",
+    "cardholder_name": "Cardholder Name",
+    "bank_name": "Bank Name",
+    "account_number": "Account Number",
+    "iban": "IBAN",
+    "terms_acceptance": "I accept the terms and conditions for this payment",
+    "confirm_payment": "Confirm Payment"
   },
   "agency": {
     "requests": "Recruitment Requests",
@@ -130,6 +154,11 @@
     "max_length": "Maximum {{max}} characters allowed",
     "numeric": "Must be a number",
     "positive": "Must be a positive number",
-    "future_date": "Must be a future date"
+    "future_date": "Must be a future date",
+    "invalid_card": "Invalid card number",
+    "invalid_expiry": "Invalid expiry date (MM/YY)",
+    "invalid_cvv": "Invalid CVV",
+    "invalid_otp": "Invalid OTP code",
+    "terms_required": "You must accept the terms and conditions"
   }
 }

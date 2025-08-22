@@ -71,7 +71,31 @@
     "min_age": "الحد الأدنى للعمر",
     "max_age": "الحد الأقصى للعمر",
     "min_experience": "الحد الأدنى للخبرة (سنوات)",
-    "contract_created": "تم إنشاء العقد بنجاح"
+    "contract_created": "تم إنشاء العقد بنجاح",
+    "contract_details": "تفاصيل العقد",
+    "package_info": "معلومات الباقة",
+    "package": "الباقة",
+    "duration": "المدة",
+    "amount": "المبلغ",
+    "payment_expires": "ينتهي الدفع خلال",
+    "prepare_payment": "تحضير الدفع",
+    "payment_summary": "ملخص الدفع",
+    "contract_info": "معلومات العقد",
+    "invoice_info": "معلومات الفاتورة",
+    "worker": "العامل",
+    "payment_method": "طريقة الدفع",
+    "select_payment_method": "اختر طريقة الدفع",
+    "credit_card": "بطاقة ائتمان",
+    "bank_transfer": "تحويل بنكي",
+    "card_number": "رقم البطاقة",
+    "expiry_date": "تاريخ الانتهاء",
+    "cvv": "رمز الأمان",
+    "cardholder_name": "اسم حامل البطاقة",
+    "bank_name": "اسم البنك",
+    "account_number": "رقم الحساب",
+    "iban": "رقم الآيبان",
+    "terms_acceptance": "أوافق على الشروط والأحكام لهذا الدفع",
+    "confirm_payment": "تأكيد الدفع"
   },
   "agency": {
     "requests": "طلبات التوظيف",
@@ -130,6 +154,11 @@
     "max_length": "الحد الأقصى {{max}} حرف مسموح",
     "numeric": "يجب أن يكون رقماً",
     "positive": "يجب أن يكون رقماً موجباً",
-    "future_date": "يجب أن يكون تاريخاً مستقبلياً"
+    "future_date": "يجب أن يكون تاريخاً مستقبلياً",
+    "invalid_card": "رقم البطاقة غير صحيح",
+    "invalid_expiry": "تاريخ الانتهاء غير صحيح (شهر/سنة)",
+    "invalid_cvv": "رمز الأمان غير صحيح",
+    "invalid_otp": "رمز التحقق غير صحيح",
+    "terms_required": "يجب الموافقة على الشروط والأحكام"
   }
 }
