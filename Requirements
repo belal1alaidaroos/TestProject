@@ -1,0 +1,170 @@
+Requirements 
+You are a senior full-stack engineer. Build a production-ready, on-prem web application using:
+- Frontend: React 18 + Vite + TypeScript, TailwindCSS, React Router, React Hook Form, Axios, i18next (ar/en with full RTL), Zustand or Redux Toolkit for state.
+- Backend: Laravel 11 (PHP 8.3) with sqlsrv driver for SQL Server 2019/2022, Sanctum or JWT for API auth, Laravel Queues (Redis) for jobs/schedulers, Laravel Excel for import/export, OpenAPI (Swagger) docs.
+- Database: SQL Server. Use UUID (uniqueidentifier) PKs. Add CHECK constraints for enumerations. Add CreatedBy/CreatedAt/ModifiedBy/ModifiedAt on all major tables.
+- Hosting: On-prem only. No external SaaS except internal SMS and SAP B1 via adapters/stubs.
+
+========================
+1) CORE BUSINESS SCOPE
+========================
+A) Customer Portal (Phone OTP login)
+- Login via phone OTP (verify-otp). Store only OTP hash + expiry + attempts.
+- Browse “Ready” workers as cards: photo, age, nationality, experience, agency, status.
+- Reserve worker -> Worker.Status=ReservedAwaitingContract + Reservation TTL1 countdown.
+- Create contract from reservation -> Contract.Status=AwaitingPayment; Worker.Status=ReservedAwaitingPayment + TTL2 countdown.
+- Show invoice summary. Prepare payment (create invoice in ERP stub). Confirm payment => Contract.Active and Worker.AssignedToContract.
+- Auto release:
+  - If TTL1 expires with no contract => cancel reservation, Worker.Back to Ready.
+  - If TTL2 expires with no payment => cancel contract & reservation, Worker.Back to Ready.
+- Before payment, validate consistency:
+  Contract.Status == AwaitingPayment AND Worker.Status == ReservedAwaitingPayment AND linkage Worker.CurrentContractId == Contract.Id.
+
+B) Agency Portal (Proposals)
+- Company creates Recruitment Requests (country, nationality, profession, quantity…).
+- Agencies (accounts created by the company; no self-signup) see only eligible requests per routing (country/nationality/profession).
+- Agency submits 1 active proposal per request (MVP): OfferedQty, UnitPrice(SAR), LeadTimeDays, ValidUntil, Notes, Attachment.
+- Company reviews proposals: approve fully/partially or reject. Enforce the “Remaining” golden rule:
+  Remaining = Request.Quantity – SUM(ApprovedQty). On approval TX: (ApprovedSum + newApprovedQty) MUST NOT exceed Request.Quantity.
+- Auto close request when Remaining == 0 (FullyAwarded); block new approvals.
+
+========================
+2) ROLES & RBAC
+========================
+Users: AppUser with UserType ∈ {Internal, Customer, Agency}. Multi-roles:
+- AppRole, AppUserRole (M:N), AppResource, RolePermission per resource with actions: Create, Read, Update, Delete, Import, Export.
+Key resources:
+- lookups.countries/cities/districts/nationalities/professions/packages
+- customers, customers.addresses
+- workers, recruitment.requests, agency.proposals, admin.proposals
+- contracts, invoices, payments, templates, notifications
+- rbac.users, rbac.roles, rbac.permissions
+
+Middleware: can(resource, action). Prevent IDOR by scoping to AgencyId/CustomerId where applicable.
+
+========================
+3) DATA MODEL (DDL highlights)
+========================
+Use UUID (uniqueidentifier). Include audit columns on all main tables. Tables (non-exhaustive):
+- Country, City (FK Country), District (FK City).
+- Customer, CustomerAddress { Title, CityId, DistrictId, Latitude, Longitude, Status, IsDefault }.
+- Worker { NationalityId, ProfessionId, AgencyId, RecruitmentRequestId, Status ∈ [Ready, ReservedAwaitingContract, ReservedAwaitingPayment, AssignedToContract], CurrentContractId, PhotoFileId }.
+- WorkerStage { WorkerId, StageType ∈ [Medical,Visa,Travel,Iqama,Bank,SIM], Status, DueDate, CompletedAt, EvidenceFileId }.
+- WorkerReservation { WorkerId, CustomerId, ContractId?, State ∈ [AwaitingContract,AwaitingPayment,Completed,Cancelled], ExpiresAt }. Unique active index per Worker for (AwaitingContract|AwaitingPayment).
+- RecruitmentRequest { CountryId, NationalityId, ProfessionId, Quantity, SLA_Days, Status ∈ [Open,PartiallyAwarded,FullyAwarded] }.
+- SupplierProposal { RequestId, AgencyId, OfferedQty, UnitPrice, LeadTimeDays?, ValidUntil?, Status ∈ [Submitted,Reviewed,Approved,PartiallyApproved,Rejected,Cancelled], ApprovedQty }.
+- Package { Name, Duration ∈ [Week,Month,Year,TwoYears], Price, IsActive }.
+- Contract { CustomerId, WorkerId, PackageId, StartDate, EndDate, Status ∈ [Draft,AwaitingPayment,Active,Cancelled,Terminated], SignedAt?, ReservationId? }.
+- ContractReminder { 30/15/3, Channel ∈ [SMS,Email] }.
+- Invoice { ContractId, Amount, DueDate, Status ∈ [Unpaid,Paid,Overdue], ERPRef? }.
+- Payment { InvoiceId, Amount, PaidAt, Method, ERPRef? }.
+- FinanceSync { EntityType ∈ [Contract,Invoice,Payment], Direction ∈ [ToERP,FromERP], Status, Payload, Response }.
+- Template, Notification.
+- AuthOtp { Phone, CodeHash, ExpiresAt, Attempts, IsUsed }.
+- SystemSetting { ReservationTimeout_Create (TTL1 secs), ReservationTimeout_Pay (TTL2 secs), SMS settings, ERP base URL }.
+- AppUser, AppRole, AppUserRole, AppResource, RolePermission.
+- AuditLog { UserId, Action, Entity, EntityId, DiffJson, Ip, UserAgent }.
+
+Add CHECK constraints for enumerations. Add indexes for frequent filters (status, foreign keys). Seed baseline data (roles/resources/lookups/settings).
+
+========================
+4) FRONTEND (React)
+========================
+A) Customer Portal
+Pages:
+- Auth: Phone login → OTP verification (ar/en; RTL).
+- Workers Grid: server-paged list with filters (nationality, age, experience), “Reserve” button per card, live TTL for reservation (countdown).
+- Reservation → Create Contract Wizard: choose package, start date (auto compute end date), confirm default address; submit → AwaitingPayment page with TTL2 timer.
+- Invoice & Checkout: show invoice summary; call prepare-payment; confirm-payment to activate.
+- States for errors/expiry to auto redirect + toast notifications.
+B) Agency Portal
+Pages:
+- Requests List (eligible only) with Remaining badge.
+- Submit/Edit Proposal modal: OfferedQty, UnitPrice, LeadTimeDays, ValidUntil, Notes, Attachment.
+- My Proposals list with statuses; withdraw if Submitted.
+C) Backoffice (minimum for this scope)
+- Proposals Review per Request: table (Agency | OfferedQty | UnitPrice | LeadTime | Status | ApprovedQty input | Approve/Reject).
+- RBAC screens: users, roles, permissions.
+- Lookups CRUD: cities/districts/nationalities/professions/packages with Import/Export (Excel).
+UI:
+- Tailwind; responsive; i18next with `dir="rtl"` for Arabic. Accessible forms (labels, errors). Use Axios interceptors for auth. Route guards per RBAC.
+
+========================
+5) BACKEND (Laravel)
+========================
+Auth:
+- /auth/request-otp { phone }
+- /auth/verify-otp { phone, code } → JWT/Sanctum token; create AppUser (UserType=Customer) if not exists.
+- Rate limit OTP (e.g., 3/min/phone; max attempts).
+Customer APIs:
+/portal/workers (GET) filters & pagination – only Worker.Status=Ready
+/portal/workers/{workerId}/reserve (POST) → create WorkerReservation (TTL1), set Worker.Status=ReservedAwaitingContract
+/portal/reservations/{id}/contract (POST) → create Contract Draft; set Worker.Status=ReservedAwaitingPayment; link ReservationId
+/portal/contracts/{id}/invoice (GET)
+/portal/contracts/{id}/prepare-payment (POST) → ERP stub creates invoice; persist ERPRef
+/portal/contracts/{id}/confirm-payment (POST) → validate states; set Contract.Active; Worker.AssignedToContract
+/portal/reservations/{id}/cancel (POST)
+/portal/contracts/{id}/cancel (POST) – if AwaitingPayment
+Schedulers/Jobs:
+- ReleaseExpiredReservations (every 1m): cancel AwaitingContract passed ExpiresAt → Worker.Ready
+- CancelExpiredAwaitingPayment (every 2m): cancel contract+reservation → Worker.Ready
+
+Agency APIs:
+/agency/requests (GET) → only eligible per routing (country/nationality/profession)
+/agency/requests/{requestId}/proposals (POST)
+/agency/proposals/{proposalId} (PATCH if Submitted)
+/agency/proposals/{proposalId} (DELETE withdraw if Submitted)
+Admin APIs:
+/admin/requests/{requestId}/proposals (GET)
+/admin/proposals/{proposalId}/approve (POST {approvedQty}) – transactional Remaining check
+/admin/proposals/{proposalId}/reject (POST {reason})
+Lookups & RBAC CRUD endpoints. All endpoints documented via Swagger; include examples.
+
+Validation:
+- Business rules for statuses and ownership (scoping). Use Form Requests and Policies/Gates.
+- Idempotency-Key support for critical POSTs (reserve, approve, confirm-payment) with a small idempotency table.
+
+========================
+6) SECURITY & COMPLIANCE
+========================
+- OWASP ASVS: input validation, output encoding, CSRF (for web forms), JWT TTL ≤ 30m + refresh optional.
+- OTP: store hash only, expiry, attempts, rate limiting; audit IP/UA.
+- Secrets: environment variables; no secrets in repo.
+- Files: validate content-type, store outside web root; checksum.
+- AuditLog for sensitive mutations. Prevent IDOR by scoping queries (AgencyId/CustomerId).
+- TLS required; HSTS at reverse proxy. CSP headers on FE.
+
+========================
+7) TESTING
+========================
+- Backend: PHPUnit/Pest unit/integration for services & policies; mock ERP/SMS adapters.
+- Frontend: Cypress/Playwright E2E for happy paths + expiry edge cases.
+- Performance: K6/JMeter – Workers Grid and Approvals endpoints.
+- Exit criteria: zero Critical/High, UAT scenarios pass:
+  * Reserve → Draft Contract → AwaitingPayment → Active with payment
+  * TTL expiry auto-cancel frees worker
+  * Proposal approval enforces Remaining always
+
+========================
+8) DEV EXPERIENCE & OUTPUT FORMAT
+========================
+- Generate a monorepo layout:
+  /frontend (React app)
+  /backend (Laravel app)
+- Provide .env.example for backend (sqlsrv connection, queue, jwt/sanctum keys, ERP/SMS stubs) and frontend (API_BASE_URL, i18n default).
+- Generate DB migrations & seeders for roles/resources/lookups/system settings.
+- Implement Repository+Service pattern in Laravel for core domains.
+- Generate Swagger (OpenAPI) JSON + /docs route.
+- Provide sample seed data: 3 Nationalities, 3 Professions, 3 Agencies, 2 Packages, 10 Workers with photos (placeholders), 2 Recruitment Requests.
+
+NOW DO:
+1) Create full project structure with working build scripts (frontend & backend).
+2) Implement migrations, models, policies, controllers, services, jobs, events for the modules above.
+3) Implement the React pages and components as described (bi-lingual, RTL).
+4) Add unit/integration/E2E test stubs for critical paths.
+5) Output all created files with paths + concise code blocks, grouped by feature, so I can copy them in order.
+6) After code, output RUN BOOK:
+   - How to create DB, configure sqlsrv, run migrations/seed.
+   - How to run queues/schedulers.
+   - How to start FE/BE in DEV.
+7) Do not use any external paid services. ERP/SMS must be internal adapters with stubs and clear TODOs to swap real endpoints later.
