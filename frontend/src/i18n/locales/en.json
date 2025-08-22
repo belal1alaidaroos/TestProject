@@ -22,7 +22,12 @@
     "no_data": "No data available",
     "language": "Language",
     "logout": "Logout",
-    "profile": "Profile"
+    "profile": "Profile",
+    "select": "Select",
+    "all": "All",
+    "show": "Show",
+    "hide": "Hide",
+    "years": "years"
   },
   "auth": {
     "login": "Login",
@@ -53,15 +58,20 @@
     "agency": "Agency",
     "reserve": "Reserve",
     "reserved": "Reserved",
-    "reservation_expires": "Reservation expires in {{time}}",
-    "contract_expires": "Contract expires in {{time}}",
+    "reservation_expires": "Reservation expires in",
+    "contract_expires": "Contract expires in",
     "select_package": "Select Package",
     "start_date": "Start Date",
     "end_date": "End Date",
     "total_amount": "Total Amount",
     "confirm_payment": "Confirm Payment",
     "payment_success": "Payment successful",
-    "contract_active": "Contract activated successfully"
+    "contract_active": "Contract activated successfully",
+    "name": "Name",
+    "min_age": "Minimum Age",
+    "max_age": "Maximum Age",
+    "min_experience": "Minimum Experience (Years)",
+    "contract_created": "Contract created successfully"
   },
   "agency": {
     "requests": "Recruitment Requests",

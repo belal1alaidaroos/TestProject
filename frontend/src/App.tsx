@@ -26,7 +26,7 @@ import ProposalsPage from './pages/agency/ProposalsPage';
 import SubmitProposalPage from './pages/agency/SubmitProposalPage';
 
 // Admin Pages
-import AdminDashboardPage from './pages/admin/DashboardPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import ProposalsReviewPage from './pages/admin/ProposalsReviewPage';
 import UsersPage from './pages/admin/UsersPage';
 import SettingsPage from './pages/admin/SettingsPage';
@@ -81,10 +81,26 @@ function App() {
       case 'Customer':
         return (
           <Routes>
-            <Route path="/workers" element={<WorkersPage />} />
-            <Route path="/reservation/:id" element={<ReservationPage />} />
-            <Route path="/contract/:id" element={<ContractPage />} />
-            <Route path="/payment/:id" element={<PaymentPage />} />
+            <Route path="/workers" element={
+              <ProtectedRoute requiredUserType="Customer">
+                <WorkersPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/reservation/:id" element={
+              <ProtectedRoute requiredUserType="Customer">
+                <ReservationPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/contract/:id" element={
+              <ProtectedRoute requiredUserType="Customer">
+                <ContractPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/payment/:id" element={
+              <ProtectedRoute requiredUserType="Customer">
+                <PaymentPage />
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<Navigate to="/workers" replace />} />
           </Routes>
         );
@@ -92,9 +108,21 @@ function App() {
       case 'Agency':
         return (
           <Routes>
-            <Route path="/requests" element={<RequestsPage />} />
-            <Route path="/proposals" element={<ProposalsPage />} />
-            <Route path="/submit-proposal/:requestId" element={<SubmitProposalPage />} />
+            <Route path="/requests" element={
+              <ProtectedRoute requiredUserType="Agency">
+                <RequestsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/proposals" element={
+              <ProtectedRoute requiredUserType="Agency">
+                <ProposalsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/submit-proposal/:requestId" element={
+              <ProtectedRoute requiredUserType="Agency">
+                <SubmitProposalPage />
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<Navigate to="/requests" replace />} />
           </Routes>
         );
@@ -102,10 +130,26 @@ function App() {
       case 'Internal':
         return (
           <Routes>
-            <Route path="/dashboard" element={<AdminDashboardPage />} />
-            <Route path="/proposals-review/:requestId" element={<ProposalsReviewPage />} />
-            <Route path="/users" element={<UsersPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute requiredUserType="Internal">
+                <AdminDashboardPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/proposals-review/:requestId" element={
+              <ProtectedRoute requiredUserType="Internal">
+                <ProposalsReviewPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/users" element={
+              <ProtectedRoute requiredUserType="Internal">
+                <UsersPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute requiredUserType="Internal">
+                <SettingsPage />
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         );

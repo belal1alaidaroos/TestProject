@@ -22,7 +22,12 @@
     "no_data": "لا توجد بيانات متاحة",
     "language": "اللغة",
     "logout": "تسجيل الخروج",
-    "profile": "الملف الشخصي"
+    "profile": "الملف الشخصي",
+    "select": "اختيار",
+    "all": "الكل",
+    "show": "إظهار",
+    "hide": "إخفاء",
+    "years": "سنوات"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -53,15 +58,20 @@
     "agency": "الوكالة",
     "reserve": "حجز",
     "reserved": "محجوز",
-    "reservation_expires": "ينتهي الحجز خلال {{time}}",
-    "contract_expires": "ينتهي العقد خلال {{time}}",
+    "reservation_expires": "ينتهي الحجز خلال",
+    "contract_expires": "ينتهي العقد خلال",
     "select_package": "اختر الباقة",
     "start_date": "تاريخ البداية",
     "end_date": "تاريخ الانتهاء",
     "total_amount": "المبلغ الإجمالي",
     "confirm_payment": "تأكيد الدفع",
     "payment_success": "تم الدفع بنجاح",
-    "contract_active": "تم تفعيل العقد بنجاح"
+    "contract_active": "تم تفعيل العقد بنجاح",
+    "name": "الاسم",
+    "min_age": "الحد الأدنى للعمر",
+    "max_age": "الحد الأقصى للعمر",
+    "min_experience": "الحد الأدنى للخبرة (سنوات)",
+    "contract_created": "تم إنشاء العقد بنجاح"
   },
   "agency": {
     "requests": "طلبات التوظيف",
