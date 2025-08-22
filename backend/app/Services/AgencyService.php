@@ -117,6 +117,53 @@ class AgencyService
         return $this->proposalRepository->getByAgency($agencyId, $filters, $perPage);
     }
 
+    /**
+     * Get recruitment requests for agencies (for controller compatibility)
+     */
+    public function getRequestsForAgency(string $agencyId, array $filters = []): array
+    {
+        return $this->getEligibleRequests($agencyId, $filters, $filters['per_page'] ?? 10);
+    }
+
+    /**
+     * Get a specific recruitment request for agency
+     */
+    public function getRequestForAgency(string $requestId, string $agencyId): ?RecruitmentRequest
+    {
+        return RecruitmentRequest::with(['profession'])
+            ->where('id', $requestId)
+            ->where('status', '!=', 'Closed')
+            ->where('valid_until', '>', now())
+            ->first();
+    }
+
+    /**
+     * Get a specific agency proposal
+     */
+    public function getAgencyProposal(string $proposalId, string $agencyId): ?SupplierProposal
+    {
+        return SupplierProposal::with(['request.profession'])
+            ->where('id', $proposalId)
+            ->where('agency_id', $agencyId)
+            ->first();
+    }
+
+    /**
+     * Delete a proposal
+     */
+    public function deleteProposal(string $proposalId, string $agencyId): void
+    {
+        $proposal = SupplierProposal::where('id', $proposalId)
+            ->where('agency_id', $agencyId)
+            ->firstOrFail();
+
+        if ($proposal->status !== 'Submitted') {
+            throw new \Exception('Proposal cannot be deleted in current status');
+        }
+
+        $proposal->delete();
+    }
+
     private function getRemainingQuantity(string $requestId): int
     {
         $request = $this->requestRepository->findById($requestId);
