@@ -2,28 +2,35 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CustomerAddress extends BaseModel
+class CustomerAddress extends Model
 {
+    use HasUuids;
+
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'customer_id',
-        'address_type',
-        'address_line_1',
-        'address_line_2',
+        'address_name',
         'city_id',
         'district_id',
-        'postal_code',
+        'full_address',
+        'latitude',
+        'longitude',
         'is_default',
-        'is_active',
+        'created_by',
+        'modified_by',
     ];
 
     protected $casts = [
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
         'is_default' => 'boolean',
-        'is_active' => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     public function customer(): BelongsTo
@@ -41,9 +48,15 @@ class CustomerAddress extends BaseModel
         return $this->belongsTo(District::class);
     }
 
-    public function scopeActive($query)
+    public function attachments(): HasMany
     {
-        return $query->where('is_active', true);
+        return $this->hasMany(Attachment::class, 'entity_id')
+            ->where('entity_name', 'CustomerAddress');
+    }
+
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(Contract::class, 'delivery_address_id');
     }
 
     public function scopeDefault($query)
@@ -56,8 +69,32 @@ class CustomerAddress extends BaseModel
         return $query->where('customer_id', $customerId);
     }
 
-    public function scopeByType($query, $type)
+    public function getFullAddressAttribute($value)
     {
-        return $query->where('address_type', $type);
+        return $value . ', ' . $this->district->name . ', ' . $this->city->name;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($address) {
+            if ($address->is_default) {
+                // Remove default from other addresses of the same customer
+                static::where('customer_id', $address->customer_id)
+                    ->where('is_default', true)
+                    ->update(['is_default' => false]);
+            }
+        });
+
+        static::updating(function ($address) {
+            if ($address->is_default && $address->isDirty('is_default')) {
+                // Remove default from other addresses of the same customer
+                static::where('customer_id', $address->customer_id)
+                    ->where('id', '!=', $address->id)
+                    ->where('is_default', true)
+                    ->update(['is_default' => false]);
+            }
+        });
     }
 }
