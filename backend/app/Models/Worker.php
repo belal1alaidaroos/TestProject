@@ -22,6 +22,7 @@ class Worker extends Model
         'nationality_id',
         'profession_id',
         'agency_id',
+        'assigned_employee_id',
         'recruitment_request_id',
         'iqama_number',
         'iqama_expiry_date',
@@ -59,6 +60,11 @@ class Worker extends Model
     public function agency(): BelongsTo
     {
         return $this->belongsTo(Agency::class);
+    }
+
+    public function assignedEmployee(): BelongsTo
+    {
+        return $this->belongsTo(AppUser::class, 'assigned_employee_id');
     }
 
     public function recruitmentRequest(): BelongsTo

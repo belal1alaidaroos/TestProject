@@ -18,6 +18,7 @@ class Contract extends Model
         'contract_number',
         'customer_id',
         'worker_id',
+        'assigned_employee_id',
         'package_id',
         'delivery_address_id',
         'start_date',
@@ -30,6 +31,9 @@ class Contract extends Model
         'status',
         'payment_status',
         'notes',
+        'employee_notes',
+        'status_updated_at',
+        'status_updated_by',
         'created_by',
         'modified_by',
     ];
@@ -40,6 +44,7 @@ class Contract extends Model
         'total_amount' => 'decimal:2',
         'original_amount' => 'decimal:2',
         'discount_amount' => 'decimal:2',
+        'status_updated_at' => 'datetime',
     ];
 
     public function customer(): BelongsTo
@@ -65,6 +70,16 @@ class Contract extends Model
     public function appliedDiscount(): BelongsTo
     {
         return $this->belongsTo(Discount::class, 'applied_discount_id');
+    }
+
+    public function assignedEmployee(): BelongsTo
+    {
+        return $this->belongsTo(AppUser::class, 'assigned_employee_id');
+    }
+
+    public function statusUpdatedBy(): BelongsTo
+    {
+        return $this->belongsTo(AppUser::class, 'status_updated_by');
     }
 
     public function payments(): HasMany

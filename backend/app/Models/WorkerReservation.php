@@ -9,15 +9,20 @@ class WorkerReservation extends BaseModel
     protected $fillable = [
         'worker_id',
         'customer_id',
+        'assigned_employee_id',
         'reservation_date',
         'expires_at',
         'status',
         'notes',
+        'employee_notes',
+        'status_updated_at',
+        'status_updated_by',
     ];
 
     protected $casts = [
         'reservation_date' => 'datetime',
         'expires_at' => 'datetime',
+        'status_updated_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -31,6 +36,16 @@ class WorkerReservation extends BaseModel
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function assignedEmployee(): BelongsTo
+    {
+        return $this->belongsTo(AppUser::class, 'assigned_employee_id');
+    }
+
+    public function statusUpdatedBy(): BelongsTo
+    {
+        return $this->belongsTo(AppUser::class, 'status_updated_by');
     }
 
     public function scopeActive($query)
