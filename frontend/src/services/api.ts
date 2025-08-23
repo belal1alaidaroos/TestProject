@@ -229,3 +229,36 @@ export const auditLogsAPI = {
   getUserLogs: (userId: string) => api.get(`/audit-logs/user/${userId}`),
   exportLogs: (params?: any) => api.get('/audit-logs/export', { params, responseType: 'blob' }),
 };
+
+// Role Management API
+export const roleManagementAPI = {
+  assignRole: (data: any) => api.post('/admin/role-management/assign-role', data),
+  removeRole: (data: any) => api.post('/admin/role-management/remove-role', data),
+  syncRoles: (data: any) => api.post('/admin/role-management/sync-roles', data),
+  setPrimaryRole: (data: any) => api.post('/admin/role-management/set-primary-role', data),
+  getUserRoles: (userId: string) => api.get(`/admin/role-management/users/${userId}/roles`),
+  getUsersByRole: (roleName: string, params?: any) => api.get(`/admin/role-management/roles/${roleName}/users`, { params }),
+  getRoleAssignmentHistory: (userId: string) => api.get(`/admin/role-management/users/${userId}/role-history`),
+  getRoleStatistics: () => api.get('/admin/role-management/statistics'),
+};
+
+// Localization API
+export const localizationAPI = {
+  getSupportedLanguages: () => api.get('/localization/supported-languages'),
+  getSupportedCurrencies: () => api.get('/localization/supported-currencies'),
+  getSupportedTimezones: () => api.get('/localization/supported-timezones'),
+  getDateFormats: () => api.get('/localization/date-formats'),
+  getUserLocalizationSettings: () => api.get('/localization/user-settings'),
+  setUserLanguage: (data: any) => api.post('/localization/set-language', data),
+  setUserCurrency: (data: any) => api.post('/localization/set-currency', data),
+  setUserTimezone: (data: any) => api.post('/localization/set-timezone', data),
+  setUserDateFormat: (data: any) => api.post('/localization/set-date-format', data),
+  formatCurrency: (data: any) => api.post('/localization/format-currency', data),
+  formatDate: (data: any) => api.post('/localization/format-date', data),
+  getTranslation: (data: any) => api.post('/localization/translation', data),
+  getTranslations: (data: any) => api.post('/localization/translations', data),
+  getSystemLocalizationSettings: () => api.get('/localization/system-settings'),
+  updateSystemLocalizationSettings: (data: any) => api.post('/localization/system-settings', data),
+  exportTranslations: (data: any) => api.post('/localization/export-translations', data),
+  importTranslations: (data: any) => api.post('/localization/import-translations', data),
+};
