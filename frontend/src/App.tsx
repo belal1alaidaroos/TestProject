@@ -9,6 +9,7 @@ import Layout from './components/Layout/Layout';
 import CustomerLayout from './components/Layout/CustomerLayout';
 import AgencyLayout from './components/Layout/AgencyLayout';
 import AdminLayout from './components/Layout/AdminLayout';
+import EmployeeLayout from './pages/employee/Layout';
 
 // Auth Pages
 import LoginPage from './pages/auth/LoginPage';
@@ -30,6 +31,13 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import ProposalsReviewPage from './pages/admin/ProposalsReviewPage';
 import UsersPage from './pages/admin/UsersPage';
 import SettingsPage from './pages/admin/SettingsPage';
+
+// Employee Portal Pages
+import EmployeeDashboard from './pages/employee/Dashboard';
+import EmployeeWorkers from './pages/employee/Workers';
+import EmployeeContracts from './pages/employee/Contracts';
+import EmployeeReservations from './pages/employee/Reservations';
+import EmployeeNotifications from './pages/employee/Notifications';
 
 // Protected Route Component
 import ProtectedRoute from './components/Auth/ProtectedRoute';
@@ -60,7 +68,11 @@ function App() {
       case 'Agency':
         return <AgencyLayout />;
       case 'Internal':
-        return <AdminLayout />;
+        // Check if user has employee role to determine layout
+        const hasEmployeeRole = user.roles?.some((role: any) => 
+          role.name === 'Employee' || role.display_name === 'Employee'
+        );
+        return hasEmployeeRole ? <EmployeeLayout /> : <AdminLayout />;
       default:
         return <Layout />;
     }
@@ -128,31 +140,69 @@ function App() {
         );
       
       case 'Internal':
-        return (
-          <Routes>
-            <Route path="/dashboard" element={
-              <ProtectedRoute requiredUserType="Internal">
-                <AdminDashboardPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/proposals-review/:requestId" element={
-              <ProtectedRoute requiredUserType="Internal">
-                <ProposalsReviewPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/users" element={
-              <ProtectedRoute requiredUserType="Internal">
-                <UsersPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings" element={
-              <ProtectedRoute requiredUserType="Internal">
-                <SettingsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+        // Check if user has employee role to determine routes
+        const hasEmployeeRole = user.roles?.some((role: any) => 
+          role.name === 'Employee' || role.display_name === 'Employee'
         );
+        
+        if (hasEmployeeRole) {
+          return (
+            <Routes>
+              <Route path="/employee" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <EmployeeDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/employee/workers" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <EmployeeWorkers />
+                </ProtectedRoute>
+              } />
+              <Route path="/employee/contracts" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <EmployeeContracts />
+                </ProtectedRoute>
+              } />
+              <Route path="/employee/reservations" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <EmployeeReservations />
+                </ProtectedRoute>
+              } />
+              <Route path="/employee/notifications" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <EmployeeNotifications />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<Navigate to="/employee" replace />} />
+            </Routes>
+          );
+        } else {
+          return (
+            <Routes>
+              <Route path="/dashboard" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <AdminDashboardPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/proposals-review/:requestId" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <ProposalsReviewPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/users" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <UsersPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <SettingsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          );
+        }
       
       default:
         return (

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CustomerPortalController;
 use App\Http\Controllers\Api\AgencyController;
 use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\LookupsController;
 
 /*
@@ -85,6 +86,33 @@ Route::middleware('auth:sanctum')->group(function () {
         // Lookups for admin
         Route::get('agencies', [AdminController::class, 'getAgencies']);
         Route::get('roles', [AdminController::class, 'getRoles']);
+    });
+
+    // Employee Portal Routes
+    Route::prefix('employee')->group(function () {
+        // Dashboard
+        Route::get('dashboard/stats', [EmployeeController::class, 'getDashboardStats']);
+        Route::get('tasks/summary', [EmployeeController::class, 'getTasksSummary']);
+        
+        // Workers Management
+        Route::get('workers', [EmployeeController::class, 'getAssignedWorkers']);
+        Route::get('workers/{workerId}', [EmployeeController::class, 'getWorker']);
+        
+        // Contracts Management
+        Route::get('contracts', [EmployeeController::class, 'getAssignedContracts']);
+        Route::get('contracts/{contractId}', [EmployeeController::class, 'getContract']);
+        Route::patch('contracts/{contractId}/status', [EmployeeController::class, 'updateContractStatus']);
+        
+        // Reservations Management
+        Route::get('reservations', [EmployeeController::class, 'getAssignedReservations']);
+        Route::patch('reservations/{reservationId}/status', [EmployeeController::class, 'updateReservationStatus']);
+        
+        // Notifications
+        Route::get('notifications', [EmployeeController::class, 'getNotifications']);
+        Route::patch('notifications/{notificationId}/read', [EmployeeController::class, 'markNotificationAsRead']);
+        
+        // Audit Logs
+        Route::get('audit-logs', [EmployeeController::class, 'getAuditLogs']);
     });
 
     // Lookups Routes (for all authenticated users)
