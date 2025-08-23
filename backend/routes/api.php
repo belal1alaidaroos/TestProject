@@ -113,6 +113,13 @@ Route::middleware('auth:sanctum')->group(function () {
         
         // Audit Logs
         Route::get('audit-logs', [EmployeeController::class, 'getAuditLogs']);
+        
+        // Worker Problems Management
+        Route::get('worker-problems', [EmployeeController::class, 'getWorkerProblems']);
+        Route::get('worker-problems/{problemId}', [EmployeeController::class, 'getWorkerProblem']);
+        Route::post('worker-problems/{problemId}/approve', [EmployeeController::class, 'approveWorkerProblem']);
+        Route::post('worker-problems/{problemId}/reject', [EmployeeController::class, 'rejectWorkerProblem']);
+        Route::post('worker-problems/{problemId}/close', [EmployeeController::class, 'closeWorkerProblem']);
     });
 
     // Lookups Routes (for all authenticated users)

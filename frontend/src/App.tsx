@@ -37,6 +37,7 @@ import EmployeeDashboard from './pages/employee/Dashboard';
 import EmployeeWorkers from './pages/employee/Workers';
 import EmployeeContracts from './pages/employee/Contracts';
 import EmployeeReservations from './pages/employee/Reservations';
+import EmployeeWorkerProblems from './pages/employee/WorkerProblems';
 import EmployeeNotifications from './pages/employee/Notifications';
 
 // Protected Route Component
@@ -166,6 +167,11 @@ function App() {
               <Route path="/employee/reservations" element={
                 <ProtectedRoute requiredUserType="Internal">
                   <EmployeeReservations />
+                </ProtectedRoute>
+              } />
+              <Route path="/employee/worker-problems" element={
+                <ProtectedRoute requiredUserType="Internal">
+                  <EmployeeWorkerProblems />
                 </ProtectedRoute>
               } />
               <Route path="/employee/notifications" element={

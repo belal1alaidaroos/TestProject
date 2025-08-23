@@ -154,11 +154,18 @@ const Dashboard: React.FC = () => {
           color="purple"
           subtitle="Successfully completed"
         />
+        <StatCard
+          title="Worker Problems"
+          value={tasksSummary?.problems?.pending || 0}
+          icon={AlertCircle}
+          color="red"
+          subtitle="Pending issues"
+        />
       </div>
 
       {/* Tasks Summary */}
       {tasksSummary && (
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {/* Workers Summary */}
           <Card>
             <CardHeader>
@@ -242,6 +249,34 @@ const Dashboard: React.FC = () => {
                 <span className="text-sm text-muted-foreground">Confirmed</span>
                 <Badge variant="default" className="bg-green-100 text-green-800">
                   {tasksSummary.reservations.confirmed}
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Problems Summary */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5" />
+                Problems Summary
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Total Problems</span>
+                <Badge variant="secondary">{tasksSummary.problems?.total || 0}</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Pending</span>
+                <Badge variant="outline" className="border-orange-200 text-orange-800">
+                  {tasksSummary.problems?.pending || 0}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Resolved</span>
+                <Badge variant="default" className="bg-green-100 text-green-800">
+                  {tasksSummary.problems?.resolved || 0}
                 </Badge>
               </div>
             </CardContent>

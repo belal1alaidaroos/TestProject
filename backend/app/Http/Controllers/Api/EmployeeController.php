@@ -613,6 +613,17 @@ class EmployeeController extends Controller
                         ->where('status', 'pending')->count(),
                     'confirmed' => WorkerReservation::where('assigned_employee_id', $user->id)
                         ->where('status', 'confirmed')->count(),
+                ],
+                'problems' => [
+                    'total' => WorkerProblem::whereHas('worker', function ($query) use ($user) {
+                        $query->where('assigned_employee_id', $user->id);
+                    })->count(),
+                    'pending' => WorkerProblem::whereHas('worker', function ($query) use ($user) {
+                        $query->where('assigned_employee_id', $user->id);
+                    })->where('status', 'Pending')->count(),
+                    'resolved' => WorkerProblem::whereHas('worker', function ($query) use ($user) {
+                        $query->where('assigned_employee_id', $user->id);
+                    })->whereIn('status', ['Approved', 'Rejected', 'Closed'])->count(),
                 ]
             ];
 
@@ -625,6 +636,351 @@ class EmployeeController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch tasks summary',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get worker problems for assigned workers
+     */
+    public function getWorkerProblems(Request $request)
+    {
+        $user = $request->user();
+        
+        if ($user->user_type !== 'Internal') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access denied. Only employees can access this portal.'
+            ], 403);
+        }
+
+        try {
+            $query = WorkerProblem::with(['worker', 'createdBy', 'approvedBy'])
+                ->whereHas('worker', function ($q) use ($user) {
+                    $q->where('assigned_employee_id', $user->id);
+                });
+
+            // Apply filters
+            if ($request->has('status')) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->has('problem_type')) {
+                $query->where('problem_type', $request->problem_type);
+            }
+
+            if ($request->has('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('description', 'like', "%{$search}%")
+                      ->orWhereHas('worker', function ($wq) use ($search) {
+                          $wq->where('name_en', 'like', "%{$search}%")
+                             ->orWhere('name_ar', 'like', "%{$search}%")
+                             ->orWhere('passport_number', 'like', "%{$search}%");
+                      });
+                });
+            }
+
+            $problems = $query->orderBy('created_at', 'desc')
+                             ->paginate($request->get('per_page', 15));
+
+            return response()->json([
+                'success' => true,
+                'data' => $problems
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch worker problems',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get specific worker problem details
+     */
+    public function getWorkerProblem(Request $request, $problemId)
+    {
+        $user = $request->user();
+        
+        if ($user->user_type !== 'Internal') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access denied. Only employees can access this portal.'
+            ], 403);
+        }
+
+        try {
+            $problem = WorkerProblem::with(['worker', 'createdBy', 'approvedBy', 'attachments'])
+                ->where('id', $problemId)
+                ->whereHas('worker', function ($q) use ($user) {
+                    $q->where('assigned_employee_id', $user->id);
+                })
+                ->first();
+
+            if (!$problem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Worker problem not found or not assigned to you'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $problem
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch worker problem details',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Approve worker problem
+     */
+    public function approveWorkerProblem(Request $request, $problemId)
+    {
+        $user = $request->user();
+        
+        if ($user->user_type !== 'Internal') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access denied. Only employees can access this portal.'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'resolution_action' => 'required|in:Dismissal,Re-training,Escalation',
+            'resolution_notes' => 'nullable|string|max:1000'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $problem = WorkerProblem::where('id', $problemId)
+                                   ->whereHas('worker', function ($q) use ($user) {
+                                       $q->where('assigned_employee_id', $user->id);
+                                   })
+                                   ->first();
+
+            if (!$problem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Worker problem not found or not assigned to you'
+                ], 404);
+            }
+
+            if (!$problem->canBeApproved()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Problem cannot be approved in its current status'
+                ], 400);
+            }
+
+            $problem->approve(
+                $user->id,
+                $request->resolution_action,
+                $request->resolution_notes
+            );
+
+            // Log the action
+            AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'worker_problem_approved',
+                'table_name' => 'worker_problems',
+                'record_id' => $problem->id,
+                'old_values' => ['status' => 'Pending'],
+                'new_values' => [
+                    'status' => 'Approved',
+                    'resolution_action' => $request->resolution_action,
+                    'resolution_notes' => $request->resolution_notes
+                ],
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Worker problem approved successfully',
+                'data' => $problem->load(['worker', 'createdBy', 'approvedBy'])
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to approve worker problem',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Reject worker problem
+     */
+    public function rejectWorkerProblem(Request $request, $problemId)
+    {
+        $user = $request->user();
+        
+        if ($user->user_type !== 'Internal') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access denied. Only employees can access this portal.'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'resolution_notes' => 'nullable|string|max:1000'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $problem = WorkerProblem::where('id', $problemId)
+                                   ->whereHas('worker', function ($q) use ($user) {
+                                       $q->where('assigned_employee_id', $user->id);
+                                   })
+                                   ->first();
+
+            if (!$problem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Worker problem not found or not assigned to you'
+                ], 404);
+            }
+
+            if (!$problem->canBeRejected()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Problem cannot be rejected in its current status'
+                ], 400);
+            }
+
+            $problem->reject($user->id, $request->resolution_notes);
+
+            // Log the action
+            AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'worker_problem_rejected',
+                'table_name' => 'worker_problems',
+                'record_id' => $problem->id,
+                'old_values' => ['status' => 'Pending'],
+                'new_values' => [
+                    'status' => 'Rejected',
+                    'resolution_notes' => $request->resolution_notes
+                ],
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Worker problem rejected successfully',
+                'data' => $problem->load(['worker', 'createdBy', 'approvedBy'])
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to reject worker problem',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Close worker problem
+     */
+    public function closeWorkerProblem(Request $request, $problemId)
+    {
+        $user = $request->user();
+        
+        if ($user->user_type !== 'Internal') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access denied. Only employees can access this portal.'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'resolution_notes' => 'nullable|string|max:1000'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $problem = WorkerProblem::where('id', $problemId)
+                                   ->whereHas('worker', function ($q) use ($user) {
+                                       $q->where('assigned_employee_id', $user->id);
+                                   })
+                                   ->first();
+
+            if (!$problem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Worker problem not found or not assigned to you'
+                ], 404);
+            }
+
+            if (!$problem->canBeClosed()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Problem cannot be closed in its current status'
+                ], 400);
+            }
+
+            $oldStatus = $problem->status;
+            $problem->close($request->resolution_notes);
+
+            // Log the action
+            AuditLog::create([
+                'user_id' => $user->id,
+                'action' => 'worker_problem_closed',
+                'table_name' => 'worker_problems',
+                'record_id' => $problem->id,
+                'old_values' => ['status' => $oldStatus],
+                'new_values' => [
+                    'status' => 'Closed',
+                    'resolution_notes' => $request->resolution_notes
+                ],
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Worker problem closed successfully',
+                'data' => $problem->load(['worker', 'createdBy', 'approvedBy'])
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to close worker problem',
                 'error' => $e->getMessage()
             ], 500);
         }

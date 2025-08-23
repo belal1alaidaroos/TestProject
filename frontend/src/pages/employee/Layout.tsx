@@ -11,7 +11,8 @@ import {
   LogOut,
   Menu,
   X,
-  User
+  User,
+  AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '@/stores/authStore';
 
@@ -26,6 +27,7 @@ const EmployeeLayout: React.FC = () => {
     { name: 'Workers', href: '/employee/workers', icon: Users },
     { name: 'Contracts', href: '/employee/contracts', icon: FileText },
     { name: 'Reservations', href: '/employee/reservations', icon: Calendar },
+    { name: 'Worker Problems', href: '/employee/worker-problems', icon: AlertTriangle },
     { name: 'Notifications', href: '/employee/notifications', icon: Bell },
   ];
 
