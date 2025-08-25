@@ -22,6 +22,10 @@ class AuthService
 
     public function requestOtp(string $phone): array
     {
+        $devMode = config('services.sms.provider', 'internal') === 'internal' 
+            || app()->environment('local') 
+            || (bool) env('OTP_BYPASS_ENABLED', false);
+
         // Rate limiting check
         $recentOtps = $this->otpRepository->getRecentByPhone($phone, 1);
         if ($recentOtps->count() > 0) {
@@ -51,14 +55,53 @@ class AuthService
 
         Log::info('OTP requested', ['phone' => $phone]);
 
-        return [
+        $response = [
             'message' => 'OTP sent successfully',
             'expires_in' => config('system.otp_expiry', 300),
         ];
+
+        // In development/internal mode, include OTP in response to ease testing
+        if ($devMode) {
+            $response['dev_otp'] = $otp;
+        }
+
+        return $response;
     }
 
     public function verifyOtp(string $phone, string $code): array
     {
+        $devMode = config('services.sms.provider', 'internal') === 'internal' 
+            || app()->environment('local') 
+            || (bool) env('OTP_BYPASS_ENABLED', false);
+        $bypassCode = env('OTP_BYPASS_CODE', '000000');
+
+        // If dev bypass is enabled and code matches, skip OTP validation
+        if ($devMode && $code === $bypassCode) {
+            $user = $this->userRepository->findByPhone($phone);
+            if (!$user) {
+                $user = $this->createCustomerUser($phone);
+            }
+
+            if (!$user->phone_verified_at) {
+                $this->userRepository->update($user->id, [
+                    'phone_verified_at' => now()
+                ]);
+            }
+
+            $token = $user->createToken('auth-token')->plainTextToken;
+
+            Log::info('OTP verification bypassed in dev mode', [
+                'phone' => $phone,
+                'user_id' => $user->id
+            ]);
+
+            return [
+                'user' => $user->load('customer'),
+                'token' => $token,
+                'token_type' => 'Bearer',
+            ];
+        }
+
         $otp = $this->otpRepository->getLatestByPhone($phone);
         
         if (!$otp) {
