@@ -2,14 +2,20 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { api } from '../services/api';
 
+interface UserRole {
+  name: string;
+  display_name: string;
+}
+
 interface User {
   id: string;
   name: string;
   email: string;
   phone: string;
   user_type: 'Customer' | 'Agency' | 'Internal';
-  customer?: any;
-  agency?: any;
+  customer?: unknown;
+  agency?: unknown;
+  roles?: UserRole[];
 }
 
 interface AuthState {
@@ -67,10 +73,11 @@ export const useAuthStore = create<AuthStore>()(
               error: response.data.message || 'Login failed',
             });
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
+          const errorMessage = error instanceof Error ? error.message : 'Login failed';
           set({
             isLoading: false,
-            error: error.response?.data?.message || 'Login failed',
+            error: errorMessage,
           });
         }
       },
@@ -121,7 +128,7 @@ export const useAuthStore = create<AuthStore>()(
           } else {
             set({ isAuthenticated: false });
           }
-        } catch (error) {
+        } catch {
           set({ isAuthenticated: false });
           delete api.defaults.headers.common['Authorization'];
         }
