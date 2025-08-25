@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from './stores/authStore';
@@ -46,6 +46,11 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 // Initialize i18n
 import './i18n';
 
+interface UserRole {
+  name: string;
+  display_name: string;
+}
+
 function App() {
   const { i18n } = useTranslation();
   const { user, isAuthenticated } = useAuthStore();
@@ -64,18 +69,22 @@ function App() {
     if (!isAuthenticated || !user) return null;
     
     switch (user.user_type) {
-      case 'Customer':
-        return <CustomerLayout />;
-      case 'Agency':
-        return <AgencyLayout />;
-      case 'Internal':
+      case 'Customer': {
+        return <CustomerLayout>{getRoutes()}</CustomerLayout>;
+      }
+      case 'Agency': {
+        return <AgencyLayout>{getRoutes()}</AgencyLayout>;
+      }
+      case 'Internal': {
         // Check if user has employee role to determine layout
-        const hasEmployeeRole = user.roles?.some((role: any) => 
+        const hasEmployeeRole = user.roles?.some((role: UserRole) => 
           role.name === 'Employee' || role.display_name === 'Employee'
         );
-        return hasEmployeeRole ? <EmployeeLayout /> : <AdminLayout />;
-      default:
-        return <Layout />;
+        return hasEmployeeRole ? <EmployeeLayout>{getRoutes()}</EmployeeLayout> : <AdminLayout>{getRoutes()}</AdminLayout>;
+      }
+      default: {
+        return <Layout>{getRoutes()}</Layout>;
+      }
     }
   };
 
@@ -91,7 +100,7 @@ function App() {
     }
 
     switch (user.user_type) {
-      case 'Customer':
+      case 'Customer': {
         return (
           <Routes>
             <Route path="/workers" element={
@@ -117,8 +126,9 @@ function App() {
             <Route path="*" element={<Navigate to="/workers" replace />} />
           </Routes>
         );
+      }
       
-      case 'Agency':
+      case 'Agency': {
         return (
           <Routes>
             <Route path="/requests" element={
@@ -139,10 +149,11 @@ function App() {
             <Route path="*" element={<Navigate to="/requests" replace />} />
           </Routes>
         );
+      }
       
-      case 'Internal':
+      case 'Internal': {
         // Check if user has employee role to determine routes
-        const hasEmployeeRole = user.roles?.some((role: any) => 
+        const hasEmployeeRole = user.roles?.some((role: UserRole) => 
           role.name === 'Employee' || role.display_name === 'Employee'
         );
         
@@ -209,23 +220,22 @@ function App() {
             </Routes>
           );
         }
+      }
       
-      default:
+      default: {
         return (
           <Routes>
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         );
+      }
     }
   };
 
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
-        {getLayout()}
-        <main className={getLayout() ? 'pt-16' : ''}>
-          {getRoutes()}
-        </main>
+        {getLayout() || getRoutes()}
       </div>
     </Router>
   );
