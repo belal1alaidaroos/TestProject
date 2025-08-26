@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
-import { useAuth } from './stores/AuthStore'
+import { useAuth } from './stores/AuthProvider'
 import { useI18n } from './i18n/useI18n'
 import Layout from './components/Layout/Layout'
 import LoadingSpinner from './components/UI/LoadingSpinner'
