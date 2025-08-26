@@ -50,11 +50,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         ]);
 
-        // Rate limiting
-        $middleware->throttleApi([
-            'otp' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':3,1',
-            'auth' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':5,1',
-            'api' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':60,1',
+        // Rate limiting - using proper Laravel 11 syntax
+        $middleware->alias([
+            'throttle.otp' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':3,1',
+            'throttle.auth' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':5,1',
+            'throttle.api' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':60,1',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
@@ -102,6 +102,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Method not allowed.',
                     'status' => 405
                 ], 405);
+            }
         });
 
         $exceptions->render(function (\Illuminate\Database\QueryException $e, $request) {

@@ -14,7 +14,6 @@
         "spatie/laravel-activitylog": "^4.0",
         "spatie/laravel-query-builder": "^5.0",
         "spatie/laravel-backup": "^8.0",
-        "barryvdh/laravel-cors": "^4.0",
         "laravel/telescope": "^5.0",
         "guzzlehttp/guzzle": "^7.0"
     },

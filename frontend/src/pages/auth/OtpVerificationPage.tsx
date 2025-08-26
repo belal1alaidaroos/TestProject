@@ -120,6 +120,14 @@ const OtpVerificationPage: React.FC = () => {
           <p className="mt-1 text-center text-sm text-gray-500">
             {phone}
           </p>
+          {/* Development OTP Bypass Notice */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+              <p className="text-xs text-yellow-800 text-center">
+                <strong>Testing Mode:</strong> Use code <code className="bg-yellow-100 px-1 rounded">8523</code> to bypass OTP verification
+              </p>
+            </div>
+          )}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleVerifyOtp)}>

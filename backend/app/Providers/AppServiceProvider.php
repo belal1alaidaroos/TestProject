@@ -27,9 +27,6 @@ class AppServiceProvider extends ServiceProvider
         // Register Laravel Excel
         $this->app->register(\Maatwebsite\Excel\ExcelServiceProvider::class);
         
-        // Register CORS
-        $this->app->register(\Barryvdh\Cors\ServiceProvider::class);
-        
         // Register Telescope in development
         if ($this->app->environment('local')) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);

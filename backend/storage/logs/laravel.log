@@ -1,0 +1,573 @@
+[2025-08-26 09:38:47] production.ERROR: The /workspace/backend/bootstrap/cache directory must be present and writable. {"exception":"[object] (Exception(code: 0): The /workspace/backend/bootstrap/cache directory must be present and writable. at /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php:179)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(132): Illuminate\\Foundation\\PackageManifest->write()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(108): Illuminate\\Foundation\\PackageManifest->build()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(91): Illuminate\\Foundation\\PackageManifest->getManifest()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(80): Illuminate\\Foundation\\PackageManifest->config()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterFacades.php(26): Illuminate\\Foundation\\PackageManifest->aliases()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(342): Illuminate\\Foundation\\Bootstrap\\RegisterFacades->bootstrap()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(474): Illuminate\\Foundation\\Application->bootstrapWith()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(196): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#8 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#9 {main}
+"} 
+[2025-08-26 09:38:54] production.ERROR: Class "Barryvdh\Cors\ServiceProvider" not found {"exception":"[object] (Error(code: 0): Class \"Barryvdh\\Cors\\ServiceProvider\" not found at /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:961)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(893): Illuminate\\Foundation\\Application->resolveProvider()
+#1 /workspace/backend/app/Providers/AppServiceProvider.php(31): Illuminate\\Foundation\\Application->register()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(896): App\\Providers\\AppServiceProvider->register()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(75): Illuminate\\Foundation\\Application->register()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(871): Illuminate\\Foundation\\ProviderRepository->load()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(37): Illuminate\\Foundation\\Application->registerConfiguredProviders()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(342): Illuminate\\Foundation\\Bootstrap\\RegisterProviders->bootstrap()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(474): Illuminate\\Foundation\\Application->bootstrapWith()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(196): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#9 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#10 {main}
+"} 
+[2025-08-26 09:39:04] production.ERROR: Array to string conversion {"exception":"[object] (ErrorException(code: 0): Array to string conversion at /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php:496)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(258): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php(496): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->{closure:Illuminate\\Foundation\\Bootstrap\\HandleExceptions::forwardsTo():257}()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php(286): Illuminate\\Foundation\\Configuration\\Middleware->getMiddlewareGroups()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1432): Illuminate\\Foundation\\Configuration\\ApplicationBuilder->{closure:Illuminate\\Foundation\\Configuration\\ApplicationBuilder::withMiddleware():276}()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1368): Illuminate\\Container\\Container->fireCallbackArray()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1354): Illuminate\\Container\\Container->fireAfterResolvingCallbacks()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(850): Illuminate\\Container\\Container->fireResolvingCallbacks()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1078): Illuminate\\Container\\Container->resolve()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(763): Illuminate\\Foundation\\Application->resolve()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1058): Illuminate\\Container\\Container->make()
+#10 /workspace/backend/vendor/laravel/sanctum/src/SanctumServiceProvider.php(119): Illuminate\\Foundation\\Application->make()
+#11 /workspace/backend/vendor/laravel/sanctum/src/SanctumServiceProvider.php(58): Laravel\\Sanctum\\SanctumServiceProvider->configureMiddleware()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Sanctum\\SanctumServiceProvider->boot()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1151): Illuminate\\Container\\Container->call()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1132): Illuminate\\Foundation\\Application->bootProvider()
+#19 [internal function]: Illuminate\\Foundation\\Application->{closure:Illuminate\\Foundation\\Application::boot():1131}()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1131): array_walk()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(342): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap()
+#23 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(474): Illuminate\\Foundation\\Application->bootstrapWith()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(196): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#25 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#26 {main}
+"} 
+[2025-08-26 09:39:46] local.ERROR: could not find driver (Connection: sqlsrv, SQL: insert into [telescope_entries] ([batch_id], [content], [created_at], [family_hash], [type], [uuid]) values (9fb97e6a-030e-4cea-a381-0bafb1d88721, {"command":"key:generate","exit_code":0,"arguments":{"command":"key:generate"},"options":{"show":false,"force":false,"help":false,"silent":false,"quiet":false,"verbose":false,"version":false,"ansi":null,"no-interaction":false,"env":null},"hostname":"cursor"}, 2025-08-26 09:39:46, ?, command, 9fb97e6a-0222-42d3-9018-c2266d16b9fd)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 0): could not find driver (Connection: sqlsrv, SQL: insert into [telescope_entries] ([batch_id], [content], [created_at], [family_hash], [type], [uuid]) values (9fb97e6a-030e-4cea-a381-0bafb1d88721, {\"command\":\"key:generate\",\"exit_code\":0,\"arguments\":{\"command\":\"key:generate\"},\"options\":{\"show\":false,\"force\":false,\"help\":false,\"silent\":false,\"quiet\":false,\"verbose\":false,\"version\":false,\"ansi\":null,\"no-interaction\":false,\"env\":null},\"hostname\":\"cursor\"}, 2025-08-26 09:39:46, ?, command, 9fb97e6a-0222-42d3-9018-c2266d16b9fd)) at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(524): Illuminate\\Database\\Connection->statement()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3717): Illuminate\\Database\\Connection->insert()
+#4 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(145): Illuminate\\Database\\Query\\Builder->insert()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(261): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::store():144}()
+#6 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(144): Illuminate\\Support\\Collection->each()
+#7 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(664): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->store()
+#8 [internal function]: Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\Telescope::store():656}()
+#9 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(289): call_user_func()
+#10 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(656): Laravel\\Telescope\\Telescope::withoutRecording()
+#11 /workspace/backend/vendor/laravel/telescope/src/ListensForStorageOpportunities.php(65): Laravel\\Telescope\\Telescope::store()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\ListensForStorageOpportunities::storeEntriesBeforeTermination():64}()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(83): Illuminate\\Container\\Util::unwrapIfClosure()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1452): Illuminate\\Container\\Container->call()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(219): Illuminate\\Foundation\\Application->terminate()
+#19 /workspace/backend/artisan(51): Illuminate\\Foundation\\Console\\Kernel->terminate()
+#20 {main}
+
+[previous exception] [object] (PDOException(code: 0): could not find driver at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:67)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(67): PDO::connect()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(44): Illuminate\\Database\\Connectors\\Connector->createPdoConnection()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connectors/SqlServerConnector.php(32): Illuminate\\Database\\Connectors\\Connector->createConnection()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(185): Illuminate\\Database\\Connectors\\SqlServerConnector->connect()
+#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->{closure:Illuminate\\Database\\Connectors\\ConnectionFactory::createPdoResolverWithHosts():180}()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1231): call_user_func()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(565): Illuminate\\Database\\Connection->getPdo()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::statement():560}()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#10 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(524): Illuminate\\Database\\Connection->statement()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3717): Illuminate\\Database\\Connection->insert()
+#12 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(145): Illuminate\\Database\\Query\\Builder->insert()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(261): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::store():144}()
+#14 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(144): Illuminate\\Support\\Collection->each()
+#15 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(664): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->store()
+#16 [internal function]: Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\Telescope::store():656}()
+#17 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(289): call_user_func()
+#18 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(656): Laravel\\Telescope\\Telescope::withoutRecording()
+#19 /workspace/backend/vendor/laravel/telescope/src/ListensForStorageOpportunities.php(65): Laravel\\Telescope\\Telescope::store()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\ListensForStorageOpportunities::storeEntriesBeforeTermination():64}()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(83): Illuminate\\Container\\Util::unwrapIfClosure()
+#23 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#25 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1452): Illuminate\\Container\\Container->call()
+#26 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(219): Illuminate\\Foundation\\Application->terminate()
+#27 /workspace/backend/artisan(51): Illuminate\\Foundation\\Console\\Kernel->terminate()
+#28 {main}
+"} 
+[2025-08-26 09:40:21] local.ERROR: Database file at path [employee_portal] does not exist. Ensure this is an absolute path to the database. (Connection: sqlite, SQL: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as "exists") {"exception":"[object] (Illuminate\\Database\\QueryException(code: 0): Database file at path [employee_portal] does not exist. Ensure this is an absolute path to the database. (Connection: sqlite, SQL: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as \"exists\") at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(344): Illuminate\\Database\\Connection->select()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(361): Illuminate\\Database\\Connection->selectOne()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/SQLiteBuilder.php(44): Illuminate\\Database\\Connection->scalar()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\SQLiteBuilder->hasTable()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(742): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/FreshCommand.php(68): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(658): Illuminate\\Database\\Console\\Migrations\\FreshCommand->{closure:Illuminate\\Database\\Console\\Migrations\\FreshCommand::handle():67}()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/FreshCommand.php(67): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#10 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\FreshCommand->handle()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#16 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#18 /workspace/backend/vendor/symfony/console/Application.php(1092): Illuminate\\Console\\Command->run()
+#19 /workspace/backend/vendor/symfony/console/Application.php(341): Symfony\\Component\\Console\\Application->doRunCommand()
+#20 /workspace/backend/vendor/symfony/console/Application.php(192): Symfony\\Component\\Console\\Application->doRun()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#22 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#23 {main}
+
+[previous exception] [object] (Illuminate\\Database\\SQLiteDatabaseDoesNotExistException(code: 0): Database file at path [employee_portal] does not exist. Ensure this is an absolute path to the database. at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connectors/SQLiteConnector.php:37)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(224): Illuminate\\Database\\Connectors\\SQLiteConnector->connect()
+#1 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->{closure:Illuminate\\Database\\Connectors\\ConnectionFactory::createPdoResolverWithoutHosts():224}()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1231): call_user_func()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(1267): Illuminate\\Database\\Connection->getPdo()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(512): Illuminate\\Database\\Connection->getReadPdo()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): Illuminate\\Database\\Connection->getPdoForSelect()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::select():398}()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(344): Illuminate\\Database\\Connection->select()
+#10 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(361): Illuminate\\Database\\Connection->selectOne()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/SQLiteBuilder.php(44): Illuminate\\Database\\Connection->scalar()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/DatabaseMigrationRepository.php(184): Illuminate\\Database\\Schema\\SQLiteBuilder->hasTable()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(742): Illuminate\\Database\\Migrations\\DatabaseMigrationRepository->repositoryExists()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/FreshCommand.php(68): Illuminate\\Database\\Migrations\\Migrator->repositoryExists()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(658): Illuminate\\Database\\Console\\Migrations\\FreshCommand->{closure:Illuminate\\Database\\Console\\Migrations\\FreshCommand::handle():67}()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/FreshCommand.php(67): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\FreshCommand->handle()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#19 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#23 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#25 /workspace/backend/vendor/symfony/console/Application.php(1092): Illuminate\\Console\\Command->run()
+#26 /workspace/backend/vendor/symfony/console/Application.php(341): Symfony\\Component\\Console\\Application->doRunCommand()
+#27 /workspace/backend/vendor/symfony/console/Application.php(192): Symfony\\Component\\Console\\Application->doRun()
+#28 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#29 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#30 {main}
+"} 
+[2025-08-26 09:40:29] local.INFO: Query executed: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as "exists" {"bindings":[],"time":0.14} 
+[2025-08-26 09:40:29] local.INFO: Query executed: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as "exists" {"bindings":[],"time":0.06} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "migrations" ("id" integer primary key autoincrement not null, "migration" varchar not null, "batch" integer not null) {"bindings":[],"time":14.95} 
+[2025-08-26 09:40:30] local.INFO: Query executed: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as "exists" {"bindings":[],"time":0.07} 
+[2025-08-26 09:40:30] local.INFO: Query executed: select "migration" from "migrations" order by "batch" asc, "migration" asc {"bindings":[],"time":0.04} 
+[2025-08-26 09:40:30] local.INFO: Query executed: select "migration" from "migrations" order by "batch" asc, "migration" asc {"bindings":[],"time":0.04} 
+[2025-08-26 09:40:30] local.INFO: Query executed: select max("batch") as aggregate from "migrations" {"bindings":[],"time":0.05} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "countries" ("id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "code" varchar not null, "phone_code" varchar not null, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":1.81} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "countries_is_active_index" on "countries" ("is_active") {"bindings":[],"time":2.06} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "countries_code_unique" on "countries" ("code") {"bindings":[],"time":1.75} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000001_create_countries_table",1],"time":1.33} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "cities" ("id" varchar not null, "country_id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("country_id") references "countries"("id") on delete cascade, primary key ("id")) {"bindings":[],"time":1.87} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "cities_country_id_is_active_index" on "cities" ("country_id", "is_active") {"bindings":[],"time":1.59} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000002_create_cities_table",1],"time":0.98} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "districts" ("id" varchar not null, "city_id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("city_id") references "cities"("id") on delete cascade, primary key ("id")) {"bindings":[],"time":0.84} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "districts_city_id_is_active_index" on "districts" ("city_id", "is_active") {"bindings":[],"time":0.64} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000003_create_districts_table",1],"time":0.62} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "nationalities" ("id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "code" varchar not null, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":0.79} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "nationalities_is_active_index" on "nationalities" ("is_active") {"bindings":[],"time":0.74} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "nationalities_code_unique" on "nationalities" ("code") {"bindings":[],"time":0.7} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000004_create_nationalities_table",1],"time":2.25} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "professions" ("id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "description_en" text, "description_ar" text, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":2.23} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "professions_is_active_index" on "professions" ("is_active") {"bindings":[],"time":1.96} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000005_create_professions_table",1],"time":1.92} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "agencies" ("id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "license_number" varchar not null, "contact_person" varchar not null, "phone" varchar not null, "email" varchar not null, "address" text not null, "country_id" varchar not null, "city_id" varchar not null, "status" varchar check ("status" in ('active', 'inactive', 'suspended')) not null default 'active', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("country_id") references "countries"("id"), foreign key("city_id") references "cities"("id"), primary key ("id")) {"bindings":[],"time":1.4} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "agencies_status_index" on "agencies" ("status") {"bindings":[],"time":1.16} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "agencies_license_number_unique" on "agencies" ("license_number") {"bindings":[],"time":1.13} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000006_create_agencies_table",1],"time":0.96} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "packages" ("id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "duration" varchar check ("duration" in ('Week', 'Month', 'Year', 'TwoYears')) not null, "price" numeric not null, "description_en" text, "description_ar" text, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":2.77} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "packages_is_active_duration_index" on "packages" ("is_active", "duration") {"bindings":[],"time":2.54} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000007_create_packages_table",1],"time":2.13} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "app_users" ("id" varchar not null, "name" varchar not null, "email" varchar not null, "phone" varchar not null, "user_type" varchar check ("user_type" in ('Internal', 'Customer', 'Agency')) not null, "agency_id" varchar, "is_active" tinyint(1) not null default '1', "email_verified_at" datetime, "phone_verified_at" datetime, "password" varchar, "remember_token" varchar, "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("agency_id") references "agencies"("id"), primary key ("id")) {"bindings":[],"time":2.8} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "app_users_user_type_is_active_index" on "app_users" ("user_type", "is_active") {"bindings":[],"time":1.9} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "app_users_phone_index" on "app_users" ("phone") {"bindings":[],"time":2.32} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "app_users_email_unique" on "app_users" ("email") {"bindings":[],"time":2.88} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "app_users_phone_unique" on "app_users" ("phone") {"bindings":[],"time":1.88} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000008_create_app_users_table",1],"time":1.55} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "app_roles" ("id" varchar not null, "name" varchar not null, "display_name" varchar not null, "description" text, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":2.92} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "app_roles_is_active_index" on "app_roles" ("is_active") {"bindings":[],"time":3.07} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000009_create_app_roles_table",1],"time":1.57} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "app_resources" ("id" varchar not null, "name" varchar not null, "display_name" varchar not null, "description" text, "is_active" tinyint(1) not null default '1', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":2.39} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "app_resources_is_active_index" on "app_resources" ("is_active") {"bindings":[],"time":1.88} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000010_create_app_resources_table",1],"time":2.24} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "app_user_roles" ("id" varchar not null, "app_user_id" varchar not null, "app_role_id" varchar not null, "created_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("app_user_id") references "app_users"("id") on delete cascade, foreign key("app_role_id") references "app_roles"("id") on delete cascade, primary key ("id")) {"bindings":[],"time":2.61} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "app_user_roles_app_user_id_app_role_id_unique" on "app_user_roles" ("app_user_id", "app_role_id") {"bindings":[],"time":2.09} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000011_create_app_user_roles_table",1],"time":2.0} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "role_permissions" ("id" varchar not null, "app_role_id" varchar not null, "app_resource_id" varchar not null, "action" varchar check ("action" in ('Create', 'Read', 'Update', 'Delete', 'Import', 'Export')) not null, "created_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("app_role_id") references "app_roles"("id") on delete cascade, foreign key("app_resource_id") references "app_resources"("id") on delete cascade, primary key ("id")) {"bindings":[],"time":2.34} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "role_permissions_app_role_id_app_resource_id_action_unique" on "role_permissions" ("app_role_id", "app_resource_id", "action") {"bindings":[],"time":2.03} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000012_create_role_permissions_table",1],"time":1.82} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "customers" ("id" varchar not null, "app_user_id" varchar not null, "company_name_en" varchar, "company_name_ar" varchar, "contact_person" varchar not null, "phone" varchar not null, "email" varchar not null, "status" varchar check ("status" in ('active', 'inactive', 'suspended')) not null default 'active', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("app_user_id") references "app_users"("id"), primary key ("id")) {"bindings":[],"time":1.06} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "customers_status_index" on "customers" ("status") {"bindings":[],"time":0.66} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000013_create_customers_table",1],"time":1.03} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "customer_addresses" ("id" varchar not null, "customer_id" varchar not null, "title" varchar not null, "city_id" varchar not null, "district_id" varchar not null, "address_line" text not null, "latitude" numeric, "longitude" numeric, "status" varchar check ("status" in ('active', 'inactive')) not null default 'active', "is_default" tinyint(1) not null default '0', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("customer_id") references "customers"("id") on delete cascade, foreign key("city_id") references "cities"("id"), foreign key("district_id") references "districts"("id"), primary key ("id")) {"bindings":[],"time":1.29} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "customer_addresses_customer_id_status_index" on "customer_addresses" ("customer_id", "status") {"bindings":[],"time":0.85} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000014_create_customer_addresses_table",1],"time":0.46} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "workers" ("id" varchar not null, "name_en" varchar not null, "name_ar" varchar not null, "date_of_birth" date not null, "nationality_id" varchar not null, "profession_id" varchar not null, "agency_id" varchar not null, "recruitment_request_id" varchar, "status" varchar check ("status" in ('Ready', 'ReservedAwaitingContract', 'ReservedAwaitingPayment', 'AssignedToContract')) not null default 'Ready', "current_contract_id" varchar, "photo_file_id" varchar, "experience_summary" text, "experience_years" integer not null default '0', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("nationality_id") references "nationalities"("id"), foreign key("profession_id") references "professions"("id"), foreign key("agency_id") references "agencies"("id"), foreign key("recruitment_request_id") references "recruitment_requests"("id"), foreign key("current_contract_id") references "contracts"("id"), primary key ("id")) {"bindings":[],"time":0.83} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "workers_status_nationality_id_profession_id_index" on "workers" ("status", "nationality_id", "profession_id") {"bindings":[],"time":0.84} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "workers_agency_id_index" on "workers" ("agency_id") {"bindings":[],"time":2.83} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000015_create_workers_table",1],"time":1.37} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "recruitment_requests" ("id" varchar not null, "country_id" varchar not null, "nationality_id" varchar not null, "profession_id" varchar not null, "quantity" integer not null, "sla_days" integer not null, "status" varchar check ("status" in ('Open', 'PartiallyAwarded', 'FullyAwarded')) not null default 'Open', "requirements" text, "deadline" date not null, "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("country_id") references "countries"("id"), foreign key("nationality_id") references "nationalities"("id"), foreign key("profession_id") references "professions"("id"), primary key ("id")) {"bindings":[],"time":2.27} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "recruitment_requests_status_country_id_nationality_id_profession_id_index" on "recruitment_requests" ("status", "country_id", "nationality_id", "profession_id") {"bindings":[],"time":2.98} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000016_create_recruitment_requests_table",1],"time":1.76} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "supplier_proposals" ("id" varchar not null, "request_id" varchar not null, "agency_id" varchar not null, "offered_qty" integer not null, "unit_price" numeric not null, "lead_time_days" integer, "valid_until" datetime, "notes" text, "attachment_file_id" varchar, "status" varchar check ("status" in ('Submitted', 'Reviewed', 'Approved', 'PartiallyApproved', 'Rejected', 'Cancelled')) not null default 'Submitted', "approved_qty" integer not null default '0', "rejection_reason" text, "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("request_id") references "recruitment_requests"("id") on delete cascade, foreign key("agency_id") references "agencies"("id"), primary key ("id")) {"bindings":[],"time":2.99} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "supplier_proposals_request_id_agency_id_index" on "supplier_proposals" ("request_id", "agency_id") {"bindings":[],"time":2.58} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "supplier_proposals_status_index" on "supplier_proposals" ("status") {"bindings":[],"time":1.9} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000017_create_supplier_proposals_table",1],"time":1.84} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "contracts" ("id" varchar not null, "customer_id" varchar not null, "worker_id" varchar not null, "package_id" varchar not null, "start_date" date not null, "end_date" date not null, "status" varchar check ("status" in ('Draft', 'AwaitingPayment', 'Active', 'Cancelled', 'Terminated')) not null default 'Draft', "signed_at" datetime, "reservation_id" varchar, "total_amount" numeric not null, "terms_conditions" text, "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("customer_id") references "customers"("id"), foreign key("worker_id") references "workers"("id"), foreign key("package_id") references "packages"("id"), foreign key("reservation_id") references "worker_reservations"("id"), primary key ("id")) {"bindings":[],"time":1.23} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "contracts_status_customer_id_index" on "contracts" ("status", "customer_id") {"bindings":[],"time":0.89} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "contracts_worker_id_index" on "contracts" ("worker_id") {"bindings":[],"time":0.69} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000018_create_contracts_table",1],"time":0.58} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "worker_reservations" ("id" varchar not null, "worker_id" varchar not null, "customer_id" varchar not null, "contract_id" varchar, "state" varchar check ("state" in ('AwaitingContract', 'AwaitingPayment', 'Completed', 'Cancelled')) not null default 'AwaitingContract', "expires_at" datetime not null, "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("worker_id") references "workers"("id"), foreign key("customer_id") references "customers"("id"), foreign key("contract_id") references "contracts"("id"), primary key ("id")) {"bindings":[],"time":0.86} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "worker_reservations_worker_id_state_index" on "worker_reservations" ("worker_id", "state") {"bindings":[],"time":0.77} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "worker_reservations_expires_at_index" on "worker_reservations" ("expires_at") {"bindings":[],"time":2.4} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "worker_reservations_customer_id_index" on "worker_reservations" ("customer_id") {"bindings":[],"time":2.16} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000019_create_worker_reservations_table",1],"time":1.29} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "invoices" ("id" varchar not null, "contract_id" varchar not null, "amount" numeric not null, "due_date" date not null, "status" varchar check ("status" in ('Unpaid', 'Paid', 'Overdue')) not null default 'Unpaid', "erp_ref" varchar, "notes" text, "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("contract_id") references "contracts"("id"), primary key ("id")) {"bindings":[],"time":2.81} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "invoices_status_due_date_index" on "invoices" ("status", "due_date") {"bindings":[],"time":2.6} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "invoices_contract_id_index" on "invoices" ("contract_id") {"bindings":[],"time":1.68} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000020_create_invoices_table",1],"time":2.5} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "payments" ("id" varchar not null, "invoice_id" varchar not null, "amount" numeric not null, "paid_at" datetime not null, "method" varchar check ("method" in ('bank_transfer', 'credit_card', 'cash', 'check')) not null, "erp_ref" varchar, "notes" text, "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("invoice_id") references "invoices"("id"), primary key ("id")) {"bindings":[],"time":2.18} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "payments_invoice_id_index" on "payments" ("invoice_id") {"bindings":[],"time":1.27} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "payments_paid_at_index" on "payments" ("paid_at") {"bindings":[],"time":0.95} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000021_create_payments_table",1],"time":0.89} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "auth_otps" ("id" varchar not null, "phone" varchar not null, "code_hash" varchar not null, "expires_at" datetime not null, "attempts" integer not null default '0', "is_used" tinyint(1) not null default '0', "ip_address" varchar, "user_agent" text, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":0.89} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "auth_otps_phone_expires_at_index" on "auth_otps" ("phone", "expires_at") {"bindings":[],"time":0.61} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "auth_otps_is_used_index" on "auth_otps" ("is_used") {"bindings":[],"time":0.57} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000022_create_auth_otps_table",1],"time":0.47} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "system_settings" ("id" varchar not null, "key" varchar not null, "value" text not null, "type" varchar not null default 'string', "description" text, "is_public" tinyint(1) not null default '0', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":2.35} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "system_settings_key_index" on "system_settings" ("key") {"bindings":[],"time":1.74} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create unique index "system_settings_key_unique" on "system_settings" ("key") {"bindings":[],"time":0.92} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000023_create_system_settings_table",1],"time":2.34} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create table "audit_logs" ("id" varchar not null, "user_id" varchar, "action" varchar not null, "entity" varchar not null, "entity_id" varchar, "diff_json" text, "ip_address" varchar, "user_agent" text, "created_at" datetime, "updated_at" datetime, primary key ("id")) {"bindings":[],"time":1.01} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "audit_logs_user_id_index" on "audit_logs" ("user_id") {"bindings":[],"time":0.64} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "audit_logs_entity_entity_id_index" on "audit_logs" ("entity", "entity_id") {"bindings":[],"time":0.69} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "audit_logs_action_index" on "audit_logs" ("action") {"bindings":[],"time":0.94} 
+[2025-08-26 09:40:30] local.INFO: Query executed: create index "audit_logs_created_at_index" on "audit_logs" ("created_at") {"bindings":[],"time":0.74} 
+[2025-08-26 09:40:30] local.INFO: Query executed: insert into "migrations" ("migration", "batch") values (?, ?) {"bindings":["2024_01_01_000024_create_audit_logs_table",1],"time":0.47} 
+[2025-08-26 09:40:30] local.ERROR: SQLSTATE[HY000]: General error: 1 table "customer_addresses" already exists (Connection: sqlite, SQL: create table "customer_addresses" ("id" varchar not null, "customer_id" varchar not null, "address_name" varchar not null, "city_id" varchar not null, "district_id" varchar not null, "full_address" text not null, "latitude" numeric, "longitude" numeric, "is_default" tinyint(1) not null default '0', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("customer_id") references "customers"("id") on delete cascade, foreign key("city_id") references "cities"("id"), foreign key("district_id") references "districts"("id"), primary key ("id"))) {"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1 table \"customer_addresses\" already exists (Connection: sqlite, SQL: create table \"customer_addresses\" (\"id\" varchar not null, \"customer_id\" varchar not null, \"address_name\" varchar not null, \"city_id\" varchar not null, \"district_id\" varchar not null, \"full_address\" text not null, \"latitude\" numeric, \"longitude\" numeric, \"is_default\" tinyint(1) not null default '0', \"created_by\" varchar, \"modified_by\" varchar, \"created_at\" datetime, \"updated_at\" datetime, foreign key(\"customer_id\") references \"customers\"(\"id\") on delete cascade, foreign key(\"city_id\") references \"cities\"(\"id\"), foreign key(\"district_id\") references \"districts\"(\"id\"), primary key (\"id\"))) at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(118): Illuminate\\Database\\Connection->statement()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(564): Illuminate\\Database\\Schema\\Blueprint->build()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(418): Illuminate\\Database\\Schema\\Builder->build()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\\Database\\Schema\\Builder->create()
+#6 /workspace/backend/database/migrations/2024_01_01_000025_create_customer_addresses_table.php(11): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(507): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(432): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(441): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runMigration():428}()
+#10 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(40): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runUp():244}()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(798): Illuminate\\Console\\View\\Components\\Task->render()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->write()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(211): Illuminate\\Database\\Migrations\\Migrator->runUp()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(138): Illuminate\\Database\\Migrations\\Migrator->runPending()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(117): Illuminate\\Database\\Migrations\\Migrator->run()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(658): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->{closure:Illuminate\\Database\\Console\\Migrations\\MigrateCommand::runMigrations():110}()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(110): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#19 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(89): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->runMigrations()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#23 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#25 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#26 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#27 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#28 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(68): Illuminate\\Console\\Command->run()
+#29 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(29): Illuminate\\Console\\Command->runCommand()
+#30 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/FreshCommand.php(82): Illuminate\\Console\\Command->call()
+#31 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\FreshCommand->handle()
+#32 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#33 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#34 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#35 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#36 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#37 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#38 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#39 /workspace/backend/vendor/symfony/console/Application.php(1092): Illuminate\\Console\\Command->run()
+#40 /workspace/backend/vendor/symfony/console/Application.php(341): Symfony\\Component\\Console\\Application->doRunCommand()
+#41 /workspace/backend/vendor/symfony/console/Application.php(192): Symfony\\Component\\Console\\Application->doRun()
+#42 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#43 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#44 {main}
+
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 1 table \"customer_addresses\" already exists at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:565)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(565): PDO->prepare()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::statement():560}()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(118): Illuminate\\Database\\Connection->statement()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(564): Illuminate\\Database\\Schema\\Blueprint->build()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(418): Illuminate\\Database\\Schema\\Builder->build()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\\Database\\Schema\\Builder->create()
+#8 /workspace/backend/database/migrations/2024_01_01_000025_create_customer_addresses_table.php(11): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(507): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(432): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(441): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runMigration():428}()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(40): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runUp():244}()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(798): Illuminate\\Console\\View\\Components\\Task->render()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->write()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(211): Illuminate\\Database\\Migrations\\Migrator->runUp()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(138): Illuminate\\Database\\Migrations\\Migrator->runPending()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(117): Illuminate\\Database\\Migrations\\Migrator->run()
+#19 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(658): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->{closure:Illuminate\\Database\\Console\\Migrations\\MigrateCommand::runMigrations():110}()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(110): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(89): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->runMigrations()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#23 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#25 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#26 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#27 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#28 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#29 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#30 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(68): Illuminate\\Console\\Command->run()
+#31 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Concerns/CallsCommands.php(29): Illuminate\\Console\\Command->runCommand()
+#32 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/FreshCommand.php(82): Illuminate\\Console\\Command->call()
+#33 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\FreshCommand->handle()
+#34 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#35 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#36 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#37 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#38 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#39 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#40 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#41 /workspace/backend/vendor/symfony/console/Application.php(1092): Illuminate\\Console\\Command->run()
+#42 /workspace/backend/vendor/symfony/console/Application.php(341): Symfony\\Component\\Console\\Application->doRunCommand()
+#43 /workspace/backend/vendor/symfony/console/Application.php(192): Symfony\\Component\\Console\\Application->doRun()
+#44 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#45 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#46 {main}
+"} 
+[2025-08-26 09:40:39] local.INFO: Query executed: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as "exists" {"bindings":[],"time":0.11} 
+[2025-08-26 09:40:39] local.INFO: Query executed: select "migration" from "migrations" order by "batch" asc, "migration" asc {"bindings":[],"time":0.07} 
+[2025-08-26 09:40:39] local.INFO: Query executed: select "batch", "migration" from "migrations" order by "batch" asc, "migration" asc {"bindings":[],"time":0.04} 
+[2025-08-26 09:40:39] local.ERROR: SQLSTATE[HY000]: General error: 1 no such table: telescope_entries (Connection: sqlite, SQL: insert into "telescope_entries" ("batch_id", "content", "created_at", "family_hash", "type", "uuid") values (9fb97eba-6a55-4487-81e1-6b44c398624d, {"connection":"sqlite","driver":"sqlite","bindings":[],"sql":"select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as \"exists\"","time":"0.11","slow":false,"file":"\/workspace\/backend\/artisan","line":35,"hash":"8bc9c24d8a065ac8726bcfc1c1c7ff83","hostname":"cursor"}, 2025-08-26 09:40:39, ?, query, 9fb97eba-6328-4414-b552-de477728e933), (9fb97eba-6a55-4487-81e1-6b44c398624d, {"connection":"sqlite","driver":"sqlite","bindings":[],"sql":"select \"migration\" from \"migrations\" order by \"batch\" asc, \"migration\" asc","time":"0.07","slow":false,"file":"\/workspace\/backend\/artisan","line":35,"hash":"84af29f5c40ba2eeda76663cdfcee4df","hostname":"cursor"}, 2025-08-26 09:40:39, ?, query, 9fb97eba-64c6-4ae1-9746-d4feef935c36), (9fb97eba-6a55-4487-81e1-6b44c398624d, {"connection":"sqlite","driver":"sqlite","bindings":[],"sql":"select \"batch\", \"migration\" from \"migrations\" order by \"batch\" asc, \"migration\" asc","time":"0.04","slow":false,"file":"\/workspace\/backend\/artisan","line":35,"hash":"1b6c8ec237e77c97928a842aa3b464d4","hostname":"cursor"}, 2025-08-26 09:40:39, ?, query, 9fb97eba-64e5-4a37-bff5-8816af7c924d), (9fb97eba-6a55-4487-81e1-6b44c398624d, {"command":"migrate:status","exit_code":0,"arguments":{"command":"migrate:status"},"options":{"database":null,"pending":false,"path":[],"realpath":false,"help":false,"silent":false,"quiet":false,"verbose":false,"version":false,"ansi":null,"no-interaction":false,"env":null},"hostname":"cursor"}, 2025-08-26 09:40:39, ?, command, 9fb97eba-6a09-4a25-96c2-34d47caa4a7a)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1 no such table: telescope_entries (Connection: sqlite, SQL: insert into \"telescope_entries\" (\"batch_id\", \"content\", \"created_at\", \"family_hash\", \"type\", \"uuid\") values (9fb97eba-6a55-4487-81e1-6b44c398624d, {\"connection\":\"sqlite\",\"driver\":\"sqlite\",\"bindings\":[],\"sql\":\"select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as \\\"exists\\\"\",\"time\":\"0.11\",\"slow\":false,\"file\":\"\\/workspace\\/backend\\/artisan\",\"line\":35,\"hash\":\"8bc9c24d8a065ac8726bcfc1c1c7ff83\",\"hostname\":\"cursor\"}, 2025-08-26 09:40:39, ?, query, 9fb97eba-6328-4414-b552-de477728e933), (9fb97eba-6a55-4487-81e1-6b44c398624d, {\"connection\":\"sqlite\",\"driver\":\"sqlite\",\"bindings\":[],\"sql\":\"select \\\"migration\\\" from \\\"migrations\\\" order by \\\"batch\\\" asc, \\\"migration\\\" asc\",\"time\":\"0.07\",\"slow\":false,\"file\":\"\\/workspace\\/backend\\/artisan\",\"line\":35,\"hash\":\"84af29f5c40ba2eeda76663cdfcee4df\",\"hostname\":\"cursor\"}, 2025-08-26 09:40:39, ?, query, 9fb97eba-64c6-4ae1-9746-d4feef935c36), (9fb97eba-6a55-4487-81e1-6b44c398624d, {\"connection\":\"sqlite\",\"driver\":\"sqlite\",\"bindings\":[],\"sql\":\"select \\\"batch\\\", \\\"migration\\\" from \\\"migrations\\\" order by \\\"batch\\\" asc, \\\"migration\\\" asc\",\"time\":\"0.04\",\"slow\":false,\"file\":\"\\/workspace\\/backend\\/artisan\",\"line\":35,\"hash\":\"1b6c8ec237e77c97928a842aa3b464d4\",\"hostname\":\"cursor\"}, 2025-08-26 09:40:39, ?, query, 9fb97eba-64e5-4a37-bff5-8816af7c924d), (9fb97eba-6a55-4487-81e1-6b44c398624d, {\"command\":\"migrate:status\",\"exit_code\":0,\"arguments\":{\"command\":\"migrate:status\"},\"options\":{\"database\":null,\"pending\":false,\"path\":[],\"realpath\":false,\"help\":false,\"silent\":false,\"quiet\":false,\"verbose\":false,\"version\":false,\"ansi\":null,\"no-interaction\":false,\"env\":null},\"hostname\":\"cursor\"}, 2025-08-26 09:40:39, ?, command, 9fb97eba-6a09-4a25-96c2-34d47caa4a7a)) at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(524): Illuminate\\Database\\Connection->statement()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3717): Illuminate\\Database\\Connection->insert()
+#4 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(145): Illuminate\\Database\\Query\\Builder->insert()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(261): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::store():144}()
+#6 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(144): Illuminate\\Support\\Collection->each()
+#7 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(664): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->store()
+#8 [internal function]: Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\Telescope::store():656}()
+#9 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(289): call_user_func()
+#10 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(656): Laravel\\Telescope\\Telescope::withoutRecording()
+#11 /workspace/backend/vendor/laravel/telescope/src/ListensForStorageOpportunities.php(65): Laravel\\Telescope\\Telescope::store()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\ListensForStorageOpportunities::storeEntriesBeforeTermination():64}()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(83): Illuminate\\Container\\Util::unwrapIfClosure()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1452): Illuminate\\Container\\Container->call()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(219): Illuminate\\Foundation\\Application->terminate()
+#19 /workspace/backend/artisan(51): Illuminate\\Foundation\\Console\\Kernel->terminate()
+#20 {main}
+
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 1 no such table: telescope_entries at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:565)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(565): PDO->prepare()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::statement():560}()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(524): Illuminate\\Database\\Connection->statement()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3717): Illuminate\\Database\\Connection->insert()
+#6 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(145): Illuminate\\Database\\Query\\Builder->insert()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(261): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::store():144}()
+#8 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(144): Illuminate\\Support\\Collection->each()
+#9 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(664): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->store()
+#10 [internal function]: Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\Telescope::store():656}()
+#11 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(289): call_user_func()
+#12 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(656): Laravel\\Telescope\\Telescope::withoutRecording()
+#13 /workspace/backend/vendor/laravel/telescope/src/ListensForStorageOpportunities.php(65): Laravel\\Telescope\\Telescope::store()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\ListensForStorageOpportunities::storeEntriesBeforeTermination():64}()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(83): Illuminate\\Container\\Util::unwrapIfClosure()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#19 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1452): Illuminate\\Container\\Container->call()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(219): Illuminate\\Foundation\\Application->terminate()
+#21 /workspace/backend/artisan(51): Illuminate\\Foundation\\Console\\Kernel->terminate()
+#22 {main}
+"} 
+[2025-08-26 09:40:49] local.INFO: Query executed: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as "exists" {"bindings":[],"time":0.1} 
+[2025-08-26 09:40:49] local.INFO: Query executed: select exists (select 1 from sqlite_master where name = 'migrations' and type = 'table') as "exists" {"bindings":[],"time":0.06} 
+[2025-08-26 09:40:49] local.INFO: Query executed: select "migration" from "migrations" order by "batch" asc, "migration" asc {"bindings":[],"time":0.05} 
+[2025-08-26 09:40:49] local.INFO: Query executed: select "migration" from "migrations" order by "batch" asc, "migration" asc {"bindings":[],"time":0.04} 
+[2025-08-26 09:40:49] local.INFO: Query executed: select max("batch") as aggregate from "migrations" {"bindings":[],"time":0.05} 
+[2025-08-26 09:40:49] local.ERROR: SQLSTATE[HY000]: General error: 1 table "customer_addresses" already exists (Connection: sqlite, SQL: create table "customer_addresses" ("id" varchar not null, "customer_id" varchar not null, "address_name" varchar not null, "city_id" varchar not null, "district_id" varchar not null, "full_address" text not null, "latitude" numeric, "longitude" numeric, "is_default" tinyint(1) not null default '0', "created_by" varchar, "modified_by" varchar, "created_at" datetime, "updated_at" datetime, foreign key("customer_id") references "customers"("id") on delete cascade, foreign key("city_id") references "cities"("id"), foreign key("district_id") references "districts"("id"), primary key ("id"))) {"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1 table \"customer_addresses\" already exists (Connection: sqlite, SQL: create table \"customer_addresses\" (\"id\" varchar not null, \"customer_id\" varchar not null, \"address_name\" varchar not null, \"city_id\" varchar not null, \"district_id\" varchar not null, \"full_address\" text not null, \"latitude\" numeric, \"longitude\" numeric, \"is_default\" tinyint(1) not null default '0', \"created_by\" varchar, \"modified_by\" varchar, \"created_at\" datetime, \"updated_at\" datetime, foreign key(\"customer_id\") references \"customers\"(\"id\") on delete cascade, foreign key(\"city_id\") references \"cities\"(\"id\"), foreign key(\"district_id\") references \"districts\"(\"id\"), primary key (\"id\"))) at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(118): Illuminate\\Database\\Connection->statement()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(564): Illuminate\\Database\\Schema\\Blueprint->build()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(418): Illuminate\\Database\\Schema\\Builder->build()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\\Database\\Schema\\Builder->create()
+#6 /workspace/backend/database/migrations/2024_01_01_000025_create_customer_addresses_table.php(11): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(507): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(432): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(441): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runMigration():428}()
+#10 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(40): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runUp():244}()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(798): Illuminate\\Console\\View\\Components\\Task->render()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->write()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(211): Illuminate\\Database\\Migrations\\Migrator->runUp()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(138): Illuminate\\Database\\Migrations\\Migrator->runPending()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(117): Illuminate\\Database\\Migrations\\Migrator->run()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(658): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->{closure:Illuminate\\Database\\Console\\Migrations\\MigrateCommand::runMigrations():110}()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(110): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#19 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(89): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->runMigrations()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#23 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#25 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#26 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#27 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#28 /workspace/backend/vendor/symfony/console/Application.php(1092): Illuminate\\Console\\Command->run()
+#29 /workspace/backend/vendor/symfony/console/Application.php(341): Symfony\\Component\\Console\\Application->doRunCommand()
+#30 /workspace/backend/vendor/symfony/console/Application.php(192): Symfony\\Component\\Console\\Application->doRun()
+#31 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#32 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#33 {main}
+
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 1 table \"customer_addresses\" already exists at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:565)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(565): PDO->prepare()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::statement():560}()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(118): Illuminate\\Database\\Connection->statement()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(564): Illuminate\\Database\\Schema\\Blueprint->build()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(418): Illuminate\\Database\\Schema\\Builder->build()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\\Database\\Schema\\Builder->create()
+#8 /workspace/backend/database/migrations/2024_01_01_000025_create_customer_addresses_table.php(11): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(507): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(432): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(441): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runMigration():428}()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(40): Illuminate\\Database\\Migrations\\Migrator->{closure:Illuminate\\Database\\Migrations\\Migrator::runUp():244}()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(798): Illuminate\\Console\\View\\Components\\Task->render()
+#15 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(244): Illuminate\\Database\\Migrations\\Migrator->write()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(211): Illuminate\\Database\\Migrations\\Migrator->runUp()
+#17 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(138): Illuminate\\Database\\Migrations\\Migrator->runPending()
+#18 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(117): Illuminate\\Database\\Migrations\\Migrator->run()
+#19 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(658): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->{closure:Illuminate\\Database\\Console\\Migrations\\MigrateCommand::runMigrations():110}()
+#20 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(110): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#21 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(89): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->runMigrations()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#23 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#25 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#26 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#27 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#28 /workspace/backend/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#29 /workspace/backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#30 /workspace/backend/vendor/symfony/console/Application.php(1092): Illuminate\\Console\\Command->run()
+#31 /workspace/backend/vendor/symfony/console/Application.php(341): Symfony\\Component\\Console\\Application->doRunCommand()
+#32 /workspace/backend/vendor/symfony/console/Application.php(192): Symfony\\Component\\Console\\Application->doRun()
+#33 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#34 /workspace/backend/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#35 {main}
+"} 
+[2025-08-26 09:40:49] local.ERROR: SQLSTATE[HY000]: General error: 1 no such table: telescope_entries (Connection: sqlite, SQL: select count(*) as aggregate from "telescope_entries" where "type" = exception and "family_hash" = 489827d2810c2fa655ebb4b41fb9c456) {"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1 no such table: telescope_entries (Connection: sqlite, SQL: select count(*) as aggregate from \"telescope_entries\" where \"type\" = exception and \"family_hash\" = 489827d2810c2fa655ebb4b41fb9c456) at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:825)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->{closure:Illuminate\\Database\\Query\\Builder::get():3090}()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3603): Illuminate\\Database\\Query\\Builder->get()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3531): Illuminate\\Database\\Query\\Builder->aggregate()
+#8 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(123): Illuminate\\Database\\Query\\Builder->count()
+#9 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(165): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->countExceptionOccurences()
+#10 [internal function]: Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::storeExceptions():163}:164}()
+#11 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Arr.php(609): array_map()
+#12 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Collection.php(799): Illuminate\\Support\\Arr::map()
+#13 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(164): Illuminate\\Support\\Collection->map()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(261): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::storeExceptions():163}()
+#15 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(163): Illuminate\\Support\\Collection->each()
+#16 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(140): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->storeExceptions()
+#17 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(664): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->store()
+#18 [internal function]: Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\Telescope::store():656}()
+#19 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(289): call_user_func()
+#20 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(656): Laravel\\Telescope\\Telescope::withoutRecording()
+#21 /workspace/backend/vendor/laravel/telescope/src/ListensForStorageOpportunities.php(65): Laravel\\Telescope\\Telescope::store()
+#22 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\ListensForStorageOpportunities::storeEntriesBeforeTermination():64}()
+#23 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(83): Illuminate\\Container\\Util::unwrapIfClosure()
+#25 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#26 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#27 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1452): Illuminate\\Container\\Container->call()
+#28 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(219): Illuminate\\Foundation\\Application->terminate()
+#29 /workspace/backend/artisan(51): Illuminate\\Foundation\\Console\\Kernel->terminate()
+#30 {main}
+
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 1 no such table: telescope_entries at /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:407)
+[stacktrace]
+#0 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(407): PDO->prepare()
+#1 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->{closure:Illuminate\\Database\\Connection::select():398}()
+#2 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\\Database\\Connection->run()
+#4 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3106): Illuminate\\Database\\Connection->select()
+#5 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3091): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3676): Illuminate\\Database\\Query\\Builder->{closure:Illuminate\\Database\\Query\\Builder::get():3090}()
+#7 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3090): Illuminate\\Database\\Query\\Builder->onceWithColumns()
+#8 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3603): Illuminate\\Database\\Query\\Builder->get()
+#9 /workspace/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3531): Illuminate\\Database\\Query\\Builder->aggregate()
+#10 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(123): Illuminate\\Database\\Query\\Builder->count()
+#11 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(165): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->countExceptionOccurences()
+#12 [internal function]: Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::storeExceptions():163}:164}()
+#13 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Arr.php(609): array_map()
+#14 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Collection.php(799): Illuminate\\Support\\Arr::map()
+#15 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(164): Illuminate\\Support\\Collection->map()
+#16 /workspace/backend/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(261): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->{closure:Laravel\\Telescope\\Storage\\DatabaseEntriesRepository::storeExceptions():163}()
+#17 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(163): Illuminate\\Support\\Collection->each()
+#18 /workspace/backend/vendor/laravel/telescope/src/Storage/DatabaseEntriesRepository.php(140): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->storeExceptions()
+#19 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(664): Laravel\\Telescope\\Storage\\DatabaseEntriesRepository->store()
+#20 [internal function]: Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\Telescope::store():656}()
+#21 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(289): call_user_func()
+#22 /workspace/backend/vendor/laravel/telescope/src/Telescope.php(656): Laravel\\Telescope\\Telescope::withoutRecording()
+#23 /workspace/backend/vendor/laravel/telescope/src/ListensForStorageOpportunities.php(65): Laravel\\Telescope\\Telescope::store()
+#24 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Telescope\\Telescope::{closure:Laravel\\Telescope\\ListensForStorageOpportunities::storeEntriesBeforeTermination():64}()
+#25 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#26 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(83): Illuminate\\Container\\Util::unwrapIfClosure()
+#27 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#28 /workspace/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#29 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1452): Illuminate\\Container\\Container->call()
+#30 /workspace/backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(219): Illuminate\\Foundation\\Application->terminate()
+#31 /workspace/backend/artisan(51): Illuminate\\Foundation\\Console\\Kernel->terminate()
+#32 {main}
+"} 
