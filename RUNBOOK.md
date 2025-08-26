@@ -1,164 +1,83 @@
-# Worker Management System - Run Book
+# Employee Portal - Complete Runbook
 
 ## 🚀 Quick Start Guide
 
-### Prerequisites Check
+### Prerequisites
+- **Node.js** 18+ and npm 9+
+- **PHP** 8.3+
+- **SQL Server** 2019/2022 with sqlsrv drivers
+- **Composer** 2.0+
+- **Redis** (for queues and caching)
+- **Git**
+
+### 1. Initial Setup
+
 ```bash
-# Check Node.js version (requires 18+)
-node --version
-
-# Check npm version (requires 9+)
-npm --version
-
-# Check PHP version (requires 8.3+)
-php --version
-
-# Check Composer version (requires 2.0+)
-composer --version
-
-# Check if SQL Server is accessible
-sqlcmd -S localhost -U sa -P YourStrongPassword123! -Q "SELECT @@VERSION"
-```
-
-## 📋 Step-by-Step Setup
-
-### 1. Database Setup
-
-#### SQL Server Installation & Configuration
-
-**Ubuntu/Debian:**
-```bash
-# Install SQL Server
-curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
-apt-get update
-ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 unixodbc-dev
-
-# Install PHP SQL Server drivers
-sudo apt-get install php-sqlsrv php-pdo-sqlsrv
-
-# Restart PHP-FPM
-sudo systemctl restart php8.3-fpm
-```
-
-**CentOS/RHEL:**
-```bash
-# Install SQL Server
-sudo yum install -y mssql-tools unixODBC-devel
-
-# Install PHP SQL Server drivers
-sudo yum install php-sqlsrv php-pdo-sqlsrv
-
-# Restart PHP-FPM
-sudo systemctl restart php-fpm
-```
-
-#### Create Database and User
-```sql
--- Connect to SQL Server as SA
-sqlcmd -S localhost -U sa -P YourStrongPassword123!
-
--- Create database
-CREATE DATABASE worker_management;
-GO
-
--- Create login and user
-CREATE LOGIN worker_user WITH PASSWORD = 'YourStrongPassword123!';
-GO
-
-USE worker_management;
-GO
-
-CREATE USER worker_user FOR LOGIN worker_user;
-GO
-
--- Grant permissions
-ALTER ROLE db_owner ADD MEMBER worker_user;
-GO
-
--- Verify
-SELECT name FROM sys.databases WHERE name = 'worker_management';
-GO
-```
-
-### 2. Redis Setup
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get install redis-server
-sudo systemctl enable redis-server
-sudo systemctl start redis-server
-```
-
-**CentOS/RHEL:**
-```bash
-sudo yum install redis
-sudo systemctl enable redis
-sudo systemctl start redis
-```
-
-**Test Redis:**
-```bash
-redis-cli ping
-# Should return: PONG
-```
-
-### 3. Application Setup
-
-#### Clone and Install
-```bash
-# Clone repository
+# Clone the repository
 git clone <repository-url>
-cd worker-management-system
+cd employee-portal-monorepo
 
 # Install all dependencies
 npm run install:all
+
+# Setup backend environment
+cd backend
+cp .env.example .env
+# Edit .env with your database credentials
+
+# Setup frontend environment
+cd ../frontend
+cp .env.example .env
+# Edit .env with your API base URL
+```
+
+### 2. Database Configuration
+
+#### SQL Server Setup
+```sql
+-- Create database
+CREATE DATABASE employee_portal;
+GO
+
+-- Create login and user
+CREATE LOGIN portal_user WITH PASSWORD = 'YourStrongPassword123!';
+GO
+
+USE employee_portal;
+GO
+
+CREATE USER portal_user FOR LOGIN portal_user;
+GO
+
+-- Grant permissions
+ALTER ROLE db_owner ADD MEMBER portal_user;
+GO
 ```
 
 #### Environment Configuration
-```bash
-# Copy environment files
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
-
-# Edit backend environment
-nano backend/.env
-```
-
-**Required backend/.env changes:**
 ```env
-APP_NAME="Worker Management System"
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-# Database
+# Backend .env
 DB_CONNECTION=sqlsrv
-DB_HOST=127.0.0.1
+DB_HOST=your-sql-server
 DB_PORT=1433
-DB_DATABASE=worker_management
-DB_USERNAME=worker_user
+DB_DATABASE=employee_portal
+DB_USERNAME=portal_user
 DB_PASSWORD=YourStrongPassword123!
 
-# Redis
+# JWT Configuration
+JWT_SECRET=your-jwt-secret-key-here
+JWT_TTL=30
+JWT_REFRESH_TTL=1440
+
+# Redis Configuration
 REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
 REDIS_PORT=6379
-
-# Queue
 QUEUE_CONNECTION=redis
-
-# JWT
-JWT_SECRET=your-super-secret-jwt-key-here
-JWT_TTL=1800
-
-# System Settings
-RESERVATION_TIMEOUT_CREATE=300
-RESERVATION_TIMEOUT_PAY=600
-OTP_EXPIRY=300
-OTP_MAX_ATTEMPTS=3
 ```
 
-#### Backend Initialization
+### 3. Backend Setup
+
 ```bash
 cd backend
 
@@ -169,52 +88,129 @@ php artisan key:generate
 php artisan jwt:secret
 
 # Run migrations
-php artisan migrate
+php artisan migrate:fresh
 
-# Seed database
+# Seed database with initial data
 php artisan db:seed
 
 # Create storage link
 php artisan storage:link
 
-# Set permissions
-sudo chown -R www-data:www-data storage bootstrap/cache
-sudo chmod -R 775 storage bootstrap/cache
+# Set proper permissions
+chmod -R 775 storage bootstrap/cache
 ```
 
-#### Frontend Build
+### 4. Frontend Setup
+
 ```bash
 cd frontend
 
+# Install dependencies (if not already done)
+npm install
+
 # Build for production
 npm run build
-
-# Or for development
-npm run dev
 ```
 
-### 4. Queue Worker Setup
+### 5. Start Development Servers
 
-#### Development
+```bash
+# From root directory - start both servers
+npm run dev
+
+# Or start separately:
+npm run dev:backend    # Laravel server on :8000
+npm run dev:frontend   # Vite dev server on :5173
+```
+
+## 🗄️ Database Management
+
+### Migration Commands
 ```bash
 cd backend
+
+# Create new migration
+php artisan make:migration create_table_name
+
+# Run migrations
+php artisan migrate
+
+# Rollback last migration
+php artisan migrate:rollback
+
+# Reset all migrations
+php artisan migrate:reset
+
+# Fresh install (drop all tables and recreate)
+php artisan migrate:fresh --seed
+```
+
+### Seeding Commands
+```bash
+cd backend
+
+# Run all seeders
+php artisan db:seed
+
+# Run specific seeder
+php artisan db:seed --class=UserSeeder
+
+# Run demo data seeder
+php artisan portal:seed-demo
+```
+
+### Database Backup
+```bash
+cd backend
+
+# Create backup
+php artisan portal:backup-db
+
+# Clean old backups
+php artisan backup:clean
+```
+
+## 🔄 Queue Management
+
+### Start Queue Workers
+```bash
+cd backend
+
+# Start queue worker
+php artisan queue:work
+
+# Start with specific queue
+php artisan queue:work --queue=high,default,low
+
+# Start with specific connection
+php artisan queue:work --connection=redis
+
+# Start in daemon mode
 php artisan queue:work --daemon
 ```
 
-#### Production with Supervisor
+### Queue Monitoring
 ```bash
-# Install supervisor
-sudo apt-get install supervisor
+cd backend
 
-# Create configuration
-sudo nano /etc/supervisor/conf.d/worker-queues.conf
+# Check failed jobs
+php artisan queue:failed
+
+# Retry failed job
+php artisan queue:retry {id}
+
+# Clear all failed jobs
+php artisan queue:flush
+
+# Monitor queue status
+php artisan queue:monitor
 ```
 
-**Supervisor configuration:**
+### Supervisor Configuration (Production)
 ```ini
-[program:worker-queues]
+[program:employee-portal-queues]
 process_name=%(program_name)s_%(process_num)02d
-command=php /path/to/worker-management-system/backend/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+command=php /path/to/employee-portal/backend/artisan queue:work --sleep=3 --tries=3 --max-time=3600
 autostart=true
 autorestart=true
 stopasgroup=true
@@ -222,377 +218,376 @@ killasgroup=true
 user=www-data
 numprocs=8
 redirect_stderr=true
-stdout_logfile=/path/to/worker-management-system/backend/storage/logs/worker.log
+stdout_logfile=/path/to/employee-portal/backend/storage/logs/worker.log
 stopwaitsecs=3600
 ```
 
-**Start supervisor:**
-```bash
-sudo supervisorctl reread
-sudo supervisorctl update
-sudo supervisorctl start worker-queues:*
-```
+## ⏰ Scheduled Tasks
 
-### 5. Scheduler Setup
-
-#### Crontab Configuration
+### Cron Setup
 ```bash
-# Edit crontab
+# Add to crontab
 crontab -e
 
-# Add this line
-* * * * * cd /path/to/worker-management-system/backend && php artisan schedule:run >> /dev/null 2>&1
+# Add this line:
+* * * * * cd /path/to/employee-portal/backend && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-#### Verify Scheduler
+### Available Scheduled Jobs
+- **Release Expired Reservations**: Every minute
+- **Cancel Expired Awaiting Payment**: Every 2 minutes
+- **Send Contract Reminders**: Daily at 9 AM
+- **Sync with ERP**: Every hour
+- **Generate Reports**: Daily at 6 AM
+- **Cleanup Tasks**: Daily at various times
+
+### Manual Job Execution
 ```bash
 cd backend
-php artisan schedule:list
+
+# Run specific scheduled job
+php artisan schedule:run --verbose
+
+# Test specific job
+php artisan queue:work --once --queue=default
 ```
 
-## 🚀 Running the Application
+## 🧪 Testing
 
-### Development Mode
+### Backend Testing
 ```bash
-# Start both frontend and backend
-npm run dev
+cd backend
 
-# Or start individually
-npm run dev:frontend  # http://localhost:3000
-npm run dev:backend   # http://localhost:8000
+# Run all tests
+php artisan test
+
+# Run specific test file
+php artisan test tests/Feature/AuthTest.php
+
+# Run with coverage
+php artisan test --coverage
+
+# Run specific test method
+php artisan test --filter testUserCanLogin
 ```
 
-### Production Mode
+### Frontend Testing
 ```bash
-# Build frontend
 cd frontend
-npm run build
 
-# Serve backend
+# Run all tests
+npm run test
+
+# Run with UI
+npm run test:ui
+
+# Run with coverage
+npm run test:coverage
+
+# Run specific test
+npm run test -- --grep "Login"
+```
+
+### E2E Testing
+```bash
+cd frontend
+
+# Install Playwright
+npx playwright install
+
+# Run E2E tests
+npx playwright test
+
+# Run with UI
+npx playwright test --ui
+```
+
+## 🔧 Maintenance Commands
+
+### System Health Check
+```bash
 cd backend
-php artisan serve --host=0.0.0.0 --port=8000
+
+# Run health check
+php artisan portal:health-check
+
+# Check system status
+php artisan portal:stats
+
+# Test OTP generation
+php artisan portal:test-otp 0501234567
 ```
 
-### Using Nginx (Production)
+### Cleanup Commands
 ```bash
-# Install Nginx
-sudo apt-get install nginx
+cd backend
 
-# Create Nginx configuration
-sudo nano /etc/nginx/sites-available/worker-management
+# Clean up expired data
+php artisan portal:cleanup
+
+# Clear application cache
+php artisan cache:clear
+
+# Clear config cache
+php artisan config:clear
+
+# Clear route cache
+php artisan route:clear
+
+# Clear view cache
+php artisan view:clear
+
+# Optimize for production
+php artisan optimize
 ```
 
-**Nginx configuration:**
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    root /path/to/worker-management-system/backend/public;
-    index index.php index.html;
-
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    location /api {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    # Frontend static files
-    location / {
-        root /path/to/worker-management-system/frontend/dist;
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-**Enable site:**
+### Log Management
 ```bash
-sudo ln -s /etc/nginx/sites-available/worker-management /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
+cd backend
+
+# View logs
+tail -f storage/logs/laravel.log
+
+# Clear old logs
+php artisan log:clear
+
+# Monitor slow queries
+tail -f storage/logs/slow-queries.log
 ```
 
-## 🔧 Maintenance Tasks
+## 🚀 Production Deployment
+
+### Environment Setup
+```bash
+# Set production environment
+export APP_ENV=production
+export APP_DEBUG=false
+
+# Optimize for production
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize
+```
+
+### Performance Optimization
+```bash
+cd backend
+
+# Enable OPcache
+# Add to php.ini:
+opcache.enable=1
+opcache.memory_consumption=128
+opcache.interned_strings_buffer=8
+opcache.max_accelerated_files=4000
+opcache.revalidate_freq=2
+opcache.fast_shutdown=1
+
+# Enable Redis for sessions and cache
+# Update .env:
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+```
+
+### Security Hardening
+```bash
+cd backend
+
+# Set proper file permissions
+chmod -R 755 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+
+# Enable HTTPS
+# Configure SSL certificates in web server
+
+# Set security headers
+# Add to web server configuration:
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "no-referrer-when-downgrade" always;
+add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+```
+
+## 📊 Monitoring & Logging
+
+### Application Monitoring
+```bash
+cd backend
+
+# Enable Telescope (development only)
+php artisan telescope:install
+php artisan migrate
+
+# Monitor queue performance
+php artisan queue:monitor
+
+# Check failed jobs
+php artisan queue:failed
+```
+
+### Database Monitoring
+```sql
+-- Check slow queries
+SELECT 
+    qs.sql_handle,
+    qs.execution_count,
+    qs.total_elapsed_time / 1000000.0 AS total_elapsed_time_seconds,
+    qs.last_execution_time,
+    SUBSTRING(qt.text, (qs.statement_start_offset/2)+1, 
+        ((CASE qs.statement_end_offset
+            WHEN -1 THEN DATALENGTH(qt.text)
+            ELSE qs.statement_end_offset
+        END - qs.statement_start_offset)/2) + 1) AS statement_text
+FROM sys.dm_exec_query_stats qs
+CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) qt
+WHERE qs.total_elapsed_time > 1000000  -- 1 second
+ORDER BY qs.total_elapsed_time DESC;
+```
+
+### Performance Monitoring
+```bash
+cd backend
+
+# Monitor memory usage
+php artisan tinker
+memory_get_usage(true)
+
+# Check database connections
+php artisan tinker
+DB::connection()->getPdo()->getAttribute(PDO::ATTR_CONNECTION_STATUS)
+```
+
+## 🔄 Backup & Recovery
 
 ### Database Backup
 ```bash
-# Create backup script
-nano backup.sh
+cd backend
+
+# Create backup
+php artisan portal:backup-db
+
+# Manual backup using SQL Server tools
+sqlcmd -S your-server -d employee_portal -Q "BACKUP DATABASE employee_portal TO DISK = 'C:\backups\employee_portal_$(Get-Date -Format 'yyyyMMdd_HHmmss').bak'"
 ```
 
-**Backup script:**
+### File Backup
 ```bash
-#!/bin/bash
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/backups/worker-management"
-mkdir -p $BACKUP_DIR
+# Backup storage directory
+tar -czf storage_backup_$(date +%Y%m%d_%H%M%S).tar.gz storage/
 
-# Database backup
-sqlcmd -S localhost -U worker_user -P YourStrongPassword123! -Q "BACKUP DATABASE worker_management TO DISK = '$BACKUP_DIR/worker_management_$DATE.bak'"
-
-# Application backup
-tar -czf $BACKUP_DIR/app_$DATE.tar.gz /path/to/worker-management-system
-
-# Clean old backups (keep 7 days)
-find $BACKUP_DIR -name "*.bak" -mtime +7 -delete
-find $BACKUP_DIR -name "*.tar.gz" -mtime +7 -delete
+# Backup configuration files
+cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
 ```
 
-**Make executable and schedule:**
+### Recovery Procedures
 ```bash
-chmod +x backup.sh
-crontab -e
-# Add: 0 2 * * * /path/to/backup.sh
+cd backend
+
+# Restore from backup
+php artisan backup:restore --path=/path/to/backup
+
+# Restore database
+sqlcmd -S your-server -d master -Q "RESTORE DATABASE employee_portal FROM DISK = 'C:\backups\employee_portal_backup.bak'"
 ```
 
-### Log Rotation
-```bash
-# Configure logrotate
-sudo nano /etc/logrotate.d/worker-management
-```
-
-**Logrotate configuration:**
-```
-/path/to/worker-management-system/backend/storage/logs/*.log {
-    daily
-    missingok
-    rotate 30
-    compress
-    delaycompress
-    notifempty
-    create 644 www-data www-data
-    postrotate
-        systemctl reload php8.3-fpm
-    endscript
-}
-```
-
-### Health Checks
-```bash
-# Create health check script
-nano health-check.sh
-```
-
-**Health check script:**
-```bash
-#!/bin/bash
-
-# Check if backend is responding
-if curl -f http://localhost:8000/api/health > /dev/null 2>&1; then
-    echo "Backend: OK"
-else
-    echo "Backend: FAILED"
-    exit 1
-fi
-
-# Check if Redis is responding
-if redis-cli ping > /dev/null 2>&1; then
-    echo "Redis: OK"
-else
-    echo "Redis: FAILED"
-    exit 1
-fi
-
-# Check if database is accessible
-if sqlcmd -S localhost -U worker_user -P YourStrongPassword123! -Q "SELECT 1" > /dev/null 2>&1; then
-    echo "Database: OK"
-else
-    echo "Database: FAILED"
-    exit 1
-fi
-
-echo "All systems operational"
-```
-
-## 🐛 Troubleshooting
+## 🆘 Troubleshooting
 
 ### Common Issues
 
-#### 1. Database Connection Issues
+#### Database Connection Issues
 ```bash
-# Test database connection
-sqlcmd -S localhost -U worker_user -P YourStrongPassword123! -Q "SELECT @@VERSION"
+# Check SQL Server status
+systemctl status mssql-server
 
-# Check PHP SQL Server extension
-php -m | grep sqlsrv
-
-# Check Laravel database connection
-cd backend
+# Test connection
 php artisan tinker
-DB::connection()->getPdo();
+DB::connection()->getPdo()
+
+# Check drivers
+php -m | grep sqlsrv
 ```
 
-#### 2. Queue Worker Issues
+#### Queue Issues
 ```bash
-# Check queue status
-cd backend
-php artisan queue:work --once
+# Check Redis connection
+redis-cli ping
+
+# Restart queue workers
+php artisan queue:restart
 
 # Clear failed jobs
 php artisan queue:flush
-
-# Restart queue worker
-sudo supervisorctl restart worker-queues:*
 ```
 
-#### 3. Permission Issues
+#### Performance Issues
 ```bash
-# Fix storage permissions
-sudo chown -R www-data:www-data /path/to/worker-management-system/backend/storage
-sudo chmod -R 775 /path/to/worker-management-system/backend/storage
+# Check slow queries
+tail -f storage/logs/slow-queries.log
 
-# Fix cache permissions
-sudo chown -R www-data:www-data /path/to/worker-management-system/backend/bootstrap/cache
-sudo chmod -R 775 /path/to/worker-management-system/backend/bootstrap/cache
+# Monitor memory usage
+php artisan tinker
+memory_get_peak_usage(true)
+
+# Check cache hit rate
+php artisan cache:stats
 ```
 
-#### 4. Frontend Build Issues
+### Emergency Procedures
+
+#### System Down
 ```bash
-# Clear node modules and reinstall
-cd frontend
-rm -rf node_modules package-lock.json
-npm install
+# Put application in maintenance mode
+php artisan down --message="System maintenance in progress" --retry=60
 
-# Clear Vite cache
-npm run build -- --force
+# Bring system back up
+php artisan up
 ```
 
-### Log Analysis
-```bash
-# Check Laravel logs
-tail -f /path/to/worker-management-system/backend/storage/logs/laravel.log
-
-# Check queue logs
-tail -f /path/to/worker-management-system/backend/storage/logs/worker.log
-
-# Check Nginx logs
-sudo tail -f /var/log/nginx/error.log
-sudo tail -f /var/log/nginx/access.log
-
-# Check PHP-FPM logs
-sudo tail -f /var/log/php8.3-fpm.log
-```
-
-## 📊 Monitoring
-
-### Application Metrics
-```bash
-# Check queue status
-cd backend
-php artisan queue:monitor
-
-# Check scheduled tasks
-php artisan schedule:list
-
-# Check cache status
-php artisan cache:table
-php artisan cache:clear
-
-# Check storage usage
-du -sh storage/
-du -sh storage/logs/
-```
-
-### System Monitoring
-```bash
-# Monitor system resources
-htop
-iotop
-nethogs
-
-# Monitor database connections
-sqlcmd -S localhost -U worker_user -P YourStrongPassword123! -Q "SELECT * FROM sys.dm_exec_sessions"
-
-# Monitor Redis memory
-redis-cli info memory
-```
-
-## 🔄 Updates and Maintenance
-
-### Application Updates
-```bash
-# Pull latest changes
-git pull origin main
-
-# Update dependencies
-npm run install:all
-
-# Run migrations
-cd backend
-php artisan migrate
-
-# Clear caches
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-
-# Restart services
-sudo supervisorctl restart worker-queues:*
-sudo systemctl restart nginx
-sudo systemctl restart php8.3-fpm
-```
-
-### Database Maintenance
-```bash
-# Optimize database
-sqlcmd -S localhost -U worker_user -P YourStrongPassword123! -Q "DBCC SHRINKDATABASE (worker_management, 10)"
-
-# Update statistics
-sqlcmd -S localhost -U worker_user -P YourStrongPassword123! -Q "EXEC sp_updatestats"
-
-# Check for corruption
-sqlcmd -S localhost -U worker_user -P YourStrongPassword123! -Q "DBCC CHECKDB (worker_management)"
-```
-
-## 🚨 Emergency Procedures
-
-### System Recovery
-```bash
-# Stop all services
-sudo systemctl stop nginx
-sudo systemctl stop php8.3-fpm
-sudo supervisorctl stop worker-queues:*
-
-# Restore from backup
-# (Follow backup restoration procedures)
-
-# Restart services
-sudo systemctl start php8.3-fpm
-sudo systemctl start nginx
-sudo supervisorctl start worker-queues:*
-```
-
-### Database Recovery
+#### Database Recovery
 ```bash
 # Stop application
-sudo systemctl stop nginx
+php artisan down
 
 # Restore database
-sqlcmd -S localhost -U sa -P YourStrongPassword123! -Q "RESTORE DATABASE worker_management FROM DISK = '/backups/worker-management/worker_management_20240101_120000.bak'"
+# (Use SQL Server recovery procedures)
 
-# Restart application
-sudo systemctl start nginx
+# Run migrations
+php artisan migrate
+
+# Start application
+php artisan up
 ```
-
-## 📞 Support Contacts
-
-- **System Administrator**: admin@company.com
-- **Database Administrator**: dba@company.com
-- **Development Team**: dev@company.com
-- **Emergency Hotline**: +966-XX-XXX-XXXX
 
 ## 📚 Additional Resources
 
-- [Laravel Documentation](https://laravel.com/docs)
-- [React Documentation](https://react.dev)
-- [SQL Server Documentation](https://docs.microsoft.com/en-us/sql/sql-server)
-- [Redis Documentation](https://redis.io/documentation)
-- [Nginx Documentation](https://nginx.org/en/docs/)
+### Documentation
+- API Documentation: `/docs`
+- Swagger JSON: `/docs/swagger.json`
+- Health Check: `/up`
+
+### Support Commands
+```bash
+# List all available commands
+php artisan list
+
+# Get help for specific command
+php artisan help migrate
+
+# Check system requirements
+php artisan about
+```
+
+### Development Tools
+```bash
+# Install development dependencies
+composer require --dev laravel/telescope
+composer require --dev barryvdh/laravel-debugbar
+
+# Enable development features
+php artisan telescope:install
+php artisan debugbar:publish
+```
+
+This runbook provides comprehensive guidance for setting up, operating, and maintaining the Employee Portal application. Follow the procedures step-by-step and refer to the troubleshooting section for common issues.
