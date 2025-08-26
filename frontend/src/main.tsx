@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Toaster } from 'react-hot-toast'
 import App from './App.tsx'
 import './index.css'
-import { I18nProvider } from './i18n/I18nProvider'
+import { I18nProvider } from './i18n'
 import { AuthProvider } from './stores/AuthProvider'
 import { ThemeProvider } from './stores/ThemeStore'
 
