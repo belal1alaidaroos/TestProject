@@ -6,10 +6,14 @@ class AuthOtp extends BaseModel
 {
     protected $fillable = [
         'phone',
-        'otp',
+        'code_hash',
         'expires_at',
         'is_used',
         'attempts',
+        'ip_address',
+        'user_agent',
+        'created_by',
+        'modified_by',
     ];
 
     protected $casts = [

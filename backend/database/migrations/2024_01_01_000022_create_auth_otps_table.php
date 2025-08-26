@@ -17,10 +17,14 @@ return new class extends Migration
             $table->boolean('is_used')->default(false);
             $table->string('ip_address')->nullable();
             $table->text('user_agent')->nullable();
+            $table->uuid('created_by')->nullable();
+            $table->uuid('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             
             $table->index(['phone', 'expires_at']);
             $table->index(['is_used']);
+            $table->index(['deleted_at']);
         });
     }
 

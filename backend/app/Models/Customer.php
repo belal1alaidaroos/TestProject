@@ -13,8 +13,8 @@ class Customer extends BaseModel
         'tax_number',
         'commercial_license',
         'contact_person',
-        'contact_phone',
-        'contact_email',
+        'phone',
+        'email',
         'status',
     ];
 

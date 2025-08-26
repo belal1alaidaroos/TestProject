@@ -30,6 +30,7 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($resources as $resourceName => $actions) {
             $resource = AppResource::create([
                 'name' => $resourceName,
+                'display_name' => ucfirst($resourceName),
                 'description' => ucfirst($resourceName) . ' management',
             ]);
 

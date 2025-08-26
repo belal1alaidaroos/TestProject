@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Customer\WorkerController;
 use App\Http\Controllers\Customer\ReservationController;
 use App\Http\Controllers\Customer\ContractController;

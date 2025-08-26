@@ -205,7 +205,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-// Catch-all route for SPA
+// Catch-all route for SPA (excluding API routes)
 Route::get('/{any}', function () {
     return view('app');
-})->where('any', '.*');
+})->where('any', '^(?!api).*$');
