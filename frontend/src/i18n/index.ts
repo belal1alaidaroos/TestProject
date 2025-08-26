@@ -6,8 +6,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enTranslations from './locales/en.json';
 import arTranslations from './locales/ar.json';
 
-// Export the useI18n hook
-export { useI18n } from './I18nProvider';
+// Export the useI18n hook and I18nProvider
+export { useI18n, I18nProvider } from './I18nProvider';
 
 const resources = {
   en: {
