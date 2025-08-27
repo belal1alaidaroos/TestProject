@@ -8,16 +8,16 @@ import ProtectedRoute from './components/Auth/ProtectedRoute'
 import PublicRoute from './components/Auth/PublicRoute'
 
 // Lazy load pages for better performance
-const LoginPage = lazy(() => import('./pages/Auth/LoginPage'))
-const WorkersPage = lazy(() => import('./pages/Customer/WorkersPage'))
-const WorkerDetailPage = lazy(() => import('./pages/Customer/WorkerDetailPage'))
-const ReservationsPage = lazy(() => import('./pages/Customer/ReservationsPage'))
-const ContractsPage = lazy(() => import('./pages/Customer/ContractsPage'))
-const AgencyRequestsPage = lazy(() => import('./pages/Agency/RequestsPage'))
-const AgencyProposalsPage = lazy(() => import('./pages/Agency/ProposalsPage'))
-const AdminDashboardPage = lazy(() => import('./pages/Admin/DashboardPage'))
-const AdminProposalsPage = lazy(() => import('./pages/Admin/ProposalsPage'))
-const AdminUsersPage = lazy(() => import('./pages/Admin/UsersPage'))
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
+const WorkersPage = lazy(() => import('./pages/customer/WorkersPage'))
+const WorkerDetailPage = lazy(() => import('./pages/customer/WorkerDetailPage'))
+const ReservationsPage = lazy(() => import('./pages/customer/ReservationPage'))
+const ContractsPage = lazy(() => import('./pages/customer/ContractPage'))
+const AgencyRequestsPage = lazy(() => import('./pages/agency/RequestsPage'))
+const AgencyProposalsPage = lazy(() => import('./pages/agency/ProposalsPage'))
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'))
+const AdminProposalsPage = lazy(() => import('./pages/admin/ProposalsReviewPage'))
+const AdminUsersPage = lazy(() => import('./pages/admin/UsersPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 function App() {
