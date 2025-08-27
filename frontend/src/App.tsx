@@ -3,7 +3,7 @@ import { Suspense, lazy } from 'react'
 import { useAuth } from './stores/AuthProvider'
 import { useI18n } from './i18n'
 import Layout from './components/Layout/Layout'
-import LoadingSpinner from './components/UI/LoadingSpinner'
+import LoadingSpinner from './components/LoadingSpinner'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import PublicRoute from './components/Auth/PublicRoute'
 
