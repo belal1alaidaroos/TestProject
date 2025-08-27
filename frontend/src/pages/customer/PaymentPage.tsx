@@ -15,6 +15,7 @@ interface PaymentFormData {
   bank_name?: string;
   account_number?: string;
   iban?: string;
+  phone_number?: string;
   terms_accepted: boolean;
 }
 
@@ -164,39 +165,12 @@ const PaymentPage: React.FC = () => {
     try {
       setProcessing(true);
       
-      // Prepare payment data
-      const paymentData = {
-        contract_id: contract.id,
-        invoice_id: invoice.id,
-        amount: invoice.amount,
-        payment_method: data.payment_method,
-        payment_details: {
-          ...(data.payment_method === 'card' && {
-            card_number: data.card_number,
-            expiry_date: data.expiry_date,
-            cvv: data.cvv,
-            cardholder_name: data.cardholder_name,
-          }),
-          ...(data.payment_method === 'bank_transfer' && {
-            bank_name: data.bank_name,
-            account_number: data.account_number,
-            iban: data.iban,
-          }),
-        },
-      };
-      
-      const response = await customerAPI.confirmPayment(contract.id, paymentData);
-      
-      if (response.data.success) {
-        setToast({
-          type: 'success',
-          message: t('customer.payment_success'),
-        });
-        
-        // Navigate to success page or contract page
-        setTimeout(() => {
-          navigate(`/contract/${contract.id}`);
-        }, 2000);
+      if (data.payment_method === 'paypass') {
+        // Handle PayPass payment
+        await handlePayPassPayment(data);
+      } else {
+        // Handle other payment methods
+        await handleStandardPayment(data);
       }
     } catch (error: any) {
       setToast({
@@ -205,6 +179,103 @@ const PaymentPage: React.FC = () => {
       });
     } finally {
       setProcessing(false);
+    }
+  };
+
+  const handlePayPassPayment = async (data: PaymentFormData) => {
+    if (!data.phone_number) return;
+    
+    try {
+      // Create PayPass session
+      const sessionResponse = await customerAPI.createPayPassSession(contract!.id, data.phone_number);
+      
+      if (sessionResponse.data.success) {
+        // Show OTP input modal or navigate to OTP verification
+        const sessionId = sessionResponse.data.data.session_id;
+        const devOtp = sessionResponse.data.data.dev_otp;
+        
+        if (devOtp) {
+          // In development mode, show the OTP
+          setToast({
+            type: 'success',
+            message: `PayPass session created. Use OTP: ${devOtp}`,
+          });
+        } else {
+          setToast({
+            type: 'success',
+            message: 'PayPass session created. Check your phone for OTP.',
+          });
+        }
+        
+        // For now, we'll simulate the OTP verification
+        // In a real implementation, you'd show an OTP input form
+        setTimeout(() => {
+          // Simulate OTP verification with bypass code
+          verifyPayPassOtp(sessionId, '8523');
+        }, 2000);
+      }
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  const verifyPayPassOtp = async (sessionId: string, otp: string) => {
+    try {
+      const response = await customerAPI.verifyPayPassOtp(sessionId, otp);
+      
+      if (response.data.success) {
+        setToast({
+          type: 'success',
+          message: 'PayPass payment completed successfully!',
+        });
+        
+        // Navigate to success page
+        setTimeout(() => {
+          navigate(`/contract/${contract!.id}`);
+        }, 2000);
+      }
+    } catch (error: any) {
+      setToast({
+        type: 'error',
+        message: error.response?.data?.message || 'PayPass verification failed',
+      });
+    }
+  };
+
+  const handleStandardPayment = async (data: PaymentFormData) => {
+    // Prepare payment data
+    const paymentData = {
+      contract_id: contract!.id,
+      invoice_id: invoice!.id,
+      amount: invoice!.amount,
+      payment_method: data.payment_method,
+      payment_details: {
+        ...(data.payment_method === 'card' && {
+          card_number: data.card_number,
+          expiry_date: data.expiry_date,
+          cvv: data.cvv,
+          cardholder_name: data.cardholder_name,
+        }),
+        ...(data.payment_method === 'bank_transfer' && {
+          bank_name: data.bank_name,
+          account_number: data.account_number,
+          iban: data.iban,
+        }),
+      },
+    };
+    
+    const response = await customerAPI.confirmPayment(contract!.id, paymentData);
+    
+    if (response.data.success) {
+      setToast({
+        type: 'success',
+        message: t('customer.payment_success'),
+      });
+      
+      // Navigate to success page or contract page
+      setTimeout(() => {
+        navigate(`/contract/${contract!.id}`);
+      }, 2000);
     }
   };
 
@@ -333,6 +404,15 @@ const PaymentPage: React.FC = () => {
                 />
                 <span>{t('customer.bank_transfer')}</span>
               </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  value="paypass"
+                  {...register('payment_method', { required: true })}
+                  className="mr-3"
+                />
+                <span>{t('customer.paypass')}</span>
+              </label>
             </div>
           </div>
 
@@ -446,7 +526,7 @@ const PaymentPage: React.FC = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:2 gap-4">
                 <div>
                   <label className="form-label">
                     {t('customer.account_number')} *
@@ -481,6 +561,47 @@ const PaymentPage: React.FC = () => {
                   )}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* PayPass Fields */}
+          {paymentMethod === 'paypass' && (
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                <p className="text-sm text-blue-800">
+                  <strong>PayPass Payment:</strong> Enter your phone number to receive an OTP for payment verification.
+                </p>
+              </div>
+              
+              <div>
+                <label className="form-label">
+                  {t('customer.phone_number')} *
+                </label>
+                <input
+                  type="tel"
+                  {...register('phone_number', {
+                    required: paymentMethod === 'paypass',
+                    pattern: {
+                      value: /^[0-9]{10,15}$/,
+                      message: t('validation.invalid_phone'),
+                    },
+                  })}
+                  className={`input-field ${errors.phone_number ? 'border-red-500' : ''}`}
+                  placeholder="0501234567"
+                />
+                {errors.phone_number && (
+                  <p className="form-error">{errors.phone_number.message}</p>
+                )}
+              </div>
+
+              {/* Development OTP Bypass Notice */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-xs text-yellow-800 text-center">
+                    <strong>Testing Mode:</strong> Use code <code className="bg-yellow-100 px-1 rounded">8523</code> to bypass PayPass OTP verification
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
