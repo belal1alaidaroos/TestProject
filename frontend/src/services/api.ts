@@ -59,6 +59,12 @@ export const customerAPI = {
   getContractInvoice: (contractId: string) => api.get(`/portal/contracts/${contractId}/invoice`),
   preparePayment: (contractId: string) => api.post(`/portal/contracts/${contractId}/prepare-payment`),
   confirmPayment: (contractId: string) => api.post(`/portal/contracts/${contractId}/confirm-payment`),
+  
+  // PayPass Payment Methods
+  createPayPassSession: (contractId: string, phone: string) => api.post('/portal/paypass/create-session', { contract_id: contractId, phone }),
+  verifyPayPassOtp: (sessionId: string, otp: string) => api.post('/portal/paypass/verify-otp', { session_id: sessionId, otp }),
+  getPayPassSessionStatus: (sessionId: string) => api.get(`/portal/paypass/session/${sessionId}/status`),
+  cancelPayPassSession: (sessionId: string) => api.post(`/portal/paypass/session/${sessionId}/cancel`),
   cancelReservation: (reservationId: string) => api.post(`/portal/reservations/${reservationId}/cancel`),
   cancelContract: (contractId: string) => api.post(`/portal/contracts/${contractId}/cancel`),
   

@@ -22,9 +22,9 @@ class AuthService
 
     public function requestOtp(string $phone): array
     {
-        $devMode = config('services.sms.provider', 'internal') === 'internal' 
+        $devMode = config('system.development.otp_bypass_enabled', false) 
             || app()->environment('local') 
-            || (bool) env('OTP_BYPASS_ENABLED', false);
+            || config('services.sms.provider', 'internal') === 'internal';
 
         // Rate limiting check
         $recentOtps = $this->otpRepository->getRecentByPhone($phone, 1);
@@ -32,20 +32,20 @@ class AuthService
             $lastOtp = $recentOtps->first();
             $timeDiff = now()->diffInSeconds($lastOtp->created_at);
             
-            if ($timeDiff < 60) { // 1 minute cooldown
+            if ($timeDiff < config('system.otp.cooldown_seconds', 60)) {
                 throw new \Exception('Please wait before requesting another OTP');
             }
         }
 
         // Generate OTP
-        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $otp = str_pad(random_int(0, 999999), config('system.otp.length', 6), '0', STR_PAD_LEFT);
         $otpHash = Hash::make($otp);
 
         // Store OTP
         $this->otpRepository->create([
             'phone' => $phone,
             'code_hash' => $otpHash,
-            'expires_at' => now()->addSeconds(config('system.otp_expiry', 300)),
+            'expires_at' => now()->addSeconds(config('system.otp.expiry', 300)),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
@@ -57,7 +57,7 @@ class AuthService
 
         $response = [
             'message' => 'OTP sent successfully',
-            'expires_in' => config('system.otp_expiry', 300),
+            'expires_in' => config('system.otp.expiry', 300),
         ];
 
         // In development/internal mode, include OTP in response to ease testing
@@ -70,10 +70,10 @@ class AuthService
 
     public function verifyOtp(string $phone, string $code): array
     {
-        $devMode = config('services.sms.provider', 'internal') === 'internal' 
+        $devMode = config('system.development.otp_bypass_enabled', false) 
             || app()->environment('local') 
-            || (bool) env('OTP_BYPASS_ENABLED', false);
-        $bypassCode = env('OTP_BYPASS_CODE', '000000');
+            || config('services.sms.provider', 'internal') === 'internal';
+        $bypassCode = config('system.development.otp_bypass_code', '000000');
 
         // If dev bypass is enabled and code matches, skip OTP validation
         if ($devMode && $code === $bypassCode) {
@@ -116,7 +116,7 @@ class AuthService
             throw new \Exception('OTP has expired');
         }
 
-        if ($otp->attempts >= config('system.otp_max_attempts', 3)) {
+        if ($otp->attempts >= config('system.otp.max_attempts', 3)) {
             throw new \Exception('Maximum attempts exceeded');
         }
 

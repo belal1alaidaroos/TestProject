@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PayPassController;
 use App\Http\Controllers\Customer\WorkerController;
 use App\Http\Controllers\Customer\ReservationController;
 use App\Http\Controllers\Customer\ContractController;
@@ -52,6 +53,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('contracts/{contract}/prepare-payment', [ContractController::class, 'preparePayment']);
         Route::post('contracts/{contract}/confirm-payment', [ContractController::class, 'confirmPayment']);
         Route::post('contracts/{contract}/cancel', [ContractController::class, 'cancel']);
+        
+        // PayPass Payment Routes
+        Route::post('paypass/create-session', [PayPassController::class, 'createSession']);
+        Route::post('paypass/verify-otp', [PayPassController::class, 'verifyOtp']);
+        Route::get('paypass/session/{sessionId}/status', [PayPassController::class, 'getSessionStatus']);
+        Route::post('paypass/session/{sessionId}/cancel', [PayPassController::class, 'cancelSession']);
     });
 
     // Agency Portal Routes
