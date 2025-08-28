@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('lead_time_days')->nullable();
             $table->timestamp('valid_until')->nullable();
             $table->text('notes')->nullable();
+            $table->text('terms')->nullable();
             $table->uuid('attachment_file_id')->nullable();
             $table->enum('status', ['Submitted', 'Reviewed', 'Approved', 'PartiallyApproved', 'Rejected', 'Cancelled'])->default('Submitted');
             $table->integer('approved_qty')->default(0);

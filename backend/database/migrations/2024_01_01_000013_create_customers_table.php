@@ -20,6 +20,7 @@ return new class extends Migration
             $table->uuid('created_by')->nullable();
             $table->uuid('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             
             $table->foreign('app_user_id')->references('id')->on('app_users');
             $table->index(['status']);
