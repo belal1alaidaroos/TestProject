@@ -120,7 +120,8 @@ trait SqlServerMigrationHelper
         $defaultConstraints = DB::select("
             SELECT 
                 dc.name as constraint_name,
-                dc.definition
+                dc.definition,
+                c.name as column_name
             FROM sys.default_constraints dc
             INNER JOIN sys.columns c ON dc.parent_object_id = c.object_id AND dc.parent_column_id = c.column_id
             WHERE dc.parent_object_id = OBJECT_ID(?)
@@ -130,7 +131,8 @@ trait SqlServerMigrationHelper
         foreach ($defaultConstraints as $dc) {
             $dependencies['default_constraints'][] = [
                 'name' => $dc->constraint_name,
-                'definition' => $dc->definition
+                'definition' => $dc->definition,
+                'column' => $dc->column_name   // ✅ تمت الإضافة
             ];
         }
 
@@ -270,13 +272,7 @@ trait SqlServerMigrationHelper
         $unique = $index['is_unique'] ? 'UNIQUE' : '';
         $clustered = $index['type'] === 'CLUSTERED' ? 'CLUSTERED' : 'NONCLUSTERED';
         
-        if ($index['is_included']) {
-            // For included columns, we need to recreate the full index
-            // This is a simplified version - you may need to enhance this
-            DB::statement("CREATE {$unique} {$clustered} INDEX [{$index['name']}] ON [{$table}] ([{$index['column']}])");
-        } else {
-            DB::statement("CREATE {$unique} {$clustered} INDEX [{$index['name']}] ON [{$table}] ([{$index['column']}])");
-        }
+        DB::statement("CREATE {$unique} {$clustered} INDEX [{$index['name']}] ON [{$table}] ([{$index['column']}])");
         
         Log::info("Recreated index [{$index['name']}] on table [{$table}]");
     }

@@ -6,29 +6,37 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('auth_otps', function (Blueprint $table) {
-            $table->uuid('created_by')->nullable()->after('user_agent');
-            $table->uuid('modified_by')->nullable()->after('created_by');
-            $table->softDeletes();
-            
-            $table->index(['deleted_at']);
+            if (!Schema::hasColumn('auth_otps', 'created_by')) {
+                $table->uuid('created_by')->nullable()->after('user_agent');
+            }
+
+            if (!Schema::hasColumn('auth_otps', 'modified_by')) {
+                $table->uuid('modified_by')->nullable()->after('created_by');
+            }
+
+            if (!Schema::hasColumn('auth_otps', 'deleted_at')) {
+                $table->softDeletes();
+                $table->index(['deleted_at']);
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('auth_otps', function (Blueprint $table) {
-            $table->dropIndex(['deleted_at']);
-            $table->dropSoftDeletes();
-            $table->dropColumn(['created_by', 'modified_by']);
+            if (Schema::hasColumn('auth_otps', 'deleted_at')) {
+                $table->dropIndex(['deleted_at']);
+                $table->dropSoftDeletes();
+            }
+            if (Schema::hasColumn('auth_otps', 'created_by')) {
+                $table->dropColumn('created_by');
+            }
+            if (Schema::hasColumn('auth_otps', 'modified_by')) {
+                $table->dropColumn('modified_by');
+            }
         });
     }
 };

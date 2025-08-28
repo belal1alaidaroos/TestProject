@@ -9,6 +9,16 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // 🛑 Drop the existing index that depends on status
+        if (Schema::hasTable('workers')) {
+            DB::statement("IF EXISTS (
+                SELECT name FROM sys.indexes 
+                WHERE name = 'workers_status_nationality_id_profession_id_index' 
+                AND object_id = OBJECT_ID('workers')
+            )
+            DROP INDEX workers_status_nationality_id_profession_id_index ON workers;");
+        }
+
         Schema::table('workers', function (Blueprint $table) {
             // Add new fields
             $table->string('worker_number')->unique()->after('id');
@@ -31,6 +41,12 @@ return new class extends Migration
             $table->index(['lifecycle_status']);
             $table->index(['arrival_date']);
         });
+
+        // Recreate the dropped index
+        DB::statement("
+            CREATE INDEX workers_status_nationality_id_profession_id_index
+            ON workers (status, nationality_id, profession_id);
+        ");
 
         // Add CHECK constraint for lifecycle_status
         DB::statement("
@@ -71,6 +87,14 @@ return new class extends Migration
         DB::statement("ALTER TABLE workers DROP CONSTRAINT chk_workers_lifecycle_status");
         DB::statement("ALTER TABLE workers DROP CONSTRAINT chk_workers_status");
 
+        // Drop recreated index
+        DB::statement("IF EXISTS (
+            SELECT name FROM sys.indexes 
+            WHERE name = 'workers_status_nationality_id_profession_id_index' 
+            AND object_id = OBJECT_ID('workers')
+        )
+        DROP INDEX workers_status_nationality_id_profession_id_index ON workers;");
+
         Schema::table('workers', function (Blueprint $table) {
             $table->dropIndex(['worker_number']);
             $table->dropIndex(['iqama_number']);
@@ -88,8 +112,14 @@ return new class extends Migration
                 'notes'
             ]);
 
-            // Revert status to simple string
+            // Revert status back to string
             $table->string('status')->default('Ready')->change();
         });
+
+        // Optionally recreate the original index (if rollback)
+        DB::statement("
+            CREATE INDEX workers_status_nationality_id_profession_id_index
+            ON workers (status, nationality_id, profession_id);
+        ");
     }
 };

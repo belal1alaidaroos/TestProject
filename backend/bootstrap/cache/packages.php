@@ -20,6 +20,13 @@
       0 => 'Laravel\\Telescope\\TelescopeServiceProvider',
     ),
   ),
+  'laravel/tinker' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    ),
+  ),
   'maatwebsite/excel' => 
   array (
     'aliases' => 

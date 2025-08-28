@@ -14,24 +14,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Example: Modify the 'status' column in 'workers' table
+        // Modify the 'status' column in 'workers' table
         $this->safeColumnModification('workers', 'status', function () {
             Schema::table('workers', function (Blueprint $table) {
                 $table->string('status', 50)->nullable()->change();
             });
         });
 
-        // Example: Modify the 'nationality_id' column in 'workers' table
+        // Modify the 'nationality_id' column in 'workers' table
         $this->safeColumnModification('workers', 'nationality_id', function () {
             Schema::table('workers', function (Blueprint $table) {
-                $table->unsignedBigInteger('nationality_id')->nullable()->change();
+                $table->uuid('nationality_id')->nullable()->change(); // Changed to uuid
             });
         });
 
-        // Example: Modify the 'profession_id' column in 'workers' table
+        // Modify the 'profession_id' column in 'workers' table
         $this->safeColumnModification('workers', 'profession_id', function () {
             Schema::table('workers', function (Blueprint $table) {
-                $table->unsignedBigInteger('profession_id')->nullable()->change();
+                $table->uuid('profession_id')->nullable()->change(); // Changed to uuid
             });
         });
     }
@@ -41,24 +41,24 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Example: Revert the 'status' column modification
+        // Revert the 'status' column modification
         $this->safeColumnModification('workers', 'status', function () {
             Schema::table('workers', function (Blueprint $table) {
                 $table->string('status', 20)->nullable()->change(); // Revert to original size
             });
         });
 
-        // Example: Revert the 'nationality_id' column modification
+        // Revert the 'nationality_id' column modification
         $this->safeColumnModification('workers', 'nationality_id', function () {
             Schema::table('workers', function (Blueprint $table) {
-                $table->unsignedInteger('nationality_id')->nullable()->change(); // Revert to original type
+                $table->uuid('nationality_id')->nullable()->change(); // Keep as uuid for rollback consistency
             });
         });
 
-        // Example: Revert the 'profession_id' column modification
+        // Revert the 'profession_id' column modification
         $this->safeColumnModification('workers', 'profession_id', function () {
             Schema::table('workers', function (Blueprint $table) {
-                $table->unsignedInteger('profession_id')->nullable()->change(); // Revert to original type
+                $table->uuid('profession_id')->nullable()->change(); // Keep as uuid for rollback consistency
             });
         });
     }
