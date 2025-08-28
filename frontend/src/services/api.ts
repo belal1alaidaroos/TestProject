@@ -47,6 +47,12 @@ api.interceptors.response.use(
 export const authAPI = {
   requestOtp: (phone: string) => api.post('/auth/request-otp', { phone }),
   verifyOtp: (phone: string, code: string) => api.post('/auth/verify-otp', { phone, code }),
+  emailLogin: (email: string, password: string, portalType: string) => 
+    api.post('/auth/email-login', { email, password, portal_type: portalType }),
+  customerSignup: (data: any) => api.post('/auth/customer-signup', data),
+  socialLogin: (provider: string, providerUserId: string, email: string, name: string, portalType: string, phone?: string) => 
+    api.post('/auth/social-login', { provider, provider_user_id: providerUserId, email, name, portal_type: portalType, phone }),
+  checkPortalAccess: (portalType: string) => api.get(`/auth/portal-access/${portalType}`),
   logout: () => api.post('/auth/logout'),
   me: () => api.get('/auth/me'),
 };

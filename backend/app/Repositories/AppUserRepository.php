@@ -12,6 +12,11 @@ class AppUserRepository
         return AppUser::where('phone', $phone)->first();
     }
 
+    public function findByEmail(string $email): ?AppUser
+    {
+        return AppUser::where('email', $email)->first();
+    }
+
     public function findById(string $id): ?AppUser
     {
         return AppUser::find($id);
