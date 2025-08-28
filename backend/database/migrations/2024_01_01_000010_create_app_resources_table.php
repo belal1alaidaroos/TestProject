@@ -11,12 +11,13 @@ return new class extends Migration
         Schema::create('app_resources', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('display_name');
-            $table->text('description')->nullable();
+            $table->text('description_en')->nullable();
+            $table->text('description_ar')->nullable();
             $table->boolean('is_active')->default(true);
             $table->uuid('created_by')->nullable();
             $table->uuid('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             
             $table->index(['is_active']);
         });

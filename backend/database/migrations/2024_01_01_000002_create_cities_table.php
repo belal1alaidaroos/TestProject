@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('created_by')->nullable();
             $table->uuid('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->index(['country_id', 'is_active']);

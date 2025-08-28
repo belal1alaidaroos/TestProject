@@ -9,14 +9,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 🛑 Drop the existing index that depends on status
-        if (Schema::hasTable('workers')) {
-            DB::statement("IF EXISTS (
-                SELECT name FROM sys.indexes 
-                WHERE name = 'workers_status_nationality_id_profession_id_index' 
-                AND object_id = OBJECT_ID('workers')
-            )
-            DROP INDEX workers_status_nationality_id_profession_id_index ON workers;");
+        // Drop the existing index if it exists (cross-database compatible)
+        try {
+            Schema::table('workers', function (Blueprint $table) {
+                $table->dropIndex(['status', 'nationality_id', 'profession_id']);
+            });
+        } catch (Exception $e) {
+            // Index doesn't exist, continue
         }
 
         Schema::table('workers', function (Blueprint $table) {
@@ -27,13 +26,10 @@ return new class extends Migration
             $table->string('bank_account_number')->nullable()->after('iqama_expiry_date');
             $table->string('sim_card_number')->nullable()->after('bank_account_number');
 
-            // Use string instead of enum for SQL Server
+            // Use string instead of enum for cross-database compatibility
             $table->string('lifecycle_status')->default('Medical Check')->after('sim_card_number');
             $table->date('arrival_date')->nullable()->after('lifecycle_status');
             $table->text('notes')->nullable()->after('arrival_date');
-
-            // status also as string
-            $table->string('status')->default('Ready')->change();
 
             // Add indexes
             $table->index(['worker_number']);
@@ -42,58 +38,22 @@ return new class extends Migration
             $table->index(['arrival_date']);
         });
 
-        // Recreate the dropped index
-        DB::statement("
-            CREATE INDEX workers_status_nationality_id_profession_id_index
-            ON workers (status, nationality_id, profession_id);
-        ");
-
-        // Add CHECK constraint for lifecycle_status
-        DB::statement("
-            ALTER TABLE workers
-            ADD CONSTRAINT chk_workers_lifecycle_status
-            CHECK (lifecycle_status IN (
-                'Medical Check',
-                'Iqama Issued',
-                'Bank Account',
-                'SIM Card Issued',
-                'Ready to Work'
-            ));
-        ");
-
-        // Add CHECK constraint for status
-        DB::statement("
-            ALTER TABLE workers
-            ADD CONSTRAINT chk_workers_status
-            CHECK (status IN (
-                'Ready',
-                'ReservedAwaitingContract',
-                'ReservedAwaitingPayment',
-                'AssignedToContract',
-                'Medical Check',
-                'Iqama Issued',
-                'Bank Account',
-                'SIM Card Issued',
-                'Ready to Work',
-                'On Leave',
-                'Terminated'
-            ));
-        ");
+        // Recreate the index
+        Schema::table('workers', function (Blueprint $table) {
+            $table->index(['status', 'nationality_id', 'profession_id'], 'workers_status_nationality_id_profession_id_index');
+        });
     }
 
     public function down(): void
     {
-        // Drop constraints
-        DB::statement("ALTER TABLE workers DROP CONSTRAINT chk_workers_lifecycle_status");
-        DB::statement("ALTER TABLE workers DROP CONSTRAINT chk_workers_status");
-
-        // Drop recreated index
-        DB::statement("IF EXISTS (
-            SELECT name FROM sys.indexes 
-            WHERE name = 'workers_status_nationality_id_profession_id_index' 
-            AND object_id = OBJECT_ID('workers')
-        )
-        DROP INDEX workers_status_nationality_id_profession_id_index ON workers;");
+        // Drop the recreated index
+        try {
+            Schema::table('workers', function (Blueprint $table) {
+                $table->dropIndex(['status', 'nationality_id', 'profession_id']);
+            });
+        } catch (Exception $e) {
+            // Index doesn't exist, continue
+        }
 
         Schema::table('workers', function (Blueprint $table) {
             $table->dropIndex(['worker_number']);
@@ -111,15 +71,11 @@ return new class extends Migration
                 'arrival_date',
                 'notes'
             ]);
-
-            // Revert status back to string
-            $table->string('status')->default('Ready')->change();
         });
 
         // Optionally recreate the original index (if rollback)
-        DB::statement("
-            CREATE INDEX workers_status_nationality_id_profession_id_index
-            ON workers (status, nationality_id, profession_id);
-        ");
+        Schema::table('workers', function (Blueprint $table) {
+            $table->index(['status', 'nationality_id', 'profession_id'], 'workers_status_nationality_id_profession_id_index');
+        });
     }
 };

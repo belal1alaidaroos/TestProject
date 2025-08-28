@@ -20,6 +20,11 @@ use App\Models\WorkerReservation;
 use App\Models\Contract;
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\AppUser;
+use App\Models\AppRole;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class SampleDataSeeder extends Seeder
 {
@@ -27,7 +32,8 @@ class SampleDataSeeder extends Seeder
     {
         // Create sample countries
         $saudiArabia = Country::create([
-            'name' => 'Saudi Arabia',
+            'name_en' => 'Saudi Arabia',
+            'name_ar' => 'المملكة العربية السعودية',
             'code' => 'SA',
             'phone_code' => '+966',
             'is_active' => true,
@@ -35,129 +41,289 @@ class SampleDataSeeder extends Seeder
 
         // Create sample cities
         $riyadh = City::create([
-            'name' => 'Riyadh',
+            'name_en' => 'Riyadh',
+            'name_ar' => 'الرياض',
             'country_id' => $saudiArabia->id,
             'is_active' => true,
         ]);
 
         $jeddah = City::create([
-            'name' => 'Jeddah',
+            'name_en' => 'Jeddah',
+            'name_ar' => 'جدة',
             'country_id' => $saudiArabia->id,
             'is_active' => true,
         ]);
 
         // Create sample districts
         $olaya = District::create([
-            'name' => 'Olaya',
+            'name_en' => 'Olaya',
+            'name_ar' => 'العليا',
             'city_id' => $riyadh->id,
             'is_active' => true,
         ]);
 
         $malaz = District::create([
-            'name' => 'Malaz',
+            'name_en' => 'Malaz',
+            'name_ar' => 'الملز',
             'city_id' => $riyadh->id,
             'is_active' => true,
         ]);
 
         // Create sample professions
         $professions = [
-            'Housekeeper' => 'Domestic cleaning and housekeeping services',
-            'Driver' => 'Personal and commercial driving services',
-            'Cook' => 'Food preparation and cooking services',
-            'Nanny' => 'Childcare and babysitting services',
-            'Security Guard' => 'Security and protection services',
-            'Gardener' => 'Landscaping and gardening services',
+            ['name_en' => 'Housekeeper', 'name_ar' => 'مدبرة منزل', 'description_en' => 'Domestic cleaning and housekeeping services', 'description_ar' => 'خدمات التنظيف المنزلي وإدارة المنزل'],
+            ['name_en' => 'Driver', 'name_ar' => 'سائق', 'description_en' => 'Personal and commercial driving services', 'description_ar' => 'خدمات القيادة الشخصية والتجارية'],
+            ['name_en' => 'Cook', 'name_ar' => 'طباخ', 'description_en' => 'Food preparation and cooking services', 'description_ar' => 'خدمات إعداد الطعام والطبخ'],
+            ['name_en' => 'Nanny', 'name_ar' => 'مربية أطفال', 'description_en' => 'Childcare and babysitting services', 'description_ar' => 'خدمات رعاية الأطفال والحضانة'],
+            ['name_en' => 'Security Guard', 'name_ar' => 'حارس أمن', 'description_en' => 'Security and protection services', 'description_ar' => 'خدمات الأمن والحماية'],
+            ['name_en' => 'Gardener', 'name_ar' => 'بستاني', 'description_en' => 'Landscaping and gardening services', 'description_ar' => 'خدمات تنسيق الحدائق والبستنة'],
         ];
 
-        foreach ($professions as $name => $description) {
+        foreach ($professions as $profession) {
             Profession::create([
-                'name' => $name,
-                'description' => $description,
+                'name_en' => $profession['name_en'],
+                'name_ar' => $profession['name_ar'],
+                'description_en' => $profession['description_en'],
+                'description_ar' => $profession['description_ar'],
                 'is_active' => true,
             ]);
         }
 
         // Create sample nationalities
         $nationalities = [
-            'Saudi' => 'Saudi Arabian',
-            'Egyptian' => 'Egyptian',
-            'Filipino' => 'Filipino',
-            'Indian' => 'Indian',
-            'Pakistani' => 'Pakistani',
-            'Bangladeshi' => 'Bangladeshi',
+            ['name_en' => 'Saudi', 'name_ar' => 'سعودي', 'code' => 'SA'],
+            ['name_en' => 'Egyptian', 'name_ar' => 'مصري', 'code' => 'EG'],
+            ['name_en' => 'Filipino', 'name_ar' => 'فلبيني', 'code' => 'PH'],
+            ['name_en' => 'Indian', 'name_ar' => 'هندي', 'code' => 'IN'],
+            ['name_en' => 'Pakistani', 'name_ar' => 'باكستاني', 'code' => 'PK'],
+            ['name_en' => 'Bangladeshi', 'name_ar' => 'بنغلاديشي', 'code' => 'BD'],
         ];
 
-        foreach ($nationalities as $name => $description) {
+        foreach ($nationalities as $nationality) {
             Nationality::create([
-                'name' => $name,
-                'description' => $description,
+                'name_en' => $nationality['name_en'],
+                'name_ar' => $nationality['name_ar'],
+                'code' => $nationality['code'],
                 'is_active' => true,
             ]);
         }
 
-        // Create sample customer
-        $customer = Customer::create([
-            'name' => 'Test Customer Company',
-            'email' => 'customer@example.com',
-            'phone' => '+966507654321',
-            'tax_number' => '123456789',
+        // Get roles for user assignments
+        $superAdminRole = AppRole::where('name', 'Super Admin')->first();
+        $adminRole = AppRole::where('name', 'Admin')->first();
+        $managerRole = AppRole::where('name', 'Manager')->first();
+        $employeeRole = AppRole::where('name', 'Employee')->first();
+        $customerRole = AppRole::where('name', 'Customer')->first();
+        $agencyRole = AppRole::where('name', 'Agency')->first();
+
+        // Create test users for each portal
+        // 1. Admin Portal Users
+        $adminUser = AppUser::create([
+            'id' => Str::uuid(),
+            'name' => 'Super Admin User',
+            'email' => 'admin@paypass.com',
+            'phone' => '+966500000001',
+            'user_type' => 'Internal',
+            'password' => Hash::make('paypass8523'),
             'is_active' => true,
+            'email_verified_at' => now(),
+            'phone_verified_at' => now(),
+        ]);
+
+        // Assign Super Admin role
+        if ($superAdminRole) {
+            DB::table('app_user_roles')->insert([
+                'id' => Str::uuid(),
+                'app_user_id' => $adminUser->id,
+                'app_role_id' => $superAdminRole->id,
+                'is_primary' => true,
+                'assigned_by' => $adminUser->id,
+                'assigned_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        $managerUser = AppUser::create([
+            'id' => Str::uuid(),
+            'name' => 'Manager User',
+            'email' => 'manager@paypass.com',
+            'phone' => '+966500000002',
+            'user_type' => 'Internal',
+            'password' => Hash::make('paypass8523'),
+            'is_active' => true,
+            'email_verified_at' => now(),
+            'phone_verified_at' => now(),
+        ]);
+
+        // Assign Manager role
+        if ($managerRole) {
+            DB::table('app_user_roles')->insert([
+                'id' => Str::uuid(),
+                'app_user_id' => $managerUser->id,
+                'app_role_id' => $managerRole->id,
+                'is_primary' => true,
+                'assigned_by' => $adminUser->id,
+                'assigned_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // 2. Employee Portal User
+        $employeeUser = AppUser::create([
+            'id' => Str::uuid(),
+            'name' => 'Employee User',
+            'email' => 'employee@paypass.com',
+            'phone' => '+966500000003',
+            'user_type' => 'Internal',
+            'password' => Hash::make('paypass8523'),
+            'is_active' => true,
+            'email_verified_at' => now(),
+            'phone_verified_at' => now(),
+        ]);
+
+        // Assign Employee role
+        if ($employeeRole) {
+            DB::table('app_user_roles')->insert([
+                'id' => Str::uuid(),
+                'app_user_id' => $employeeUser->id,
+                'app_role_id' => $employeeRole->id,
+                'is_primary' => true,
+                'assigned_by' => $adminUser->id,
+                'assigned_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // Create sample agency first
+        $agency = Agency::create([
+            'name_en' => 'Test Recruitment Agency',
+            'name_ar' => 'وكالة التوظيف التجريبية',
+            'email' => 'agency@paypass.com',
+            'phone' => '+966509876543',
+            'license_number' => 'AG123456',
+            'contact_person' => 'Agency Manager',
+            'address' => '123 Agency Street, Riyadh',
+            'country_id' => $saudiArabia->id,
+            'city_id' => $riyadh->id,
+            'status' => 'active',
+        ]);
+
+        // 3. Agency Portal User
+        $agencyUser = AppUser::create([
+            'id' => Str::uuid(),
+            'name' => 'Agency User',
+            'email' => 'agency@paypass.com',
+            'phone' => '+966500000004',
+            'user_type' => 'Agency',
+            'agency_id' => $agency->id,
+            'password' => Hash::make('paypass8523'),
+            'is_active' => true,
+            'email_verified_at' => now(),
+            'phone_verified_at' => now(),
+        ]);
+
+        // Assign Agency role
+        if ($agencyRole) {
+            DB::table('app_user_roles')->insert([
+                'id' => Str::uuid(),
+                'app_user_id' => $agencyUser->id,
+                'app_role_id' => $agencyRole->id,
+                'is_primary' => true,
+                'assigned_by' => $adminUser->id,
+                'assigned_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // 4. Customer Portal User
+        $customerUser = AppUser::create([
+            'id' => Str::uuid(),
+            'name' => 'Customer User',
+            'email' => 'customer@paypass.com',
+            'phone' => '+966500000005',
+            'user_type' => 'Customer',
+            'password' => Hash::make('paypass8523'),
+            'is_active' => true,
+            'email_verified_at' => now(),
+            'phone_verified_at' => now(),
+        ]);
+
+        // Assign Customer role
+        if ($customerRole) {
+            DB::table('app_user_roles')->insert([
+                'id' => Str::uuid(),
+                'app_user_id' => $customerUser->id,
+                'app_role_id' => $customerRole->id,
+                'is_primary' => true,
+                'assigned_by' => $adminUser->id,
+                'assigned_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // Create sample customer linked to user
+        $customer = Customer::create([
+            'app_user_id' => $customerUser->id,
+            'company_name_en' => 'Test Customer Company',
+            'company_name_ar' => 'شركة العميل التجريبية',
+            'contact_person' => 'Customer Manager',
+            'email' => 'customer@paypass.com',
+            'phone' => '+966507654321',
+            'status' => 'active',
         ]);
 
         CustomerAddress::create([
             'customer_id' => $customer->id,
-            'address_line1' => '123 Test Street',
-            'address_line2' => 'Building A, Floor 2',
+            'title' => 'Home Address',
+            'address_line' => '123 Test Street, Building A, Floor 2',
             'city_id' => $riyadh->id,
             'district_id' => $olaya->id,
-            'postal_code' => '12345',
             'is_default' => true,
-            'is_active' => true,
-        ]);
-
-        // Create sample agency
-        $agency = Agency::create([
-            'name' => 'Test Recruitment Agency',
-            'email' => 'agency@example.com',
-            'phone' => '+966509876543',
-            'license_number' => 'AG123456',
-            'is_active' => true,
+            'status' => 'active',
         ]);
 
         // Create sample workers
         $workers = [
             [
-                'name' => 'Ahmed Hassan',
-                'phone' => '+966501111111',
-                'email' => 'ahmed@example.com',
-                'profession_id' => Profession::where('name', 'Driver')->first()->id,
-                'nationality_id' => Nationality::where('name', 'Egyptian')->first()->id,
+                'worker_number' => 'W001',
+                'name_en' => 'Ahmed Hassan',
+                'name_ar' => 'أحمد حسن',
+                'date_of_birth' => '1990-01-01',
+
+                'profession_id' => Profession::where('name_en', 'Driver')->first()->id,
+                'nationality_id' => Nationality::where('name_en', 'Egyptian')->first()->id,
+                'agency_id' => $agency->id,
                 'experience_years' => 5,
-                'salary_expectation' => 3000,
-                'is_available' => true,
-                'stage' => 'Available',
+                'status' => 'Ready',
             ],
             [
-                'name' => 'Fatima Ali',
-                'phone' => '+966502222222',
-                'email' => 'fatima@example.com',
-                'profession_id' => Profession::where('name', 'Housekeeper')->first()->id,
-                'nationality_id' => Nationality::where('name', 'Filipino')->first()->id,
+                'worker_number' => 'W002',
+                'name_en' => 'Fatima Ali',
+                'name_ar' => 'فاطمة علي',
+                'date_of_birth' => '1992-03-15',
+
+                'profession_id' => Profession::where('name_en', 'Housekeeper')->first()->id,
+                'nationality_id' => Nationality::where('name_en', 'Filipino')->first()->id,
+                'agency_id' => $agency->id,
                 'experience_years' => 3,
-                'salary_expectation' => 2500,
-                'is_available' => true,
-                'stage' => 'Available',
+                'status' => 'Ready',
             ],
             [
-                'name' => 'Mohammed Khan',
-                'phone' => '+966503333333',
-                'email' => 'mohammed@example.com',
-                'profession_id' => Profession::where('name', 'Cook')->first()->id,
-                'nationality_id' => Nationality::where('name', 'Pakistani')->first()->id,
+                'worker_number' => 'W003',
+                'name_en' => 'Mohammed Khan',
+                'name_ar' => 'محمد خان',
+                'date_of_birth' => '1988-07-20',
+
+                'profession_id' => Profession::where('name_en', 'Cook')->first()->id,
+                'nationality_id' => Nationality::where('name_en', 'Pakistani')->first()->id,
+                'agency_id' => $agency->id,
                 'experience_years' => 7,
-                'salary_expectation' => 3500,
-                'is_available' => true,
-                'stage' => 'Available',
+                'status' => 'Ready',
             ],
         ];
 
@@ -167,42 +333,44 @@ class SampleDataSeeder extends Seeder
 
         // Create sample recruitment request
         $request = RecruitmentRequest::create([
-            'title' => 'Household Staff Needed',
-            'description' => 'Looking for experienced housekeeper and driver for villa in Riyadh',
-            'profession_id' => Profession::where('name', 'Housekeeper')->first()->id,
-            'quantity_needed' => 2,
-            'salary_range_min' => 2500,
-            'salary_range_max' => 3500,
+            'profession_id' => Profession::where('name_en', 'Housekeeper')->first()->id,
+            'nationality_id' => Nationality::where('name_en', 'Filipino')->first()->id,
+            'country_id' => $saudiArabia->id,
+            'quantity' => 2,
+            'sla_days' => 30,
+            'requirements' => 'Looking for experienced housekeeper and driver for villa in Riyadh',
             'deadline' => now()->addDays(30),
             'status' => 'Open',
-            'is_active' => true,
         ]);
 
         // Create sample proposal
         SupplierProposal::create([
-            'recruitment_request_id' => $request->id,
+            'request_id' => $request->id,
             'agency_id' => $agency->id,
-            'proposed_workers' => 2,
-            'proposed_salary' => 3000,
-            'delivery_time_days' => 15,
+            'offered_qty' => 2,
+            'unit_price' => 3000,
+            'lead_time_days' => 15,
             'notes' => 'We have qualified candidates ready for immediate placement',
             'status' => 'Submitted',
-            'is_active' => true,
         ]);
 
         // Create sample packages
         $packages = [
             [
-                'name' => 'Basic Package',
-                'description' => 'Standard worker placement service',
-                'duration_days' => 30,
+                'name_en' => 'Basic Package',
+                'name_ar' => 'الباقة الأساسية',
+                'description_en' => 'Standard worker placement service',
+                'description_ar' => 'خدمة توظيف عمالة عادية',
+                'duration' => 'Month',
                 'price' => 500,
                 'is_active' => true,
             ],
             [
-                'name' => 'Premium Package',
-                'description' => 'Extended worker placement with guarantee',
-                'duration_days' => 90,
+                'name_en' => 'Premium Package',
+                'name_ar' => 'الباقة المميزة',
+                'description_en' => 'Extended worker placement with guarantee',
+                'description_ar' => 'خدمة توظيف عمالة ممتدة مع ضمان',
+                'duration' => 'Year',
                 'price' => 1200,
                 'is_active' => true,
             ],
@@ -217,9 +385,8 @@ class SampleDataSeeder extends Seeder
         $reservation = WorkerReservation::create([
             'worker_id' => $worker->id,
             'customer_id' => $customer->id,
-            'reserved_until' => now()->addHours(2),
-            'status' => 'Reserved',
-            'is_active' => true,
+            'expires_at' => now()->addHours(2),
+            'state' => 'AwaitingContract',
         ]);
 
         // Create sample contract
@@ -230,30 +397,24 @@ class SampleDataSeeder extends Seeder
             'start_date' => now()->addDays(1),
             'end_date' => now()->addDays(31),
             'total_amount' => 500,
+            'original_amount' => 500,
             'status' => 'Active',
-            'is_active' => true,
         ]);
 
         // Create sample invoice
-        Invoice::create([
+        $invoice = Invoice::create([
             'contract_id' => $contract->id,
-            'invoice_number' => 'INV-2024-001',
-            'amount' => 500,
-            'tax_amount' => 75,
-            'total_amount' => 575,
+            'amount' => 575,
             'due_date' => now()->addDays(7),
-            'status' => 'Pending',
-            'is_active' => true,
+            'status' => 'Unpaid',
         ]);
 
         // Create sample payment
         Payment::create([
-            'contract_id' => $contract->id,
+            'invoice_id' => $invoice->id,
             'amount' => 575,
-            'payment_method' => 'Bank Transfer',
-            'transaction_id' => 'TXN-2024-001',
-            'status' => 'Completed',
-            'is_active' => true,
+            'method' => 'bank_transfer',
+            'paid_at' => now(),
         ]);
     }
 }
