@@ -109,12 +109,12 @@ class SampleDataSeeder extends Seeder
         }
 
         // Get roles for user assignments
-        $superAdminRole = AppRole::where('name', 'Super Admin')->first();
-        $adminRole = AppRole::where('name', 'Admin')->first();
-        $managerRole = AppRole::where('name', 'Manager')->first();
-        $employeeRole = AppRole::where('name', 'Employee')->first();
-        $customerRole = AppRole::where('name', 'Customer')->first();
-        $agencyRole = AppRole::where('name', 'Agency')->first();
+        $superAdminRole = AppRole::where('name_en', 'Super Admin')->first();
+        $adminRole = AppRole::where('name_en', 'Admin')->first();
+        $managerRole = AppRole::where('name_en', 'Manager')->first();
+        $employeeRole = AppRole::where('name_en', 'Employee')->first();
+        $customerRole = AppRole::where('name_en', 'Customer')->first();
+        $agencyRole = AppRole::where('name_en', 'Agency')->first();
 
         // Create test users for each portal
         // 1. Admin Portal Users

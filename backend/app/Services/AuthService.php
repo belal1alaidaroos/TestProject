@@ -20,60 +20,69 @@ class AuthService
         private CustomerRepository $customerRepository
     ) {}
 
-    public function requestOtp(string $phone): array
-    {
-        $devMode = config('system.development.otp_bypass_enabled', false) 
-            || app()->environment('local') 
-            || config('services.sms.provider', 'internal') === 'internal';
+ public function requestOtp(string $phone): array
+{
+    $devMode = config('system.development.otp_bypass_enabled', false) 
+        || app()->environment('local') 
+        || config('services.sms.provider', 'internal') === 'internal';
 
-        // Rate limiting check
-        $recentOtps = $this->otpRepository->getRecentByPhone($phone, 1);
-        if ($recentOtps->count() > 0) {
-            $lastOtp = $recentOtps->first();
-            $timeDiff = now()->diffInSeconds($lastOtp->created_at);
-            
-            if ($timeDiff < config('system.otp.cooldown_seconds', 60)) {
-                throw new \Exception('Please wait before requesting another OTP');
-            }
+    // Rate limiting check
+    $recentOtps = $this->otpRepository->getRecentByPhone($phone, 1);
+    if ($recentOtps->count() > 0) {
+        $lastOtp = $recentOtps->first();
+        $timeDiff = now()->diffInSeconds($lastOtp->created_at);
+
+        $cooldownSeconds = (int) config('system.otp.cooldown_seconds', 60);
+        if ($timeDiff < $cooldownSeconds) {
+            throw new \Exception('Please wait before requesting another OTP');
         }
-
-        // Generate OTP
-        $otp = str_pad(random_int(0, 999999), config('system.otp.length', 6), '0', STR_PAD_LEFT);
-        $otpHash = Hash::make($otp);
-
-        // Store OTP
-        $this->otpRepository->create([
-            'phone' => $phone,
-            'code_hash' => $otpHash,
-            'expires_at' => now()->addSeconds(config('system.otp.expiry', 300)),
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-        ]);
-
-        // Send SMS (stub implementation)
-        $this->sendSms($phone, "Your OTP is: {$otp}");
-
-        Log::info('OTP requested', ['phone' => $phone]);
-
-        $response = [
-            'message' => 'OTP sent successfully',
-            'expires_in' => config('system.otp.expiry', 300),
-        ];
-
-        // In development/internal mode, include OTP in response to ease testing
-        if ($devMode) {
-            $response['dev_otp'] = $otp;
-        }
-
-        return $response;
     }
+
+    // Generate OTP
+    $otpLength = (int) config('system.otp.length', 4);
+    $otp = str_pad((string) random_int(0, pow(10, $otpLength) - 1), $otpLength, '0', STR_PAD_LEFT);
+    $otpHash = Hash::make($otp);
+
+    // Expiry seconds (cast to integer)
+    $expirySeconds = (int) config('system.otp.expiry', 300);
+
+    // Store OTP
+    $this->otpRepository->create([
+        'phone'       => $phone,
+        'code_hash'   => $otpHash,
+        'expires_at'  => now()->addSeconds($expirySeconds),
+        'ip_address'  => request()->ip(),
+        'user_agent'  => request()->userAgent(),
+    ]);
+
+    // Send SMS (stub implementation)
+    $this->sendSms($phone, "Your OTP is: {$otp}");
+
+    Log::info('OTP requested', ['phone' => $phone]);
+
+    $response = [
+        'message'    => 'OTP sent successfully',
+        'expires_in' => $expirySeconds,
+    ];
+
+    // In development/internal mode, include OTP in response to ease testing
+    if ($devMode) {
+        $response['dev_otp'] = $otp;
+    }
+
+    return $response;
+}
+
+
+
+
 
     public function verifyOtp(string $phone, string $code): array
     {
         $devMode = config('system.development.otp_bypass_enabled', false) 
             || app()->environment('local') 
             || config('services.sms.provider', 'internal') === 'internal';
-        $bypassCode = config('system.development.otp_bypass_code', '000000');
+        $bypassCode = config('system.development.otp_bypass_code', '0000');
 
         // If dev bypass is enabled and code matches, skip OTP validation
         if ($devMode && $code === $bypassCode) {

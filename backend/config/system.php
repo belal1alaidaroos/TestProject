@@ -24,7 +24,7 @@ return [
         'expiry' => env('OTP_EXPIRY_SECONDS', 300), // 5 minutes
         'max_attempts' => env('OTP_MAX_ATTEMPTS', 3),
         'cooldown_seconds' => env('OTP_COOLDOWN_SECONDS', 60), // 1 minute
-        'length' => env('OTP_LENGTH', 6),
+        'length' => env('OTP_LENGTH', 4),
     ],
 
     /*

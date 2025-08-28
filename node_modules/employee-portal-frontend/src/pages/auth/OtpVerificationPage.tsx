@@ -140,12 +140,12 @@ const OtpVerificationPage: React.FC = () => {
               type="text"
               autoComplete="one-time-code"
               className={`input-field text-center text-2xl tracking-widest ${errors.code ? 'border-red-500' : ''}`}
-              placeholder="000000"
-              maxLength={6}
+              placeholder="0000"
+              maxLength={4}
               {...register('code', {
                 required: t('validation.required'),
                 pattern: {
-                  value: /^[0-9]{6}$/,
+                  value: /^[0-9]{4}$/,
                   message: t('validation.invalid_otp'),
                 },
               })}
@@ -164,7 +164,7 @@ const OtpVerificationPage: React.FC = () => {
           <div>
             <button
               type="submit"
-              disabled={isLoading || !code || code.length !== 6}
+              disabled={isLoading || !code || code.length !== 4}
               className="btn-primary w-full flex justify-center py-2 px-4"
             >
               {isLoading ? t('common.loading') : t('auth.verify_otp')}

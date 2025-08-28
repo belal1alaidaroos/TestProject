@@ -35,7 +35,7 @@ Route::prefix('auth')->group(function () {
 
 // Protected routes
 Route::middleware('auth:api')->group(function () {
-    
+    //Most of the below Missing ?
     // Customer Portal Routes
     Route::prefix('portal')->middleware('role:customer')->group(function () {
         Route::get('workers', [WorkerController::class, 'index']);

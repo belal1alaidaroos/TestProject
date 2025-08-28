@@ -19,6 +19,7 @@ const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage')
 const AdminProposalsPage = lazy(() => import('./pages/admin/ProposalsReviewPage'))
 const AdminUsersPage = lazy(() => import('./pages/admin/UsersPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const OtpVerificationPage = lazy(() => import('./pages/auth/OtpVerificationPage'))
 
 function App() {
   const { isAuthenticated, user } = useAuth()
@@ -41,6 +42,16 @@ function App() {
               </PublicRoute>
             }
           />
+		  
+		  <Route
+  path="/verify-otp"
+  element={
+    <PublicRoute>
+      <OtpVerificationPage />
+    </PublicRoute>
+  }
+/>
+
 
           {/* Protected Routes */}
           <Route
