@@ -30,6 +30,10 @@ use App\Http\Controllers\Admin\DashboardController;
 Route::prefix('auth')->group(function () {
     Route::post('request-otp', [AuthController::class, 'requestOtp']);
     Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
+    Route::post('email-login', [AuthController::class, 'emailLogin']);
+    Route::post('customer-signup', [AuthController::class, 'customerSignup']);
+    Route::post('social-login', [AuthController::class, 'socialLogin']);
+    Route::get('portal-access/{portal_type}', [AuthController::class, 'checkPortalAccess']);
     Route::post('refresh', [AuthController::class, 'refresh']);
 });
 
