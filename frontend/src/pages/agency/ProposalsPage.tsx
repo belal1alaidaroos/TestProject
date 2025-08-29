@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Edit } from 'lucide-react';
 import { agencyAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import Toast from '../../components/Toast';
+import ProposalEditModal from '../../components/Agency/ProposalEditModal';
 
 interface Proposal {
   id: string;
@@ -52,6 +54,11 @@ const ProposalsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [proposalToEdit, setProposalToEdit] = useState<Proposal | null>(null);
+  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   // Load proposals
   useEffect(() => {
@@ -119,9 +126,40 @@ const ProposalsPage: React.FC = () => {
     setCurrentPage(page);
   };
 
-  const handleEditProposal = (proposalId: string) => {
-    // Navigate to edit proposal page (to be implemented)
-    navigate(`/edit-proposal/${proposalId}`);
+  const handleEditProposal = (proposal: Proposal) => {
+    setProposalToEdit(proposal);
+    setShowEditModal(true);
+  };
+
+  const handleEditSuccess = () => {
+    setToast({
+      type: 'success',
+      message: t('agency.proposal_updated_successfully')
+    });
+    setShowEditModal(false);
+    setProposalToEdit(null);
+    
+    // Reload proposals
+    const loadProposals = async () => {
+      try {
+        const params = {
+          ...filters,
+          page: currentPage,
+          per_page: 10,
+        };
+        
+        const response = await agencyAPI.getProposals(params);
+        
+        if (response.data.success) {
+          setProposals(response.data.data.data || []);
+          setTotalPages(response.data.data.last_page || 1);
+        }
+      } catch (err: any) {
+        console.error('Failed to reload proposals:', err);
+      }
+    };
+    
+    loadProposals();
   };
 
   const handleWithdrawProposal = async (proposalId: string) => {
@@ -309,9 +347,10 @@ const ProposalsPage: React.FC = () => {
                 <div className="flex justify-end space-x-3">
                   {canEditProposal(proposal) && (
                     <button
-                      onClick={() => handleEditProposal(proposal.id)}
-                      className="btn-secondary"
+                      onClick={() => handleEditProposal(proposal)}
+                      className="btn-secondary flex items-center"
                     >
+                      <Edit className="h-4 w-4 mr-2" />
                       {t('agency.edit_proposal')}
                     </button>
                   )}
@@ -384,6 +423,17 @@ const ProposalsPage: React.FC = () => {
           </nav>
         </div>
       )}
+
+      {/* Edit Proposal Modal */}
+      <ProposalEditModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setProposalToEdit(null);
+        }}
+        onSuccess={handleEditSuccess}
+        proposal={proposalToEdit}
+      />
 
       {/* Toast */}
       {toast && (
