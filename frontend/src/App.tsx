@@ -2,28 +2,30 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { useAuth } from './stores/AuthProvider'
 import { useI18n } from './i18n'
-import Layout from './components/Layout/Layout'
 import LoadingSpinner from './components/LoadingSpinner'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import PublicRoute from './components/Auth/PublicRoute'
 
-// Lazy load pages for better performance
+// Lazy load only essential components for now
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
-const WorkersPage = lazy(() => import('./pages/customer/WorkersPage'))
-const WorkerDetailPage = lazy(() => import('./pages/customer/WorkerDetailPage'))
-const ReservationsPage = lazy(() => import('./pages/customer/ReservationPage'))
-const ContractsPage = lazy(() => import('./pages/customer/ContractPage'))
-const AgencyRequestsPage = lazy(() => import('./pages/agency/RequestsPage'))
-const AgencyProposalsPage = lazy(() => import('./pages/agency/ProposalsPage'))
-const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'))
-const AdminProposalsPage = lazy(() => import('./pages/admin/ProposalsReviewPage'))
-const AdminUsersPage = lazy(() => import('./pages/admin/UsersPage'))
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
-const OtpVerificationPage = lazy(() => import('./pages/auth/OtpVerificationPage'))
+const AdminLayout = lazy(() => import('./components/Layout/AdminLayout'))
+const CustomerLayout = lazy(() => import('./components/Layout/CustomerLayout'))
+const AgencyLayout = lazy(() => import('./components/Layout/AgencyLayout'))
+
+// Simple placeholder pages
+const SimplePage = ({ title, userType }: { title: string; userType: string }) => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
+      <p className="text-xl text-gray-600">Welcome to the {userType} Portal</p>
+      <p className="text-lg text-gray-500 mt-2">This is a temporary placeholder page</p>
+    </div>
+  </div>
+)
 
 function App() {
-  const { isAuthenticated, user } = useAuth()
-  const { t, locale, dir } = useI18n()
+  const { user } = useAuth()
+  const { locale, dir } = useI18n()
 
   // Set document direction based on locale
   document.documentElement.dir = dir
@@ -42,124 +44,64 @@ function App() {
               </PublicRoute>
             }
           />
-		  
-		  <Route
-  path="/verify-otp"
-  element={
-    <PublicRoute>
-      <OtpVerificationPage />
-    </PublicRoute>
-  }
-/>
-
 
           {/* Protected Routes */}
           <Route
             path="/"
             element={
               <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            {/* Customer Portal Routes */}
-            <Route
-              path="/workers"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <WorkersPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/workers/:id"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <WorkerDetailPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/reservations"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <ReservationsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/contracts"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <ContractsPage />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Agency Portal Routes */}
-            <Route
-              path="/agency/requests"
-              element={
-                <ProtectedRoute allowedRoles={['agency']}>
-                  <AgencyRequestsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/agency/proposals"
-              element={
-                <ProtectedRoute allowedRoles={['agency']}>
-                  <AgencyProposalsPage />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Admin Portal Routes */}
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'internal']}>
-                  <AdminDashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/proposals"
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'internal']}>
-                  <AdminProposalsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/users"
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'internal']}>
-                  <AdminUsersPage />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Default redirect based on user role */}
-            <Route
-              index
-              element={
                 <Navigate
                   to={
-                    user?.roles?.includes('admin') || user?.roles?.includes('internal')
+                    user?.roles?.some(role => ['admin', 'internal'].includes(role.name))
                       ? '/admin'
-                      : user?.roles?.includes('agency')
-                      ? '/agency/requests'
-                      : '/workers'
+                      : user?.roles?.some(role => role.name === 'agency')
+                      ? '/agency'
+                      : '/customer'
                   }
                   replace
                 />
-              }
-            />
-          </Route>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Customer Portal */}
+          <Route
+            path="/customer"
+            element={
+              <ProtectedRoute allowedRoles={['customer']}>
+                <CustomerLayout>
+                  <SimplePage title="Customer Dashboard" userType="Customer" />
+                </CustomerLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Agency Portal */}
+          <Route
+            path="/agency"
+            element={
+              <ProtectedRoute allowedRoles={['agency']}>
+                <AgencyLayout>
+                  <SimplePage title="Agency Dashboard" userType="Agency" />
+                </AgencyLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Portal */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'internal']}>
+                <AdminLayout>
+                  <SimplePage title="Admin Dashboard" userType="Admin" />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* 404 Page */}
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<SimplePage title="Page Not Found" userType="Unknown" />} />
         </Routes>
       </Suspense>
     </div>

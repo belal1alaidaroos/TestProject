@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useLanguageStore } from '../stores/languageStore';
 
 interface I18nContextType {
   locale: string;
   dir: 'ltr' | 'rtl';
   t: (key: string) => string;
   setLocale: (locale: string) => void;
+  language: 'en' | 'ar';
+  toggleLanguage: () => void;
 }
 
-const I18nContext = createContext<I18nContextType | undefined>(undefined);
+export const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 interface I18nProviderProps {
   children: ReactNode;
@@ -15,6 +18,7 @@ interface I18nProviderProps {
 
 export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
   const [locale, setLocaleState] = useState('en');
+  const { language, toggleLanguage } = useLanguageStore();
 
   const setLocale = (newLocale: string) => {
     setLocaleState(newLocale);
@@ -34,6 +38,8 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
     dir,
     t,
     setLocale,
+    language,
+    toggleLanguage,
   };
 
   return (

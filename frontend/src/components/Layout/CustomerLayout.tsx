@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
 import { useLanguageStore } from '../../stores/languageStore';
 import { authAPI } from '../../services/api';
@@ -10,9 +10,9 @@ interface CustomerLayoutProps {
 }
 
 const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const { user, logout } = useAuthStore();
-  const { language, toggleLanguage } = useLanguageStore();
+  const { language, toggleLanguage } = useI18n();
   const location = useLocation();
 
   const handleLogout = async () => {
