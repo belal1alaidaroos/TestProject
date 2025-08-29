@@ -23,7 +23,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   const navigation = [
-    { name: t('admin.dashboard'), href: '/admin', current: location.pathname === '/admin' },
+    { name: t('admin.dashboard'), href: '/admin/dashboard', current: location.pathname === '/admin/dashboard' },
     { name: t('admin.proposals_review'), href: '/admin/proposals', current: location.pathname.startsWith('/admin/proposals') },
     { name: t('admin.users'), href: '/admin/users', current: location.pathname === '/admin/users' },
     { name: t('admin.settings'), href: '/admin/settings', current: location.pathname === '/admin/settings' },

@@ -22,9 +22,9 @@ const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
   };
 
   const navigation = [
-    { name: t('customer.workers'), href: '/customer', current: location.pathname === '/customer' },
-    { name: t('customer.reservation'), href: '/customer/reservations', current: location.pathname.startsWith('/customer/reservation') },
-    { name: t('customer.contract'), href: '/customer/contracts', current: location.pathname.startsWith('/customer/contract') },
+    { name: t('customer.workers'), href: '/customer/workers', current: location.pathname.startsWith('/customer/workers') },
+    { name: t('customer.reservation'), href: '/customer/reservations', current: location.pathname.startsWith('/customer/reservations') },
+    { name: t('customer.contract'), href: '/customer/contracts', current: location.pathname.startsWith('/customer/contracts') },
   ];
 
   return (

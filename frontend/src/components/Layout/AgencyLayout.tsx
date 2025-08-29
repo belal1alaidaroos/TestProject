@@ -22,8 +22,8 @@ const AgencyLayout: React.FC<AgencyLayoutProps> = ({ children }) => {
   };
 
   const navigation = [
-    { name: t('agency.requests'), href: '/agency', current: location.pathname === '/agency' },
-    { name: t('agency.proposals'), href: '/agency/proposals', current: location.pathname === '/agency/proposals' },
+    { name: t('agency.requests'), href: '/agency/requests', current: location.pathname.startsWith('/agency/requests') },
+    { name: t('agency.proposals'), href: '/agency/proposals', current: location.pathname.startsWith('/agency/proposals') },
   ];
 
   return (

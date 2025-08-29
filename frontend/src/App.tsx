@@ -1,91 +1,249 @@
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './stores/AuthProvider';
 
-// Simple working components
-const LoginPage = () => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">Login</h1>
-      <p className="text-xl text-gray-600">Login page placeholder</p>
-    </div>
-  </div>
-);
+// Auth pages
+import LoginPage from './pages/auth/LoginPage';
 
-const Dashboard = ({ title, userType }: { title: string; userType: string }) => (
-  <div className="min-h-screen bg-gray-50">
-    {/* Header */}
-    <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="text-sm text-gray-500 hover:text-gray-700">
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+// Customer pages
+import CustomerLayout from './components/Layout/CustomerLayout';
+import WorkersPage from './pages/customer/WorkersPage';
+import WorkerDetailPage from './pages/customer/WorkerDetailPage';
+import ReservationPage from './pages/customer/ReservationPage';
+import ContractPage from './pages/customer/ContractPage';
+import PaymentPage from './pages/customer/PaymentPage';
 
-    {/* Navigation */}
-    <nav className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex space-x-8 py-4">
-          <a href="#" className="px-3 py-2 rounded-md text-sm font-medium bg-blue-100 text-blue-700">
-            Dashboard
-          </a>
-          <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50">
-            Workers
-          </a>
-          <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50">
-            Contracts
-          </a>
-        </div>
-      </div>
-    </nav>
+// Agency pages
+import AgencyLayout from './components/Layout/AgencyLayout';
+import RequestsPage from './pages/agency/RequestsPage';
+import ProposalsPage from './pages/agency/ProposalsPage';
+import SubmitProposalPage from './pages/agency/SubmitProposalPage';
 
-    {/* Main Content */}
-    <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to {userType} Portal</h2>
-        <p className="text-xl text-gray-600">This is a working dashboard with navigation!</p>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Quick Stats</h3>
-            <p className="text-gray-600">View your important metrics</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Recent Activity</h3>
-            <p className="text-gray-600">See what's happening</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Actions</h3>
-            <p className="text-gray-600">Quick actions you can take</p>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-);
+// Admin pages
+import AdminLayout from './components/Layout/AdminLayout';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import UsersPage from './pages/admin/UsersPage';
+import ProposalsReviewPage from './pages/admin/ProposalsReviewPage';
+import SettingsPage from './pages/admin/SettingsPage';
 
-function App() {
-  const { user, isAuthenticated } = useAuth();
+// Common pages
+import NotFoundPage from './pages/NotFoundPage';
+
+// Protected Route Component
+const ProtectedRoute = ({ children, requiredRole }: { children: React.ReactNode; requiredRole?: string[] }) => {
+  const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {
-    return <LoginPage />;
+    return <Navigate to="/login" replace />;
   }
 
-  // Determine user type and show appropriate dashboard
-  const userType = user?.roles?.some((role: any) => ['admin', 'internal'].includes(role.name))
-    ? 'Admin'
-    : user?.roles?.some((role: any) => role.name === 'agency')
-    ? 'Agency'
-    : 'Customer';
+  if (requiredRole && requiredRole.length > 0) {
+    const hasRole = user?.roles?.some((role: any) => requiredRole.includes(role.name));
+    if (!hasRole) {
+      return <Navigate to="/unauthorized" replace />;
+    }
+  }
 
-  const title = `${userType} Dashboard`;
+  return <>{children}</>;
+};
 
-  return <Dashboard title={title} userType={userType} />;
+function App() {
+  const { isAuthenticated, user } = useAuth();
+
+  // Function to get default route based on user role
+  const getDefaultRoute = () => {
+    if (!isAuthenticated || !user) return '/login';
+    
+    if (user.roles?.some((role: any) => ['admin', 'internal'].includes(role.name))) {
+      return '/admin/dashboard';
+    } else if (user.roles?.some((role: any) => role.name === 'agency')) {
+      return '/agency/requests';
+    } else {
+      return '/customer/workers';
+    }
+  };
+
+  return (
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={getDefaultRoute()} replace />} />
+      
+      {/* Customer Routes */}
+      <Route
+        path="/customer"
+        element={
+          <ProtectedRoute requiredRole={['customer']}>
+            <CustomerLayout>
+              <Navigate to="/customer/workers" replace />
+            </CustomerLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer/workers"
+        element={
+          <ProtectedRoute requiredRole={['customer']}>
+            <CustomerLayout>
+              <WorkersPage />
+            </CustomerLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer/workers/:workerId"
+        element={
+          <ProtectedRoute requiredRole={['customer']}>
+            <CustomerLayout>
+              <WorkerDetailPage />
+            </CustomerLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer/reservations"
+        element={
+          <ProtectedRoute requiredRole={['customer']}>
+            <CustomerLayout>
+              <ReservationPage />
+            </CustomerLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer/contracts"
+        element={
+          <ProtectedRoute requiredRole={['customer']}>
+            <CustomerLayout>
+              <ContractPage />
+            </CustomerLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer/payment/:contractId"
+        element={
+          <ProtectedRoute requiredRole={['customer']}>
+            <CustomerLayout>
+              <PaymentPage />
+            </CustomerLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Agency Routes */}
+      <Route
+        path="/agency"
+        element={
+          <ProtectedRoute requiredRole={['agency']}>
+            <AgencyLayout>
+              <Navigate to="/agency/requests" replace />
+            </AgencyLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/agency/requests"
+        element={
+          <ProtectedRoute requiredRole={['agency']}>
+            <AgencyLayout>
+              <RequestsPage />
+            </AgencyLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/agency/proposals"
+        element={
+          <ProtectedRoute requiredRole={['agency']}>
+            <AgencyLayout>
+              <ProposalsPage />
+            </AgencyLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/agency/submit-proposal/:requestId"
+        element={
+          <ProtectedRoute requiredRole={['agency']}>
+            <AgencyLayout>
+              <SubmitProposalPage />
+            </AgencyLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin Routes */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute requiredRole={['admin', 'internal']}>
+            <AdminLayout>
+              <Navigate to="/admin/dashboard" replace />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute requiredRole={['admin', 'internal']}>
+            <AdminLayout>
+              <AdminDashboardPage />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute requiredRole={['admin', 'internal']}>
+            <AdminLayout>
+              <UsersPage />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/proposals"
+        element={
+          <ProtectedRoute requiredRole={['admin', 'internal']}>
+            <AdminLayout>
+              <ProposalsReviewPage />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <ProtectedRoute requiredRole={['admin', 'internal']}>
+            <AdminLayout>
+              <SettingsPage />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Default Route */}
+      <Route path="/" element={<Navigate to={getDefaultRoute()} replace />} />
+      
+      {/* Unauthorized */}
+      <Route
+        path="/unauthorized"
+        element={
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Unauthorized</h1>
+              <p className="text-xl text-gray-600">You don't have permission to access this page.</p>
+            </div>
+          </div>
+        }
+      />
+      
+      {/* 404 */}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
 }
 
 export default App;
