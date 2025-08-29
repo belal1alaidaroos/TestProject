@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal - Working Version</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .portal-section { display: none; }
+        .portal-section.active { display: block; }
+        .nav-item { cursor: pointer; }
+        .nav-item.active { background-color: #dbeafe; color: #1d4ed8; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Section -->
+    <div id="loginSection" class="portal-section active min-h-screen flex items-center justify-center">
+        <div class="max-w-md w-full space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900">Employee Portal</h2>
+                <p class="mt-2 text-sm text-gray-600">Sign in to your account</p>
+            </div>
+            <div class="bg-white py-8 px-6 shadow rounded-lg">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Portal Type</label>
+                        <select id="portalType" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="customer">Customer Portal</option>
+                            <option value="agency">Agency Portal</option>
+                            <option value="admin">Admin Portal</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your email">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your password">
+                    </div>
+                    <div>
+                        <button onclick="login()" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Sign in
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Portal -->
+    <div id="customerPortal" class="portal-section">
+        <div class="min-h-screen bg-gray-50">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex items-center">
+                            <h1 class="text-xl font-semibold text-gray-900">Customer Portal</h1>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-700">Welcome, Customer</span>
+                            <button onclick="logout()" class="text-sm text-gray-500 hover:text-gray-700">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="bg-white shadow-sm border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex space-x-8 py-4">
+                        <div class="nav-item active px-3 py-2 rounded-md text-sm font-medium" onclick="showSection('dashboard')">Dashboard</div>
+                        <div class="nav-item px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50" onclick="showSection('workers')">Workers</div>
+                        <div class="nav-item px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50" onclick="showSection('contracts')">Contracts</div>
+                        <div class="nav-item px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50" onclick="showSection('reservations')">Reservations</div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content Sections -->
+            <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <!-- Dashboard Section -->
+                <div id="dashboard" class="content-section active">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Customer Dashboard</h2>
+                        <p class="text-xl text-gray-600">Manage your workers and contracts</p>
+                        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Active Workers</h3>
+                                <p class="text-3xl font-bold text-blue-600">12</p>
+                                <p class="text-gray-600">Currently working</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Active Contracts</h3>
+                                <p class="text-3xl font-bold text-green-600">8</p>
+                                <p class="text-gray-600">In progress</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Total Spent</h3>
+                                <p class="text-3xl font-bold text-purple-600">$24,500</p>
+                                <p class="text-gray-600">This month</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workers Section -->
+                <div id="workers" class="content-section">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Available Workers</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Ahmed Hassan</h3>
+                            <p class="text-gray-600">Construction Worker</p>
+                            <p class="text-sm text-gray-500">Experience: 5 years</p>
+                            <button class="mt-3 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Reserve</button>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Maria Garcia</h3>
+                            <p class="text-gray-600">Housekeeper</p>
+                            <p class="text-sm text-gray-500">Experience: 3 years</p>
+                            <button class="mt-3 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Reserve</button>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">John Smith</h3>
+                            <p class="text-gray-600">Driver</p>
+                            <p class="text-sm text-gray-500">Experience: 7 years</p>
+                            <button class="mt-3 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Reserve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contracts Section -->
+                <div id="contracts" class="content-section">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Contracts</h2>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                        <ul class="divide-y divide-gray-200">
+                            <li class="px-6 py-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">Construction Project</h3>
+                                        <p class="text-gray-600">Ahmed Hassan - $2,500/month</p>
+                                    </div>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                                </div>
+                            </li>
+                            <li class="px-6 py-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">House Cleaning</h3>
+                                        <p class="text-gray-600">Maria Garcia - $800/month</p>
+                                    </div>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                                </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Reservations Section -->
+                <div id="reservations" class="content-section">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Reservations</h2>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                        <ul class="divide-y divide-gray-200">
+                            <li class="px-6 py-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">Driver Needed</h3>
+                                        <p class="text-gray-600">John Smith - $1,200/month</p>
+                                        <p class="text-sm text-gray-500">Start Date: Next Monday</p>
+                                    </div>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Agency Portal -->
+    <div id="agencyPortal" class="portal-section">
+        <div class="min-h-screen bg-gray-50">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex items-center">
+                            <h1 class="text-xl font-semibold text-gray-900">Agency Portal</h1>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-700">Welcome, Agency</span>
+                            <button onclick="logout()" class="text-sm text-gray-500 hover:text-gray-700">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="bg-white shadow-sm border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex space-x-8 py-4">
+                        <div class="nav-item active px-3 py-2 rounded-md text-sm font-medium" onclick="showSection('requests')">Requests</div>
+                        <div class="nav-item px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50" onclick="showSection('proposals')">Proposals</div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content -->
+            <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <div id="requests" class="content-section active">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Client Requests</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Construction Worker Needed</h3>
+                            <p class="text-gray-600">Client: ABC Company</p>
+                            <p class="text-sm text-gray-500">Duration: 6 months</p>
+                            <p class="text-sm text-gray-500">Budget: $2,500/month</p>
+                            <button class="mt-3 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit Proposal</button>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Housekeeper Required</h3>
+                            <p class="text-gray-600">Client: XYZ Family</p>
+                            <p class="text-sm text-gray-500">Duration: Ongoing</p>
+                            <p class="text-sm text-gray-500">Budget: $800/month</p>
+                            <button class="mt-3 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit Proposal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="proposals" class="content-section">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Proposals</h2>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                        <ul class="divide-y divide-gray-200">
+                            <li class="px-6 py-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">Driver Proposal</h3>
+                                        <p class="text-gray-600">Client: DEF Corporation</p>
+                                        <p class="text-sm text-gray-500">Amount: $1,200/month</p>
+                                    </div>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Under Review</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Admin Portal -->
+    <div id="adminPortal" class="portal-section">
+        <div class="min-h-screen bg-gray-50">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex items-center">
+                            <h1 class="text-xl font-semibold text-gray-900">Admin Portal</h1>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-700">Welcome, Administrator</span>
+                            <button onclick="logout()" class="text-sm text-gray-500 hover:text-gray-700">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="bg-white shadow-sm border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex space-x-8 py-4">
+                        <div class="nav-item active px-3 py-2 rounded-md text-sm font-medium" onclick="showSection('overview')">Overview</div>
+                        <div class="nav-item px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50" onclick="showSection('users')">Users</div>
+                        <div class="nav-item px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50" onclick="showSection('proposals')">Proposals</div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content -->
+            <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <div id="overview" class="content-section active">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">System Overview</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Total Users</h3>
+                            <p class="text-3xl font-bold text-blue-600">1,247</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Active Contracts</h3>
+                            <p class="text-3xl font-bold text-green-600">89</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Pending Proposals</h3>
+                            <p class="text-3xl font-bold text-yellow-600">23</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">Revenue</h3>
+                            <p class="text-3xl font-bold text-purple-600">$156K</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="users" class="content-section">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">User Management</h2>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                        <ul class="divide-y divide-gray-200">
+                            <li class="px-6 py-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">John Doe</h3>
+                                        <p class="text-gray-600">john@example.com</p>
+                                        <p class="text-sm text-gray-500">Role: Customer</p>
+                                    </div>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                                </div>
+                            </li>
+                            <li class="px-6 py-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">Jane Smith</h3>
+                                        <p class="text-gray-600">jane@agency.com</p>
+                                        <p class="text-sm text-gray-500">Role: Agency</p>
+                                    </div>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                                </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="proposals" class="content-section">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Proposal Review</h2>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                        <ul class="divide-y divide-gray-200">
+                            <li class="px-6 py-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">Driver Service Proposal</h3>
+                                        <p class="text-gray-600">Agency: Best Drivers Inc.</p>
+                                        <p class="text-sm text-gray-500">Amount: $1,200/month</p>
+                                    </div>
+                                    <div class="space-x-2">
+                                        <button class="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">Approve</button>
+                                        <button class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">Reject</button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentPortal = null;
+
+        // Login function
+        function login() {
+            const portalType = document.getElementById('portalType').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            // Simulate authentication
+            currentUser = { email, portalType };
+            currentPortal = portalType;
+
+            // Hide login, show appropriate portal
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById(portalType + 'Portal').classList.add('active');
+
+            // Update navigation for customer portal
+            if (portalType === 'customer') {
+                showSection('dashboard');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            currentUser = null;
+            currentPortal = null;
+            
+            // Hide all portals, show login
+            document.querySelectorAll('.portal-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('loginSection').classList.add('active');
+        }
+
+        // Show section function (for customer portal)
+        function showSection(sectionName) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+
+            // Update navigation active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:bg-gray-50');
+            });
+
+            // Find and activate the clicked nav item
+            event.target.classList.add('active');
+            event.target.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:bg-gray-50');
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Employee Portal loaded successfully!');
+        });
+    </script>
+</body>
+</html>

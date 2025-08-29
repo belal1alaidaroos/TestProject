@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
-import { useLanguageStore } from '../../stores/languageStore';
 import { authAPI } from '../../services/api';
 
 interface AgencyLayoutProps {
@@ -10,9 +9,9 @@ interface AgencyLayoutProps {
 }
 
 const AgencyLayout: React.FC<AgencyLayoutProps> = ({ children }) => {
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const { user, logout } = useAuthStore();
-  const { language, toggleLanguage } = useLanguageStore();
+  const { language, toggleLanguage } = useI18n();
   const location = useLocation();
 
   const handleLogout = async () => {
@@ -25,8 +24,8 @@ const AgencyLayout: React.FC<AgencyLayoutProps> = ({ children }) => {
   };
 
   const navigation = [
-    { name: t('agency.requests'), href: '/requests', current: location.pathname === '/requests' },
-    { name: t('agency.proposals'), href: '/proposals', current: location.pathname === '/proposals' },
+    { name: t('agency.requests'), href: '/agency', current: location.pathname === '/agency' },
+    { name: t('agency.proposals'), href: '/agency/proposals', current: location.pathname === '/agency/proposals' },
   ];
 
   return (

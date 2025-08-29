@@ -6,7 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  login: (phone: string, code: string) => Promise<void>;
+  login: (user: any, token: string) => void;
   logout: () => void;
   setUser: (user: any) => void;
   setToken: (token: string) => void;
