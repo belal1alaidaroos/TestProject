@@ -211,7 +211,19 @@ class AuthController
 
     public function me(Request $request): JsonResponse
     {
-        $user = $request->user()->load(['customer', 'agency']);
+        $user = $request->user()->load(['customer', 'agency', 'roles']);
+        
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'user' => $user
+            ]
+        ]);
+    }
+
+    public function user(Request $request): JsonResponse
+    {
+        $user = $request->user()->load(['customer', 'agency', 'roles']);
         
         return response()->json([
             'success' => true,

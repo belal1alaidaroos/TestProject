@@ -101,7 +101,7 @@ class AuthService
             ]);
 
             return [
-                'user' => $user->load('customer'),
+                'user' => $user->load(['customer', 'roles']),
                 'token' => $token,
                 'token_type' => 'Bearer',
             ];
@@ -157,7 +157,7 @@ class AuthService
         ]);
 
         return [
-            'user' => $user->load('customer'),
+            'user' => $user->load(['customer', 'roles']),
             'token' => $token,
             'token_type' => 'Bearer',
         ];
@@ -197,7 +197,7 @@ class AuthService
         ]);
 
         return [
-            'user' => $user->load(['customer', 'agency']),
+            'user' => $user->load(['customer', 'agency', 'roles']),
             'token' => $token,
             'token_type' => 'Bearer',
         ];
@@ -249,7 +249,7 @@ class AuthService
         ]);
 
         return [
-            'user' => $user->load('customer'),
+            'user' => $user->load(['customer', 'roles']),
             'token' => $token,
             'token_type' => 'Bearer',
         ];
@@ -307,7 +307,7 @@ class AuthService
         ]);
 
         return [
-            'user' => $user->load(['customer', 'agency']),
+            'user' => $user->load(['customer', 'agency', 'roles']),
             'token' => $token,
             'token_type' => 'Bearer',
         ];
