@@ -33,9 +33,18 @@
     "disabled": "Disabled",
     "clear_filters": "Clear Filters"
   },
+  "validation": {
+    "required": "This field is required",
+    "invalid_email": "Please enter a valid email address",
+    "invalid_phone": "Please enter a valid Saudi mobile number (+966XXXXXXXXX)",
+    "password_min": "Password must be at least 8 characters",
+    "password_mismatch": "Passwords do not match"
+  },
   "auth": {
     "login": "Login",
+    "signup": "Sign Up",
     "phone": "Phone Number",
+    "mobile_number": "Mobile Number",
     "otp": "OTP Code",
     "request_otp": "Request OTP",
     "verify_otp": "Verify OTP",
@@ -44,7 +53,21 @@
     "otp_expires_in": "OTP expires in {{time}}",
     "invalid_otp": "Invalid OTP code",
     "login_success": "Login successful",
-    "logout_success": "Logged out successfully"
+    "logout_success": "Logged out successfully",
+    "full_name": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "company_name_en": "Company Name (English)",
+    "company_name_ar": "Company Name (Arabic)",
+    "tax_number": "Tax Number",
+    "commercial_license": "Commercial License",
+    "contact_person": "Contact Person",
+    "select_portal": "Select Portal",
+    "customer_portal": "Customer Portal",
+    "agency_portal": "Agency Portal",
+    "admin_portal": "Admin Portal",
+    "internal_portal": "Internal Portal"
   },
   "customer": {
     "workers": "Available Workers",

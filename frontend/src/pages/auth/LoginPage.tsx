@@ -99,6 +99,15 @@ const LoginPage: React.FC = () => {
   const handleEmailLogin = async (data: LoginFormData) => {
     try {
       clearError();
+      
+      // Ensure portalType is set
+      if (!portalType) {
+        console.error('Portal type is not set');
+        return;
+      }
+      
+      console.log('Attempting login with portal type:', portalType);
+      
       const response = await authAPI.emailLogin(data.email, data.password, portalType);
       
       if (response.data.success) {
@@ -108,6 +117,19 @@ const LoginPage: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Email login failed:', error);
+      
+      // Handle validation errors from backend
+      if (error.response?.data?.errors) {
+        console.log('Backend validation errors:', error.response.data.errors);
+        Object.keys(error.response.data.errors).forEach(field => {
+          loginForm.setError(field as keyof LoginFormData, {
+            type: 'server',
+            message: error.response.data.errors[field][0]
+          });
+        });
+      } else if (error.response?.data?.message) {
+        console.log('Backend error message:', error.response.data.message);
+      }
     }
   };
 
@@ -130,7 +152,24 @@ const LoginPage: React.FC = () => {
   const handleCustomerSignup = async (data: SignupFormData) => {
     try {
       clearError();
-      const response = await authAPI.customerSignup(data);
+      
+      // Ensure all required fields are present and properly formatted
+      const signupData = {
+        name: data.name.trim(),
+        email: data.email.trim().toLowerCase(),
+        phone: data.phone.trim(),
+        password: data.password,
+        password_confirmation: data.password_confirmation,
+        company_name_en: data.company_name_en.trim(),
+        company_name_ar: data.company_name_ar?.trim() || '',
+        tax_number: data.tax_number?.trim() || '',
+        commercial_license: data.commercial_license?.trim() || '',
+        contact_person: data.contact_person.trim()
+      };
+      
+      console.log('Sending signup data:', signupData);
+      
+      const response = await authAPI.customerSignup(signupData);
       
       if (response.data.success) {
         const { user, token } = response.data.data;
@@ -139,6 +178,20 @@ const LoginPage: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Customer signup failed:', error);
+      
+      // Handle validation errors from backend
+      if (error.response?.data?.errors) {
+        console.log('Backend validation errors:', error.response.data.errors);
+        // You can set these errors to display to the user
+        Object.keys(error.response.data.errors).forEach(field => {
+          signupForm.setError(field as keyof SignupFormData, {
+            type: 'server',
+            message: error.response.data.errors[field][0]
+          });
+        });
+      } else if (error.response?.data?.message) {
+        console.log('Backend error message:', error.response.data.message);
+      }
     }
   };
 
@@ -397,6 +450,54 @@ const LoginPage: React.FC = () => {
         />
         {signupForm.formState.errors.contact_person && (
           <p className="mt-1 text-sm text-red-600">{signupForm.formState.errors.contact_person.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="signup_company_ar" className="block text-sm font-medium text-gray-700">
+          {t('auth.company_name_ar')} (Optional)
+        </label>
+        <input
+          id="signup_company_ar"
+          type="text"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+          placeholder="اسم الشركة"
+          {...signupForm.register('company_name_ar')}
+        />
+        {signupForm.formState.errors.company_name_ar && (
+          <p className="mt-1 text-sm text-red-600">{signupForm.formState.errors.company_name_ar.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="signup_tax_number" className="block text-sm font-medium text-gray-700">
+          {t('auth.tax_number')} (Optional)
+        </label>
+        <input
+          id="signup_tax_number"
+          type="text"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+          placeholder="Tax Number"
+          {...signupForm.register('tax_number')}
+        />
+        {signupForm.formState.errors.tax_number && (
+          <p className="mt-1 text-sm text-red-600">{signupForm.formState.errors.tax_number.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="signup_commercial_license" className="block text-sm font-medium text-gray-700">
+          {t('auth.commercial_license')} (Optional)
+        </label>
+        <input
+          id="signup_commercial_license"
+          type="text"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+          placeholder="Commercial License"
+          {...signupForm.register('commercial_license')}
+        />
+        {signupForm.formState.errors.commercial_license && (
+          <p className="mt-1 text-sm text-red-600">{signupForm.formState.errors.commercial_license.message}</p>
         )}
       </div>
 

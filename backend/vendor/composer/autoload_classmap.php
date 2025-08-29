@@ -24,6 +24,7 @@ return array(
     'App\\Http\\Controllers\\Api\\LookupsController' => $baseDir . '/app/Http/Controllers/Api/LookupsController.php',
     'App\\Http\\Controllers\\Api\\PayPassController' => $baseDir . '/app/Http/Controllers/Api/PayPassController.php',
     'App\\Http\\Controllers\\Api\\RoleManagementController' => $baseDir . '/app/Http/Controllers/Api/RoleManagementController.php',
+    'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\Customer\\ContractController' => $baseDir . '/app/Http/Controllers/Customer/ContractController.php',
     'App\\Http\\Controllers\\Customer\\ReservationController' => $baseDir . '/app/Http/Controllers/Customer/ReservationController.php',
     'App\\Http\\Controllers\\Customer\\WorkerController' => $baseDir . '/app/Http/Controllers/Customer/WorkerController.php',

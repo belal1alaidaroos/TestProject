@@ -691,6 +691,7 @@ class ComposerStaticInita7c9f758a6b64af072bea8599b3b5808
         'App\\Http\\Controllers\\Api\\LookupsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LookupsController.php',
         'App\\Http\\Controllers\\Api\\PayPassController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/PayPassController.php',
         'App\\Http\\Controllers\\Api\\RoleManagementController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/RoleManagementController.php',
+        'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\Customer\\ContractController' => __DIR__ . '/../..' . '/app/Http/Controllers/Customer/ContractController.php',
         'App\\Http\\Controllers\\Customer\\ReservationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Customer/ReservationController.php',
         'App\\Http\\Controllers\\Customer\\WorkerController' => __DIR__ . '/../..' . '/app/Http/Controllers/Customer/WorkerController.php',
