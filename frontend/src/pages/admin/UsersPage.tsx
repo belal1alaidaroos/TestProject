@@ -1,29 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Plus, Trash2, Edit, AlertTriangle } from 'lucide-react';
 import { adminAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import Toast from '../../components/Toast';
+import UserFormModal from '../../components/Admin/UserFormModal';
 
 interface User {
   id: string;
-  name_en: string;
-  name_ar: string;
+  name: string;
   email: string;
   phone: string;
   user_type: 'Customer' | 'Agency' | 'Internal';
-  status: 'Active' | 'Inactive' | 'Suspended';
+  is_active: boolean;
   created_at: string;
   last_login_at?: string;
-  roles: Array<{
+  roles?: Array<{
+    id: string;
+    name: string;
+    display_name: string;
+  }>;
+  customer?: {
     id: string;
     name_en: string;
     name_ar: string;
-  }>;
-  profile?: {
-    company_name?: string;
-    address?: string;
-    city?: string;
-    country?: string;
+    customer_type: string;
+  };
+  agency?: {
+    id: string;
+    name_en: string;
+    name_ar: string;
+    license_number: string;
   };
 }
 
@@ -48,6 +55,10 @@ const UsersPage: React.FC = () => {
   const [showUserModal, setShowUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [userFormMode, setUserFormMode] = useState<'create' | 'edit'>('create');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Load roles for assignment
   useEffect(() => {
@@ -142,9 +153,65 @@ const UsersPage: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleCreateUser = () => {
+    setSelectedUser(null);
+    setUserFormMode('create');
+    setShowUserModal(true);
+  };
+
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
+    setUserFormMode('edit');
     setShowUserModal(true);
+  };
+
+  const handleDeleteUser = (user: User) => {
+    setUserToDelete(user);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!userToDelete) return;
+    
+    setDeleting(true);
+    try {
+      await adminAPI.deleteUser(userToDelete.id);
+      setToast({
+        type: 'success',
+        message: t('admin.user_deleted')
+      });
+      
+      // Reload users
+      const response = await adminAPI.getUsers({
+        ...filters,
+        page: currentPage,
+        per_page: 10,
+      });
+      
+      if (response.data.success) {
+        setUsers(response.data.data.data || []);
+      }
+      
+      setShowDeleteConfirm(false);
+      setUserToDelete(null);
+    } catch (error: any) {
+      setToast({
+        type: 'error',
+        message: error.response?.data?.message || t('admin.delete_error')
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleUserFormSuccess = () => {
+    setToast({
+      type: 'success',
+      message: userFormMode === 'create' ? t('admin.user_created') : t('admin.user_updated')
+    });
+    
+    // Reload users
+    fetchUsers();
   };
 
   const handleAssignRoles = (user: User) => {
@@ -272,7 +339,8 @@ const UsersPage: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900">
           {t('admin.users_management')}
         </h1>
-        <button className="btn-primary">
+        <button onClick={handleCreateUser} className="btn-primary">
+          <Plus className="h-4 w-4 mr-2" />
           {t('admin.add_user')}
         </button>
       </div>
@@ -423,14 +491,23 @@ const UsersPage: React.FC = () => {
                         <button
                           onClick={() => handleEditUser(user)}
                           className="text-primary-600 hover:text-primary-900"
+                          title={t('common.edit')}
                         >
-                          {t('common.edit')}
+                          <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleAssignRoles(user)}
                           className="text-blue-600 hover:text-blue-900"
+                          title={t('admin.assign_roles')}
                         >
                           {t('admin.assign_roles')}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteUser(user)}
+                          className="text-red-600 hover:text-red-900"
+                          title={t('common.delete')}
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleToggleStatus(user.id, user.status)}
@@ -494,13 +571,23 @@ const UsersPage: React.FC = () => {
         </div>
       )}
 
-      {/* User Edit Modal */}
-      {showUserModal && selectedUser && (
+      {/* User Form Modal */}
+      <UserFormModal
+        isOpen={showUserModal}
+        onClose={() => setShowUserModal(false)}
+        onSuccess={handleUserFormSuccess}
+        user={selectedUser}
+        mode={userFormMode}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                {t('admin.edit_user')}
+            <div className="mt-3 text-center">
+              <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-red-600" />
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {t('admin.delete_user_confirm')}
               </h3>
               
               <div className="space-y-4">
