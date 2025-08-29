@@ -26,6 +26,15 @@ import UsersPage from './pages/admin/UsersPage';
 import ProposalsReviewPage from './pages/admin/ProposalsReviewPage';
 import SettingsPage from './pages/admin/SettingsPage';
 
+// Employee pages
+import EmployeeLayout from './pages/employee/Layout';
+import EmployeeDashboard from './pages/employee/Dashboard';
+import EmployeeWorkers from './pages/employee/Workers';
+import EmployeeContracts from './pages/employee/Contracts';
+import EmployeeReservations from './pages/employee/Reservations';
+import EmployeeWorkerProblems from './pages/employee/WorkerProblems';
+import EmployeeNotifications from './pages/employee/Notifications';
+
 // Common pages
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -58,6 +67,8 @@ function App() {
       return '/admin/dashboard';
     } else if (user.roles?.some((role: any) => role.name === 'agency')) {
       return '/agency/requests';
+    } else if (user.roles?.some((role: any) => role.name === 'employee')) {
+      return '/employee';
     } else {
       return '/customer/workers';
     }
@@ -223,6 +234,23 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* Employee Routes */}
+      <Route
+        path="/employee"
+        element={
+          <ProtectedRoute requiredRole={['employee', 'admin', 'internal']}>
+            <EmployeeLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<EmployeeDashboard />} />
+        <Route path="workers" element={<EmployeeWorkers />} />
+        <Route path="contracts" element={<EmployeeContracts />} />
+        <Route path="reservations" element={<EmployeeReservations />} />
+        <Route path="worker-problems" element={<EmployeeWorkerProblems />} />
+        <Route path="notifications" element={<EmployeeNotifications />} />
+      </Route>
 
       {/* Default Route */}
       <Route path="/" element={<Navigate to={getDefaultRoute()} replace />} />

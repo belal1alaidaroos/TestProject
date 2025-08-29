@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 import { 
   LayoutDashboard, 
   Users, 
@@ -14,10 +14,10 @@ import {
   User,
   AlertTriangle
 } from 'lucide-react';
-import { useAuth } from '@/stores/authStore';
+import { useAuthStore } from '../../stores/authStore';
 
 const EmployeeLayout: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
