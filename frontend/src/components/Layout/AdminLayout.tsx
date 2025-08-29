@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
 import { useLanguageStore } from '../../stores/languageStore';
-import { authAPI } from '../../services/api';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -17,8 +16,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await authAPI.logout();
-      logout();
+      await logout();
     } catch (error) {
       console.error('Logout failed:', error);
     }

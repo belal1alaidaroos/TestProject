@@ -30,7 +30,7 @@ interface AuthActions {
   login: (user: User, token: string) => void;
   loginWithOtp: (phone: string, code: string) => Promise<void>;
   loginWithEmail: (email: string, password: string, portalType: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   setUser: (user: User) => void;
   setToken: (token: string) => void;
   clearError: () => void;
@@ -131,7 +131,15 @@ export const useAuthStore = create<AuthStore>()(
         }
       },
 
-      logout: () => {
+      logout: async () => {
+        try {
+          // Call backend logout endpoint to invalidate token
+          await api.post('/auth/logout');
+        } catch (error) {
+          console.error('Logout API call failed:', error);
+          // Continue with local logout even if API call fails
+        }
+        
         set({
           user: null,
           token: null,

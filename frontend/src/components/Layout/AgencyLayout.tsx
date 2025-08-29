@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
-import { authAPI } from '../../services/api';
 
 interface AgencyLayoutProps {
   children: React.ReactNode;
@@ -16,8 +15,7 @@ const AgencyLayout: React.FC<AgencyLayoutProps> = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await authAPI.logout();
-      logout();
+      await logout();
     } catch (error) {
       console.error('Logout failed:', error);
     }

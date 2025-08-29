@@ -53,7 +53,7 @@ export const authAPI = {
   socialLogin: (provider: string, providerUserId: string, email: string, name: string, portalType: string, phone?: string) => 
     api.post('/auth/social-login', { provider, provider_user_id: providerUserId, email, name, portal_type: portalType, phone }),
   checkPortalAccess: (portalType: string) => api.get(`/auth/portal-access/${portalType}`),
-  logout: () => api.post('/logout'),
+  logout: () => api.post('/auth/logout'),
   me: () => api.get('/auth/me'),
 };
 
