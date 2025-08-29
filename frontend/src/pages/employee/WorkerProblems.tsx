@@ -1,39 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from 'react-i18next';
 import { 
-  AlertTriangle, 
-  Search, 
-  Filter, 
-  Eye,
-  Edit,
+  AlertTriangle,
+  Plus,
+  Search,
+  Filter,
   CheckCircle,
   XCircle,
   Clock,
-  User,
-  Calendar,
-  FileText,
-  AlertCircle
+  FileText
 } from 'lucide-react';
-import { apiService } from '@/services/apiService';
+import { employeeAPI } from '../../services/api';
+import ProblemReportModal from '../../components/Employee/ProblemReportModal';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import Toast from '../../components/Toast';
 
 interface WorkerProblem {
   id: string;
-  problem_type: 'escape' | 'refusal' | 'non_compliance' | 'misconduct' | 'early_return';
+  worker_id: string;
+  problem_type: string;
   description: string;
   date_reported: string;
-  status: 'Pending' | 'Approved' | 'Rejected' | 'Closed';
-  resolution_action?: 'Dismissal' | 'Re-training' | 'Escalation';
+  status: string;
+  resolution_action?: string;
   resolution_notes?: string;
   worker: {
     id: string;
     name_en: string;
     name_ar: string;
-    phone: string;
     passport_number: string;
   };
   created_by: {
@@ -44,160 +38,147 @@ interface WorkerProblem {
     id: string;
     name: string;
   };
-  approved_at?: string;
   created_at: string;
+  approved_at?: string;
 }
 
 const WorkerProblems: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [problems, setProblems] = useState<WorkerProblem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [statistics, setStatistics] = useState<any>(null);
+  
+  // Modal states
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showResolveModal, setShowResolveModal] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState<WorkerProblem | null>(null);
-  const [showActionModal, setShowActionModal] = useState(false);
-  const [actionType, setActionType] = useState<'approve' | 'reject' | 'close'>('approve');
-  const [resolutionAction, setResolutionAction] = useState('');
-  const [resolutionNotes, setResolutionNotes] = useState('');
+  const [modalMode, setModalMode] = useState<'report' | 'resolve'>('report');
 
   useEffect(() => {
     fetchProblems();
-  }, [currentPage, searchTerm, statusFilter, typeFilter]);
+    fetchStatistics();
+  }, [statusFilter, typeFilter, currentPage]);
 
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        per_page: '15'
+      const response = await employeeAPI.getWorkerProblems({
+        status: statusFilter,
+        problem_type: typeFilter,
+        page: currentPage,
+        per_page: 10
       });
 
-      if (searchTerm) params.append('search', searchTerm);
-      if (statusFilter) params.append('status', statusFilter);
-      if (typeFilter) params.append('problem_type', typeFilter);
-
-      const response = await apiService.get(`/employee/worker-problems?${params}`);
-      
-      if (response.success) {
-        setProblems(response.data.data);
-        setTotalPages(response.data.last_page);
+      if (response.data.success) {
+        setProblems(response.data.data.data || []);
+        setTotalPages(response.data.data.last_page || 1);
       }
     } catch (error) {
-      console.error('Failed to fetch worker problems:', error);
+      console.error('Failed to fetch problems:', error);
+      setToast({
+        type: 'error',
+        message: t('employee.problems_fetch_error')
+      });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStatistics = async () => {
+    try {
+      const response = await employeeAPI.getWorkerProblemStatistics();
+      if (response.data.success) {
+        setStatistics(response.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch statistics:', error);
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Pending':
-        return <Badge variant="outline" className="border-yellow-200 text-yellow-800">Pending</Badge>;
+        return <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full flex items-center">
+          <Clock className="w-3 h-3 mr-1" />
+          {t('status.pending')}
+        </span>;
       case 'Approved':
-        return <Badge className="bg-green-100 text-green-800">Approved</Badge>;
+        return <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full flex items-center">
+          <CheckCircle className="w-3 h-3 mr-1" />
+          {t('status.approved')}
+        </span>;
       case 'Rejected':
-        return <Badge variant="destructive">Rejected</Badge>;
+        return <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full flex items-center">
+          <XCircle className="w-3 h-3 mr-1" />
+          {t('status.rejected')}
+        </span>;
       case 'Closed':
-        return <Badge className="bg-gray-100 text-gray-800">Closed</Badge>;
+        return <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full flex items-center">
+          <CheckCircle className="w-3 h-3 mr-1" />
+          {t('status.closed')}
+        </span>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">{status}</span>;
     }
   };
 
   const getProblemTypeBadge = (type: string) => {
-    const typeLabels = {
-      'escape': 'Escape',
-      'refusal': 'Refusal to Work',
-      'non_compliance': 'Non-Compliance',
-      'misconduct': 'Misconduct',
-      'early_return': 'Early Return'
-    };
-
-    const typeColors = {
+    const typeColors: Record<string, string> = {
       'escape': 'bg-red-100 text-red-800',
       'refusal': 'bg-orange-100 text-orange-800',
       'non_compliance': 'bg-yellow-100 text-yellow-800',
       'misconduct': 'bg-purple-100 text-purple-800',
       'early_return': 'bg-blue-100 text-blue-800'
     };
-
-    return (
-      <Badge className={typeColors[type as keyof typeof typeColors] || 'bg-gray-100 text-gray-800'}>
-        {typeLabels[type as keyof typeof typeLabels] || type}
-      </Badge>
-    );
+    
+    const colorClass = typeColors[type] || 'bg-gray-100 text-gray-800';
+    return <span className={`px-2 py-1 text-xs font-medium rounded-full ${colorClass}`}>
+      {t(`problem.${type}`)}
+    </span>;
   };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };
 
-  const handleAction = async () => {
-    if (!selectedProblem) return;
-
-    try {
-      let endpoint = '';
-      let data: any = {};
-
-      switch (actionType) {
-        case 'approve':
-          endpoint = `/employee/worker-problems/${selectedProblem.id}/approve`;
-          data = {
-            resolution_action: resolutionAction,
-            resolution_notes: resolutionNotes
-          };
-          break;
-        case 'reject':
-          endpoint = `/employee/worker-problems/${selectedProblem.id}/reject`;
-          data = { resolution_notes: resolutionNotes };
-          break;
-        case 'close':
-          endpoint = `/employee/worker-problems/${selectedProblem.id}/close`;
-          data = { resolution_notes: resolutionNotes };
-          break;
-      }
-
-      const response = await apiService.post(endpoint, data);
-
-      if (response.success) {
-        setShowActionModal(false);
-        setSelectedProblem(null);
-        setActionType('approve');
-        setResolutionAction('');
-        setResolutionNotes('');
-        fetchProblems();
-      }
-    } catch (error) {
-      console.error('Failed to perform action:', error);
-    }
+  const handleReportProblem = () => {
+    setSelectedProblem(null);
+    setModalMode('report');
+    setShowReportModal(true);
   };
 
-  const openActionModal = (problem: WorkerProblem, action: 'approve' | 'reject' | 'close') => {
+  const handleResolveProblem = (problem: WorkerProblem) => {
     setSelectedProblem(problem);
-    setActionType(action);
-    setShowActionModal(true);
+    setModalMode('resolve');
+    setShowResolveModal(true);
   };
 
-  const canPerformAction = (problem: WorkerProblem, action: string) => {
-    switch (action) {
-      case 'approve':
-      case 'reject':
-        return problem.status === 'Pending';
-      case 'close':
-        return ['Approved', 'Rejected'].includes(problem.status);
-      default:
-        return false;
-    }
+  const handleModalSuccess = () => {
+    setToast({
+      type: 'success',
+      message: modalMode === 'report' ? t('employee.problem_reported') : t('employee.problem_resolved')
+    });
+    fetchProblems();
+    fetchStatistics();
+  };
+
+  const handleStatusFilter = (value: string) => {
+    setStatusFilter(value);
+    setCurrentPage(1);
+  };
+
+  const handleTypeFilter = (value: string) => {
+    setTypeFilter(value);
+    setCurrentPage(1);
   };
 
   if (loading && problems.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -205,329 +186,238 @@ const WorkerProblems: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Worker Problems Management</h1>
-          <p className="text-muted-foreground">
-            Manage worker problems and operational issues
+          <h1 className="text-3xl font-bold">{t('employee.worker_problems')}</h1>
+          <p className="text-gray-600 mt-1">
+            {t('employee.worker_problems_description')}
           </p>
         </div>
-        <Button onClick={fetchProblems} variant="outline">
-          Refresh
-        </Button>
+        <button onClick={handleReportProblem} className="btn-primary">
+          <Plus className="h-4 w-4 mr-2" />
+          {t('employee.report_problem')}
+        </button>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Filters
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search problems..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Approved">Approved</SelectItem>
-                <SelectItem value="Rejected">Rejected</SelectItem>
-                <SelectItem value="Closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">All Types</SelectItem>
-                <SelectItem value="escape">Escape</SelectItem>
-                <SelectItem value="refusal">Refusal to Work</SelectItem>
-                <SelectItem value="non_compliance">Non-Compliance</SelectItem>
-                <SelectItem value="misconduct">Misconduct</SelectItem>
-                <SelectItem value="early_return">Early Return</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button 
-              onClick={() => {
-                setSearchTerm('');
-                setStatusFilter('');
-                setTypeFilter('');
-                setCurrentPage(1);
-              }}
-              variant="outline"
-            >
-              Clear Filters
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Problems List */}
-      <div className="space-y-4">
-        {problems.map((problem) => (
-          <Card key={problem.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <AlertTriangle className="h-6 w-6 text-orange-600" />
-                  <div>
-                    <CardTitle className="text-lg">Problem #{problem.id.slice(0, 8)}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      Reported on {formatDate(problem.date_reported)}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {getProblemTypeBadge(problem.problem_type)}
-                  {getStatusBadge(problem.status)}
-                </div>
+      {/* Statistics */}
+      {statistics && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white p-4 rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">{t('employee.total_problems')}</p>
+                <p className="text-2xl font-semibold text-gray-900">{statistics.total_problems}</p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {/* Worker Information */}
-                <div className="space-y-2">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Worker
-                  </h4>
-                  <div className="text-sm space-y-1">
-                    <p className="font-medium">{problem.worker.name_en}</p>
-                    <p className="text-muted-foreground">{problem.worker.name_ar}</p>
-                    <p className="text-muted-foreground">{problem.worker.phone}</p>
-                    <p className="text-muted-foreground">Passport: {problem.worker.passport_number}</p>
-                  </div>
-                </div>
+              <AlertTriangle className="h-8 w-8 text-gray-400" />
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">{t('employee.pending_problems')}</p>
+                <p className="text-2xl font-semibold text-yellow-600">{statistics.pending_problems}</p>
+              </div>
+              <Clock className="h-8 w-8 text-yellow-400" />
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">{t('employee.approved_problems')}</p>
+                <p className="text-2xl font-semibold text-blue-600">{statistics.approved_problems}</p>
+              </div>
+              <CheckCircle className="h-8 w-8 text-blue-400" />
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">{t('employee.closed_problems')}</p>
+                <p className="text-2xl font-semibold text-green-600">{statistics.closed_problems}</p>
+              </div>
+              <CheckCircle className="h-8 w-8 text-green-400" />
+            </div>
+          </div>
+        </div>
+      )}
 
-                {/* Problem Details */}
-                <div className="space-y-2">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4" />
-                    Problem Details
-                  </h4>
-                  <div className="text-sm space-y-1">
-                    <p className="text-muted-foreground">{problem.description}</p>
-                    <div className="flex items-center gap-1 mt-2">
-                      <Calendar className="h-4 w-4" />
-                      <span>Reported: {formatDate(problem.date_reported)}</span>
+      {/* Filters */}
+      <div className="bg-white p-4 rounded-lg shadow">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <select
+            value={statusFilter}
+            onChange={(e) => handleStatusFilter(e.target.value)}
+            className="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          >
+            <option value="">{t('common.all_statuses')}</option>
+            <option value="Pending">{t('status.pending')}</option>
+            <option value="Approved">{t('status.approved')}</option>
+            <option value="Rejected">{t('status.rejected')}</option>
+            <option value="Closed">{t('status.closed')}</option>
+          </select>
+
+          <select
+            value={typeFilter}
+            onChange={(e) => handleTypeFilter(e.target.value)}
+            className="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          >
+            <option value="">{t('problem.all_types')}</option>
+            <option value="escape">{t('problem.escape')}</option>
+            <option value="refusal">{t('problem.refusal')}</option>
+            <option value="non_compliance">{t('problem.non_compliance')}</option>
+            <option value="misconduct">{t('problem.misconduct')}</option>
+            <option value="early_return">{t('problem.early_return')}</option>
+          </select>
+
+          <button onClick={fetchProblems} className="btn-secondary">
+            {t('common.refresh')}
+          </button>
+        </div>
+      </div>
+
+      {/* Problems Table */}
+      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('worker.info')}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('problem.details')}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('problem.status')}
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('problem.reported_by')}
+              </th>
+              <th className="relative px-6 py-3">
+                <span className="sr-only">{t('common.actions')}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {problems.map((problem) => (
+              <tr key={problem.id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {problem.worker.name_en}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {problem.worker.passport_number}
                     </div>
                   </div>
-                </div>
-
-                {/* Status Information */}
-                <div className="space-y-2">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    Status Info
-                  </h4>
-                  <div className="text-sm space-y-1">
-                    <div className="flex justify-between">
-                      <span>Status:</span>
-                      <span className="capitalize">{problem.status}</span>
+                </td>
+                <td className="px-6 py-4">
+                  <div>
+                    <div className="flex items-center space-x-2 mb-1">
+                      {getProblemTypeBadge(problem.problem_type)}
+                      <span className="text-sm text-gray-500">
+                        {formatDate(problem.date_reported)}
+                      </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Created:</span>
-                      <span>{formatDate(problem.created_at)}</span>
-                    </div>
-                    {problem.approved_at && (
-                      <div className="flex justify-between">
-                        <span>Resolved:</span>
-                        <span>{formatDate(problem.approved_at)}</span>
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {problem.description}
+                    </p>
+                    {problem.resolution_action && (
+                      <div className="mt-1">
+                        <span className="text-xs font-medium text-gray-500">
+                          {t('problem.resolution')}: {t(`problem.${problem.resolution_action.toLowerCase()}`)}
+                        </span>
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-
-              {/* Resolution Information */}
-              {(problem.resolution_action || problem.resolution_notes) && (
-                <div className="mt-4 pt-4 border-t">
-                  <h4 className="font-medium mb-2">Resolution:</h4>
-                  {problem.resolution_action && (
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Action: {problem.resolution_action}
-                    </p>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {getStatusBadge(problem.status)}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">
+                    {problem.created_by.name}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {formatDate(problem.created_at)}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  {problem.status === 'Approved' && !problem.resolution_action && (
+                    <button
+                      onClick={() => handleResolveProblem(problem)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
+                      <FileText className="h-4 w-4" />
+                    </button>
                   )}
-                  {problem.resolution_notes && (
-                    <p className="text-sm text-muted-foreground">{problem.resolution_notes}</p>
-                  )}
-                </div>
-              )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-              {/* Actions */}
-              <div className="mt-4 pt-4 border-t flex gap-2">
-                <Button size="sm" className="flex-1">
-                  <Eye className="h-4 w-4 mr-2" />
-                  View Details
-                </Button>
-                
-                {canPerformAction(problem, 'approve') && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => openActionModal(problem, 'approve')}
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+            <div className="flex-1 flex justify-between sm:hidden">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="btn-secondary"
+              >
+                {t('common.previous')}
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="btn-secondary"
+              >
+                {t('common.next')}
+              </button>
+            </div>
+            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-center">
+              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                {[...Array(totalPages)].map((_, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={() => setCurrentPage(index + 1)}
+                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                      currentPage === index + 1
+                        ? 'z-10 bg-primary-50 border-primary-500 text-primary-600'
+                        : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                    }`}
                   >
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Approve
-                  </Button>
-                )}
-                
-                {canPerformAction(problem, 'reject') && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => openActionModal(problem, 'reject')}
-                  >
-                    <XCircle className="h-4 w-4 mr-2" />
-                    Reject
-                  </Button>
-                )}
-                
-                {canPerformAction(problem, 'close') && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => openActionModal(problem, 'close')}
-                  >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Close
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                    {index + 1}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <Card>
-          <CardContent className="flex items-center justify-between pt-6">
-            <div className="text-sm text-muted-foreground">
-              Page {currentPage} of {totalPages}
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Report Problem Modal */}
+      <ProblemReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        onSuccess={handleModalSuccess}
+        mode="report"
+      />
 
-      {/* Empty State */}
-      {!loading && problems.length === 0 && (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">No worker problems found</h3>
-            <p className="text-muted-foreground text-center">
-              {searchTerm || statusFilter || typeFilter
-                ? 'Try adjusting your filters to see more results.'
-                : 'No worker problems have been reported yet.'}
-            </p>
-          </CardContent>
-        </Card>
-      )}
+      {/* Resolve Problem Modal */}
+      <ProblemReportModal
+        isOpen={showResolveModal}
+        onClose={() => setShowResolveModal(false)}
+        onSuccess={handleModalSuccess}
+        problem={selectedProblem}
+        mode="resolve"
+      />
 
-      {/* Action Modal */}
-      {showActionModal && selectedProblem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4">
-            <CardHeader>
-              <CardTitle>
-                {actionType === 'approve' && 'Approve Problem'}
-                {actionType === 'reject' && 'Reject Problem'}
-                {actionType === 'close' && 'Close Problem'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Problem</label>
-                <p className="text-sm text-muted-foreground">
-                  {selectedProblem.problem_type} - {selectedProblem.worker.name_en}
-                </p>
-              </div>
-              
-              {actionType === 'approve' && (
-                <div>
-                  <label className="text-sm font-medium">Resolution Action</label>
-                  <Select value={resolutionAction} onValueChange={setResolutionAction}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select action" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Dismissal">Dismissal</SelectItem>
-                      <SelectItem value="Re-training">Re-training</SelectItem>
-                      <SelectItem value="Escalation">Escalation</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              <div>
-                <label className="text-sm font-medium">Notes</label>
-                <Textarea
-                  value={resolutionNotes}
-                  onChange={(e) => setResolutionNotes(e.target.value)}
-                  placeholder="Add resolution notes..."
-                  rows={3}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button 
-                  onClick={handleAction}
-                  className="flex-1"
-                >
-                  {actionType === 'approve' && 'Approve'}
-                  {actionType === 'reject' && 'Reject'}
-                  {actionType === 'close' && 'Close'}
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    setShowActionModal(false);
-                    setSelectedProblem(null);
-                    setActionType('approve');
-                    setResolutionAction('');
-                    setResolutionNotes('');
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Toast */}
+      {toast && (
+        <Toast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast(null)}
+        />
       )}
     </div>
   );
