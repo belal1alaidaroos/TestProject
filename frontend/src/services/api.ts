@@ -102,6 +102,48 @@ export const agencyAPI = {
   getNationalities: () => api.get('/agency/nationalities'),
 };
 
+// Employee Portal API
+export const employeeAPI = {
+  // Workers
+  getWorkers: (params?: any) => api.get('/employee/workers', { params }),
+  createWorker: (data: any) => api.post('/employee/workers', data),
+  getWorker: (workerId: string) => api.get(`/employee/workers/${workerId}`),
+  updateWorker: (workerId: string, data: any) => api.patch(`/employee/workers/${workerId}`, data),
+  deleteWorker: (workerId: string) => api.delete(`/employee/workers/${workerId}`),
+  
+  // Contracts
+  getContracts: (params?: any) => api.get('/employee/contracts', { params }),
+  getContract: (contractId: string) => api.get(`/employee/contracts/${contractId}`),
+  updateContractStatus: (contractId: string, data: any) => 
+    api.patch(`/employee/contracts/${contractId}/status`, data),
+  getContractStatistics: () => api.get('/employee/contracts/statistics'),
+  
+  // Reservations
+  getReservations: (params?: any) => api.get('/employee/reservations', { params }),
+  getReservation: (reservationId: string) => api.get(`/employee/reservations/${reservationId}`),
+  processReservation: (reservationId: string, data: any) => 
+    api.patch(`/employee/reservations/${reservationId}/process`, data),
+  getReservationStatistics: () => api.get('/employee/reservations/statistics'),
+  
+  // Worker Problems
+  getWorkerProblems: (params?: any) => api.get('/employee/worker-problems', { params }),
+  reportProblem: (data: any) => api.post('/employee/worker-problems', data),
+  getWorkerProblem: (problemId: string) => api.get(`/employee/worker-problems/${problemId}`),
+  resolveProblem: (problemId: string, data: any) => 
+    api.patch(`/employee/worker-problems/${problemId}/resolve`, data),
+  getWorkerProblemStatistics: () => api.get('/employee/worker-problems/statistics'),
+  
+  // Notifications
+  getNotifications: (params?: any) => api.get('/employee/notifications', { params }),
+  getNotification: (notificationId: string) => api.get(`/employee/notifications/${notificationId}`),
+  markNotificationAsRead: (notificationId: string) => 
+    api.patch(`/employee/notifications/${notificationId}/read`),
+  markAllNotificationsAsRead: () => api.patch('/employee/notifications/mark-all-read'),
+  deleteNotification: (notificationId: string) => 
+    api.delete(`/employee/notifications/${notificationId}`),
+  getNotificationStatistics: () => api.get('/employee/notifications/statistics'),
+};
+
 // Admin API
 export const adminAPI = {
   getProposals: (requestId: string) => api.get(`/admin/requests/${requestId}/proposals`),

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProposalController as AdminProposalController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LookupController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Employee;  // Employee namespace
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +114,43 @@ Route::middleware('auth:api')->group(function () {
             Route::post('professions', [LookupController::class, 'storeProfession']);
             Route::post('packages', [LookupController::class, 'storePackage']);
         });
+    });
+
+    // Employee Portal Routes
+    Route::prefix('employee')->middleware('role:employee,admin,internal')->group(function () {
+        // Workers management
+        Route::get('workers', [Employee\WorkerController::class, 'index']);
+        Route::post('workers', [Employee\WorkerController::class, 'store']);
+        Route::get('workers/{worker}', [Employee\WorkerController::class, 'show']);
+        Route::patch('workers/{worker}', [Employee\WorkerController::class, 'update']);
+        Route::delete('workers/{worker}', [Employee\WorkerController::class, 'destroy']);
+        
+        // Contracts management
+        Route::get('contracts', [Employee\ContractController::class, 'index']);
+        Route::get('contracts/{contract}', [Employee\ContractController::class, 'show']);
+        Route::patch('contracts/{contract}/status', [Employee\ContractController::class, 'updateStatus']);
+        Route::get('contracts/statistics', [Employee\ContractController::class, 'statistics']);
+        
+        // Reservations management
+        Route::get('reservations', [Employee\ReservationController::class, 'index']);
+        Route::get('reservations/{reservation}', [Employee\ReservationController::class, 'show']);
+        Route::patch('reservations/{reservation}/process', [Employee\ReservationController::class, 'process']);
+        Route::get('reservations/statistics', [Employee\ReservationController::class, 'statistics']);
+        
+        // Worker Problems
+        Route::get('worker-problems', [Employee\WorkerProblemController::class, 'index']);
+        Route::post('worker-problems', [Employee\WorkerProblemController::class, 'store']);
+        Route::get('worker-problems/{problem}', [Employee\WorkerProblemController::class, 'show']);
+        Route::patch('worker-problems/{problem}/resolve', [Employee\WorkerProblemController::class, 'resolve']);
+        Route::get('worker-problems/statistics', [Employee\WorkerProblemController::class, 'statistics']);
+        
+        // Notifications
+        Route::get('notifications', [Employee\NotificationController::class, 'index']);
+        Route::get('notifications/{notification}', [Employee\NotificationController::class, 'show']);
+        Route::patch('notifications/{notification}/read', [Employee\NotificationController::class, 'markAsRead']);
+        Route::patch('notifications/mark-all-read', [Employee\NotificationController::class, 'markAllAsRead']);
+        Route::delete('notifications/{notification}', [Employee\NotificationController::class, 'destroy']);
+        Route::get('notifications/statistics', [Employee\NotificationController::class, 'statistics']);
     });
 
     // User profile and logout
