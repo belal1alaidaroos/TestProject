@@ -12,7 +12,7 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { t } = useI18n();
   const { user, logout } = useAuthStore();
-  const { language, toggleLanguage } = useLanguageStore();
+  const { language, toggleLanguage } = useI18n();
   const location = useLocation();
 
   const handleLogout = async () => {
@@ -25,10 +25,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   const navigation = [
-    { name: t('admin.dashboard'), href: '/dashboard', current: location.pathname === '/dashboard' },
-    { name: t('admin.proposals_review'), href: '/proposals-review', current: location.pathname.startsWith('/proposals-review') },
-    { name: t('admin.users'), href: '/users', current: location.pathname === '/users' },
-    { name: t('admin.settings'), href: '/settings', current: location.pathname === '/settings' },
+    { name: t('admin.dashboard'), href: '/admin', current: location.pathname === '/admin' },
+    { name: t('admin.proposals_review'), href: '/admin/proposals', current: location.pathname.startsWith('/admin/proposals') },
+    { name: t('admin.users'), href: '/admin/users', current: location.pathname === '/admin/users' },
+    { name: t('admin.settings'), href: '/admin/settings', current: location.pathname === '/admin/settings' },
   ];
 
   return (

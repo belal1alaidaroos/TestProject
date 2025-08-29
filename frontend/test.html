@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .status {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Frontend Server Test</h1>
+        
+        <div class="status">
+            <strong>✅ Server Status:</strong> If you can see this page, the Vite server is working!
+        </div>
+        
+        <h2>What This Means:</h2>
+        <ul>
+            <li>The Vite development server is running correctly</li>
+            <li>Static file serving is working</li>
+            <li>The issue is with TypeScript/React compilation</li>
+        </ul>
+        
+        <h2>Next Steps:</h2>
+        <ol>
+            <li>Fix TypeScript compilation errors</li>
+            <li>Ensure React components compile properly</li>
+            <li>Test the full application</li>
+        </ol>
+        
+        <div class="error">
+            <strong>⚠️ Current Issue:</strong> The main React app is not compiling due to TypeScript errors.
+        </div>
+        
+        <p><strong>Server Port:</strong> 5173</p>
+        <p><strong>Status:</strong> Static files working, React app needs fixing</p>
+    </div>
+</body>
+</html>

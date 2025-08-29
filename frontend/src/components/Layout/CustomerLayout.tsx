@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
-import { useLanguageStore } from '../../stores/languageStore';
 import { authAPI } from '../../services/api';
 
 interface CustomerLayoutProps {
@@ -25,9 +24,9 @@ const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children }) => {
   };
 
   const navigation = [
-    { name: t('customer.workers'), href: '/workers', current: location.pathname === '/workers' },
-    { name: t('customer.reservation'), href: '/reservations', current: location.pathname.startsWith('/reservation') },
-    { name: t('customer.contract'), href: '/contracts', current: location.pathname.startsWith('/contract') },
+    { name: t('customer.workers'), href: '/customer', current: location.pathname === '/customer' },
+    { name: t('customer.reservation'), href: '/customer/reservations', current: location.pathname.startsWith('/customer/reservation') },
+    { name: t('customer.contract'), href: '/customer/contracts', current: location.pathname.startsWith('/customer/contract') },
   ];
 
   return (

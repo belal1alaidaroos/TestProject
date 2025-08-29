@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
-import { useLanguageStore } from '../../stores/languageStore';
 import { authAPI } from '../../services/api';
 
 interface AgencyLayoutProps {
@@ -25,7 +24,7 @@ const AgencyLayout: React.FC<AgencyLayoutProps> = ({ children }) => {
   };
 
   const navigation = [
-    { name: t('agency.requests'), href: '/agency/requests', current: location.pathname === '/agency/requests' },
+    { name: t('agency.requests'), href: '/agency', current: location.pathname === '/agency' },
     { name: t('agency.proposals'), href: '/agency/proposals', current: location.pathname === '/agency/proposals' },
   ];
 
