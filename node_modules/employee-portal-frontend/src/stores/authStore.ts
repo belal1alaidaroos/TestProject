@@ -27,7 +27,9 @@ interface AuthState {
 }
 
 interface AuthActions {
-  login: (phone: string, code: string) => Promise<void>;
+  login: (user: User, token: string) => void;
+  loginWithOtp: (phone: string, code: string) => Promise<void>;
+  loginWithEmail: (email: string, password: string, portalType: string) => Promise<void>;
   logout: () => void;
   setUser: (user: User) => void;
   setToken: (token: string) => void;
@@ -48,11 +50,58 @@ export const useAuthStore = create<AuthStore>()(
       error: null,
 
       // Actions
-      login: async (phone: string, code: string) => {
+      login: (user: User, token: string) => {
+        set({
+          user,
+          token,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
+        
+        // Set token in API headers
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      },
+
+      loginWithOtp: async (phone: string, code: string) => {
         set({ isLoading: true, error: null });
         
         try {
           const response = await api.post('/auth/verify-otp', { phone, code });
+          
+          if (response.data.success) {
+            const { user, token } = response.data.data;
+            
+            set({
+              user,
+              token,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
+            
+            // Set token in API headers
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          } else {
+            set({
+              isLoading: false,
+              error: response.data.message || 'Login failed',
+            });
+          }
+        } catch (error: unknown) {
+          const errorMessage = error instanceof Error ? error.message : 'Login failed';
+          set({
+            isLoading: false,
+            error: errorMessage,
+          });
+        }
+      },
+
+      loginWithEmail: async (email: string, password: string, portalType: string) => {
+        set({ isLoading: true, error: null });
+        
+        try {
+          const response = await api.post('/auth/email-login', { email, password, portal_type: portalType });
           
           if (response.data.success) {
             const { user, token } = response.data.data;
