@@ -56,14 +56,16 @@ const ProtectedRoute = ({ children, requiredRole }: { children: React.ReactNode;
 
   if (requiredRole && requiredRole.length > 0) {
     // Check both roles array and user_type
-    const hasRole = user?.roles?.some((role: any) => 
-      requiredRole.includes(role.name) || requiredRole.includes(role.name.toLowerCase())
-    );
+    const hasRole = user?.roles?.some((role: any) => {
+      if (!role || !role.name) return false;
+      return requiredRole.includes(role.name) || requiredRole.includes(role.name.toLowerCase());
+    });
     
     // Also check user_type for backward compatibility
-    const hasUserType = user?.user_type && requiredRole.some(role => 
-      role.toLowerCase() === user.user_type.toLowerCase()
-    );
+    const hasUserType = user?.user_type && requiredRole.some(role => {
+      if (!role || !user.user_type) return false;
+      return role.toLowerCase() === user.user_type.toLowerCase();
+    });
     
     if (!hasRole && !hasUserType) {
       console.log('Access denied - no matching role or user_type');
@@ -88,13 +90,13 @@ function App() {
     });
     
     // Check roles first
-    if (user.roles?.some((role: any) => ['admin', 'internal'].includes(role.name))) {
+    if (user.roles?.some((role: any) => role?.name && ['admin', 'internal'].includes(role.name))) {
       return '/admin/dashboard';
-    } else if (user.roles?.some((role: any) => role.name === 'agency')) {
+    } else if (user.roles?.some((role: any) => role?.name === 'agency')) {
       return '/agency/requests';
-    } else if (user.roles?.some((role: any) => role.name === 'employee')) {
+    } else if (user.roles?.some((role: any) => role?.name === 'employee')) {
       return '/employee';
-    } else if (user.roles?.some((role: any) => role.name === 'customer')) {
+    } else if (user.roles?.some((role: any) => role?.name === 'customer')) {
       return '/customer/workers';
     }
     
