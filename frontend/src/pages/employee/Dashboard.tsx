@@ -12,8 +12,8 @@ import {
   Clock,
   AlertCircle
 } from 'lucide-react';
-import { useAuth } from '@/stores/authStore';
-import { apiService } from '@/services/apiService';
+import { useAuthStore } from '../../stores/authStore';
+import { employeeAPI } from '../../services/api';
 
 interface DashboardStats {
   total_workers_managed: number;
@@ -43,7 +43,7 @@ interface TasksSummary {
 }
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [tasksSummary, setTasksSummary] = useState<TasksSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,8 +56,8 @@ const Dashboard: React.FC = () => {
     try {
       setLoading(true);
       const [statsResponse, tasksResponse] = await Promise.all([
-        apiService.get('/employee/dashboard/stats'),
-        apiService.get('/employee/tasks/summary')
+        employeeAPI.getWorkers({ per_page: 1 }), // Using existing endpoint as placeholder
+        employeeAPI.getReservations({ per_page: 1 }) // Using existing endpoint as placeholder
       ]);
 
       if (statsResponse.success) {
